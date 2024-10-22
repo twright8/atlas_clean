@@ -1,5 +1,3 @@
-# integritywatch-uk
-UK Integrity Watch is designed to be a central hub for online tools that allow citizens, journalists and civil society to monitor the integrity of decisions made by politicians in the UK.
 
 
 ## Project setup
