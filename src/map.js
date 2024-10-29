@@ -172,7 +172,7 @@ updateVisibility();
     }
 
     console.time('Data Fetching');
-    fetch('./data/loc2.json')
+    fetch('./data/loc3.json')
         .then(response => response.json())
         .then(data => {
             console.timeEnd('Data Fetching');
@@ -180,7 +180,28 @@ updateVisibility();
         })
         .catch(error => console.error('Error loading data:', error));
 			const archivedFilter = document.getElementById('archivedFilter');
+		const caseFilter = document.getElementById('caseFilter');	
+					const unreliableFilter = document.getElementById('unreliableFilter');
+	let selectedIndustries = new Set();
 
+// Add event listeners for industry buttons
+document.getElementById('health-industry').addEventListener('click', function() {
+    toggleIndustry(this, 'Health');
+});
+
+document.getElementById('defence-industry').addEventListener('click', function() {
+    toggleIndustry(this, 'Defence');
+});
+function toggleIndustry(button, industry) {
+    button.classList.toggle('active');
+    if (selectedIndustries.has(industry)) {
+        selectedIndustries.delete(industry);
+    } else {
+        selectedIndustries.add(industry);
+    }
+    updateFilters();
+    updateResetButtonVisibility();
+}
     function initMap(data) {
         console.time('Data Processing');
         const dateParser = d3.timeParse("%d/%m/%y");
@@ -193,7 +214,7 @@ updateVisibility();
 
         const uniqueCountries = [...new Set(allData.map(item => item.country))].sort((a, b) => a.localeCompare(b));
         const uniqueCorruptionCategories = [...new Set(allData.flatMap(item => item['Corruption Categories']))].sort((a, b) => a.localeCompare(b));
-        const uniqueHealthCategories = [...new Set(allData.flatMap(item => item['Health Categories']))].sort((a, b) => a.localeCompare(b));
+        const uniqueHealthCategories = [...new Set(allData.flatMap(item => item['Sector Categories']))].sort((a, b) => a.localeCompare(b));
 
 		initializeSelect2Filter('#countryFilter', uniqueCountries, 'Select multiple');
 		initializeSelect2Filter('#corruptionCategoriesFilter', uniqueCorruptionCategories, 'Select multiple');
@@ -212,18 +233,24 @@ updateVisibility();
 
         $('#startDate').datepicker('setDate', minDate);
         $('#endDate').datepicker('setDate', maxDate);
-
-        $('#resetFilters').on('click', function() {
-            if (isAnyFilterActive()) {
-                $('#countryFilter, #corruptionCategoriesFilter, #healthCategoriesFilter').val(null).trigger('change');
-                $('#startDate').datepicker('setDate', minDate);
-                $('#endDate').datepicker('setDate', maxDate);
-                $('#search-input').val('');
-           archivedFilter.checked = true;
-            updateFilters();
-            updateResetButtonVisibility();
-            }
-        });
+$('#resetFilters').on('click', function() {
+    if (isAnyFilterActive()) {
+        $('#countryFilter, #corruptionCategoriesFilter, #healthCategoriesFilter').val(null).trigger('change');
+        $('#startDate').datepicker('setDate', minDate);
+        $('#endDate').datepicker('setDate', maxDate);
+        $('#search-input').val('');
+        archivedFilter.checked = true;
+        caseFilter.checked = !true;
+        unreliableFilter.checked = false;
+        
+        // Reset industry buttons
+        selectedIndustries.clear();
+        document.querySelectorAll('.industry-btn').forEach(btn => btn.classList.remove('active'));
+        
+        updateFilters();
+        updateResetButtonVisibility();
+    }
+});
 
         // Add event listener for the search input
         $('#search-input').on('input', debounce(function() {
@@ -247,22 +274,31 @@ function initializeSelect2Filter(selector, data, placeholder) {
     });
 }
 
-    function isAnyFilterActive() {
-        const selectedCountries = $('#countryFilter').val() || [];
-        const selectedCorruptionCategories = $('#corruptionCategoriesFilter').val() || [];
-        const selectedHealthCategories = $('#healthCategoriesFilter').val() || [];
-        const startDate = $('#startDate').datepicker('getDate');
-        const endDate = $('#endDate').datepicker('getDate');
-        const searchTerm = $('#search-input').val().trim();
-        const isArchivedFilterActive = !archivedFilter.checked;
+function isAnyFilterActive() {
+    const selectedCountries = $('#countryFilter').val() || [];
+    const selectedCorruptionCategories = $('#corruptionCategoriesFilter').val() || [];
+    const selectedHealthCategories = $('#healthCategoriesFilter').val() || [];
+    const startDate = $('#startDate').datepicker('getDate');
+    const endDate = $('#endDate').datepicker('getDate');
+    const searchTerm = $('#search-input').val().trim();
+    const isArchivedFilterActive = !archivedFilter.checked;
+    const isUnreliableFilterActive = unreliableFilter.checked;
+    const isCaseFilterActive = caseFilter.checked;
+    const isIndustryFilterActive = selectedIndustries.size > 0;
 
-        const isDateFilterActive = (startDate && minDate && startDate.getTime() !== minDate.getTime()) || 
-                                   (endDate && maxDate && endDate.getTime() !== maxDate.getTime());
+    const isDateFilterActive = (startDate && minDate && startDate.getTime() !== minDate.getTime()) || 
+                             (endDate && maxDate && endDate.getTime() !== maxDate.getTime());
 
-       return selectedCountries.length > 0 || selectedCorruptionCategories.length > 0 || 
-               selectedHealthCategories.length > 0 || isDateFilterActive || searchTerm !== '' ||
-               isArchivedFilterActive;
-    }
+    return selectedCountries.length > 0 || 
+           selectedCorruptionCategories.length > 0 || 
+           selectedHealthCategories.length > 0 || 
+           isDateFilterActive || 
+           searchTerm !== '' ||
+           isArchivedFilterActive ||
+           isUnreliableFilterActive || 
+           isCaseFilterActive ||
+           isIndustryFilterActive;
+}
 
     function updateResetButtonVisibility() {
         if (isAnyFilterActive()) {
@@ -274,47 +310,62 @@ function initializeSelect2Filter(selector, data, placeholder) {
 
     const dmy = d3.timeParse("%d/%m/%y");
 
- function updateFilters() {
-        console.time('Filtering Data');
-        const selectedCountries = new Set($('#countryFilter').val() || []);
-        const selectedCorruptionCategories = new Set($('#corruptionCategoriesFilter').val() || []);
-        const selectedHealthCategories = new Set($('#healthCategoriesFilter').val() || []);
-        const startDate = $('#startDate').datepicker('getDate');
-        const endDate = $('#endDate').datepicker('getDate');
-        const searchTerm = $('#search-input').val().toLowerCase().trim();
-        const showArchived = archivedFilter.checked;
+function updateFilters() {
+    console.time('Filtering Data');
+    const selectedCountries = new Set($('#countryFilter').val() || []);
+    const selectedCorruptionCategories = new Set($('#corruptionCategoriesFilter').val() || []);
+    const selectedHealthCategories = new Set($('#healthCategoriesFilter').val() || []);
+    const startDate = $('#startDate').datepicker('getDate');
+    const endDate = $('#endDate').datepicker('getDate');
+    const searchTerm = $('#search-input').val().toLowerCase().trim();
+    const showArchived = archivedFilter.checked;
+    const showCase = caseFilter.checked;
+    const unreliableCase = unreliableFilter.checked;
 
-        filteredData = allData.filter(d => {
-            const countryMatch = selectedCountries.size === 0 || selectedCountries.has(d.country);
-            const corruptionCategoryMatch = selectedCorruptionCategories.size === 0 || 
-                d['Corruption Categories'].some(category => selectedCorruptionCategories.has(category));
-            const healthCategoryMatch = selectedHealthCategories.size === 0 || 
-                d['Health Categories'].some(category => selectedHealthCategories.has(category));
-            
-            let dateMatch = true;
-            if (startDate && endDate && d.parsedDate) {
-                dateMatch = (d.parsedDate >= startDate && d.parsedDate <= endDate);
+    filteredData = allData.filter(d => {
+        const countryMatch = selectedCountries.size === 0 || selectedCountries.has(d.country);
+        const corruptionCategoryMatch = selectedCorruptionCategories.size === 0 || 
+            d['Corruption Categories'].some(category => selectedCorruptionCategories.has(category));
+        const healthCategoryMatch = selectedHealthCategories.size === 0 || 
+            d['Sector Categories'].some(category => selectedHealthCategories.has(category));
+        
+        let dateMatch = true;
+        if (startDate && endDate && d.parsedDate) {
+            dateMatch = (d.parsedDate >= startDate && d.parsedDate <= endDate);
+        }
+        
+        let titleMatch = true;
+        if (searchTerm) {
+            const title = d.Title.toLowerCase();
+            if (searchTerm.startsWith('"') && searchTerm.endsWith('"')) {
+                titleMatch = title.includes(searchTerm.slice(1, -1));
+            } else {
+                titleMatch = searchTerm.split(' ').every(word => title.includes(word));
             }
-            
-            let titleMatch = true;
-            if (searchTerm) {
-                const title = d.Title.toLowerCase();
-                if (searchTerm.startsWith('"') && searchTerm.endsWith('"')) {
-                    titleMatch = title.includes(searchTerm.slice(1, -1));
-                } else {
-                    titleMatch = searchTerm.split(' ').every(word => title.includes(word));
-                }
-            }
+        }
 
-            const archivedMatch = showArchived || !d.Archived;
+        const archivedMatch = showArchived || !d.Archived;
+        const caseMatch = showCase || d.c_n;
+        const unreliableMatch = unreliableCase || !d.f_n;
 
-            return countryMatch && corruptionCategoryMatch && healthCategoryMatch && dateMatch && titleMatch && archivedMatch;
-        });
-        console.timeEnd('Filtering Data');
+        // Add industry matching
+        const industryMatch = selectedIndustries.size === 0 || 
+            (d.Industry && d.Industry.some(industry => selectedIndustries.has(industry)));
 
-        updateMapAndTable();
-    };
+        return countryMatch && 
+               corruptionCategoryMatch && 
+               healthCategoryMatch && 
+               dateMatch && 
+               titleMatch && 
+               archivedMatch && 
+               unreliableMatch && 
+               caseMatch &&
+               industryMatch;
+    });
 
+    console.timeEnd('Filtering Data');
+    updateMapAndTable();
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     // Find the Twitter button by ID
@@ -360,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <p><strong>URL:</strong> <a href="${location.url}" target="_blank">Link</a></p>
       <p><strong>Date:</strong> ${location['Date']}</p>
       <p><strong>Corruption Type:</strong> ${String(location['Corruption Categories'] || '').replace(/,(?=[^\s])/g, ', ')}</p>
-      <p><strong>Health Area:</strong> ${String(location['Health Categories'] || '').replace(/,(?=[^\s])/g, ', ')}</p>
+      <p><strong>Sector Area:</strong> ${String(location['Sector Categories'] || '').replace(/,(?=[^\s])/g, ', ')}</p>
     </div>
   </div>
 `);
@@ -417,19 +468,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     console.timeEnd('Total Initialization');
-	    const infoBoxes = {
-        country: "Country mentioned in the article. This is usually, but not always, where the story occured.",
-        corruption: "We used AI to identify when a story is related to a particular type of corruption. See our 'About' page for qualifications and limitations.",
-        health: "We used AI to identify when a story is related to a particular area of health. See our 'About' page for qualifications and limitations.",
-        date: "Set a date range to view which events have happened within a specific time period. Our archived data uses publication date.",
-		archived: "When checked, this includes articles collected using our earlier data gathering methods. We've since improved our collection process. Unchecked shows only articles collected with our current methods."
+const infoBoxes = {
+    country: "Country mentioned in the article. This is usually, but not always, where the story occured.",
+    corruption: "We used AI to identify when a story is related to a particular type of corruption. See our 'About' page for qualifications and limitations.",
+    health: "We used AI to identify when a story is related to a particular area of health. See our 'About' page for qualifications and limitations.",
+    date: "Set a date range to view which events have happened within a specific time period. Our archived data uses publication date.",
+    archived: "When checked, this includes articles collected using our earlier data gathering methods. We've since improved our collection process. Unchecked shows only articles collected with our current methods.",
+    cased: "When unchecked, this filters out general discussions and commentaries to focus on stories about specific corruption cases. Check it to include all articles.",
+    unreliable: `We use AI to identify potentially unreliable news stories based on their writing style and content. While keeping this unchecked can help reduce exposure to low-quality news, please note: The filter works automatically and cannot fully understand context. It may incorrectly flag legitimate stories as unreliable. It may miss unreliable stories. It can reflect biases present in AI training data. Think of it as a helpful but unverified first pass rather than a definitive assessment of reliability.`,
+industry:"Filter articles by industry sector. Select Health, Defence, or both. When both are selected, no filter is applied."
+}
 
-    };
 
     let currentInfoBox = null;
 	
 	
 	archivedFilter.addEventListener('change', function() {
+        updateFilters();
+        updateResetButtonVisibility();
+    });
+	unreliableFilter.addEventListener('change', function() {
+        updateFilters();
+        updateResetButtonVisibility();
+    });
+	caseFilter.addEventListener('change', function() {
         updateFilters();
         updateResetButtonVisibility();
     });
@@ -463,7 +525,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Attach click event to specific info icons
-    const infoIconIds = ['main-info', 'country-info', 'corruption-info', 'health-info', 'date-info', 'archived-info'];
+    const infoIconIds = ['main-info', 'country-info', 'corruption-info', 'health-info', 'date-info', 'archived-info', 'case-info', 'unreliable-info', 'industry-info'];
 
     infoIconIds.forEach(id => {
         const icon = document.getElementById(id);

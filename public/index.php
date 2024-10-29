@@ -58,7 +58,7 @@
 			            <button id="closeInfoCard">Got it, thanks!</button>
 			<div class="logos">
 			<p>Data provided by:</p>
-			<img src="https://res.cloudinary.com/postman/image/upload/t_team_logo/v1629882357/team/f8940af7f4a0949b4b8f860573a34e504ab03484d2b2c88ccc1bc1c4b88bc93f" loading="lazy" alt="" style="width:100%; max-width:150px"></div>
+			<img src="/images/newscatcher.png" loading="lazy" alt="" style="width:100%; max-width:150px"></div>
 
         </div></div>
     </div>
@@ -83,15 +83,15 @@
             <!-- Add this section for date range filter -->
 			    <div class="container-fluid footer-bar">
         <div class="row"><div class="fil"/>
-            <div id="clicker2" class="footer-col col-10 col-sm-10 footer-counts">			  
+            <div id="clicker2" class="footer-col col-9 col-sm-9 footer-counts">			  
                 <div id="data-count" class="dc-data-count count-box">
                     <div class="filter-count">0</div>out of <strong class="total-count">0</strong> articles
                 </div>
                 <div class="footer-input">
-                    <input type="text" id="search-input" placeholder="SEARCH BY TITLE">
+                    <input type="text" id="search-input" placeholder="SEARCH BY TITLE OF ARTICLE">
                     <i class="material-icons"></i>
                 </div>
-            </div>        <div id="clicker" class="footer-col col-2 col-sm-2 footer-counts filters">		 <h3 class="filter_head">Filters </h3><span class="expand-icon" style="font-size:large">▼</span></div></div>
+            </div>      <div class="col-1 col-sm-1" id="export-button-container"></div>  <div id="clicker" class="footer-col col-2 col-sm-2 footer-counts filters">		 <h3 class="filter_head">Filters </h3><span class="expand-icon" style="font-size:large">▼</span></div></div>
         </div>
     </div>
         <div class="row">
@@ -112,7 +112,7 @@
             <label class="space_b"  for="healthCategoriesFilter">Health Area <span class="info-icon" id="health-info" data-filter="health">i</span></label>
             <select id="healthCategoriesFilter" multiple="multiple" class="form-control"></select>
         </div>
-        <div class="filter-group">
+        <div class="filter-group date_filter">
             <label class="space_b" >Date Range <span class="info-icon" id="date-info" data-filter="date">i</span></label>
             <div class="input-group">
                 <input type="text" class="form-control" id="startDate" placeholder="Start Date">
@@ -121,16 +121,47 @@
                 </div>
                 <input type="text" class="form-control" id="endDate" placeholder="End Date">
             </div>
-        </div>
+        </div><div class="filter-group">
+    <label class="space_b">Industry <span class="info-icon" id="industry-info" data-filter="industry">i</span></label>
+    <div class="industry-buttons">
+        <button id="health-industry" class="industry-btn" title="Health">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="100%"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M228.3 469.1L47.6 300.4c-4.2-3.9-8.2-8.1-11.9-12.4l87 0c22.6 0 43-13.6 51.7-34.5l10.5-25.2 49.3 109.5c3.8 8.5 12.1 14 21.4 14.1s17.8-5 22-13.3L320 253.7l1.7 3.4c9.5 19 28.9 31 50.1 31l104.5 0c-3.7 4.3-7.7 8.5-11.9 12.4L283.7 469.1c-7.5 7-17.4 10.9-27.7 10.9s-20.2-3.9-27.7-10.9zM503.7 240l-132 0c-3 0-5.8-1.7-7.2-4.4l-23.2-46.3c-4.1-8.1-12.4-13.3-21.5-13.3s-17.4 5.1-21.5 13.3l-41.4 82.8L205.9 158.2c-3.9-8.7-12.7-14.3-22.2-14.1s-18.1 5.9-21.8 14.8l-31.8 76.3c-1.2 3-4.2 4.9-7.4 4.9L16 240c-2.6 0-5 .4-7.3 1.1C3 225.2 0 208.2 0 190.9l0-5.8c0-69.9 50.5-129.5 119.4-141C165 36.5 211.4 51.4 244 84l12 12 12-12c32.6-32.6 79-47.5 124.6-39.9C461.5 55.6 512 115.2 512 185.1l0 5.8c0 16.9-2.8 33.5-8.3 49.1z" fill="white"/></svg>
+
+        </button>
+        <button id="defence-industry" class="industry-btn" title="Defence">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="100%"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0zm0 66.8l0 378.1C394 378 431.1 230.1 432 141.4L256 66.8s0 0 0 0z" fill="white"/></svg>
+        </button>
+    </div>
+</div>
 		            <div class="filter-group">
                 <label class="space_b" for="archivedFilter">
                     Show Archived <span class="info-icon" id="archived-info" data-filter="archived">i</span>
                 </label>
 <div id="arch" class="custom-checkbox">
     <input type="checkbox" id="archivedFilter" checked>
-    <label for="archivedFilter">Include archived entries</label>
+    <label for="archivedFilter">Include archived articles</label>
 </div>
             </div>
+					            <div class="filter-group">
+                <label class="space_b" for="caseFilter">
+                    Cases <span class="info-icon" id="case-info" data-filter="cased">i</span>
+                </label>
+<div id="arch" class="custom-checkbox">
+    <input type="checkbox" id="caseFilter">
+    <label for="caseFilter">Include non-case articles</label>
+</div>
+            </div>
+								            <div class="filter-group">
+                <label class="space_b" for="unreliableFilter">
+                    Unreliable articles <span class="info-icon" id="unreliable-info" data-filter="unreliable">i</span>
+                </label>
+<div id="arch" class="custom-checkbox">
+    <input type="checkbox" id="unreliableFilter">
+    <label for="unreliableFilter">Include unreliable articles (beta)</label>
+</div>
+            </div>
+			<!-- Add this inside the filter-content div, after the existing filter groups -->
+
         <button id="resetFilters" class="btn reseter btn-secondary">Reset Filters</button></div>
     </div>
 </div>
@@ -150,7 +181,7 @@
                     </thead>
                 </table>
 
-</div>     <div class="row share"><div class ="sharer" id="export-button-container"></div><div class="sharer"><button id="twitter_share" class ="btn btn-sm btn-outline-secondary export-csv-button btn-sharer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
+</div>     <div class="row share"><div class="sharer"><button id="twitter_share" class ="btn btn-sm btn-outline-secondary export-csv-button btn-sharer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
   <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
 </svg></button> </div><div class="sharer"><button id="lin_share" class ="btn btn-sm btn-outline-secondary export-csv-button btn-sharer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
   <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
@@ -168,31 +199,31 @@
 <p class="discl">
 We are not responsible for websites we link (including hyperlink) to and we have no control over the contents of
 linked sites (and do not endorse linked content or take any position on whether it is true or accurate). By
-providing links on the cHeatmap we are not providing any assurance that you have the necessary intellectual
+providing links on the Health Atlas we are not providing any assurance that you have the necessary intellectual
 property licences to link to, view or use any part of the content found on the linked websites. It is your
 responsibility to review any terms and conditions for linked sites, and to comply with them. We will not be liable
-to you for you accessing links via this cHeatmap, or viewing any of the content of the linked sites.</p>
+to you for you accessing links via this Health Atlas, or viewing any of the content of the linked sites.</p>
 <p class="discl" style="margin-bottom: 1rem; font-weight:600">Terms and Conditions</p>
-<p class="discl">cHeatmap is provided by us in furtherance of our charitable purposes and for the public benefit and
-interest. The mission and objective of cHeatmap is to allow users to search for news articles from around the
+<p class="discl">Health Atlas is provided by us in furtherance of our charitable purposes and for the public benefit and
+interest. The mission and objective of Health Atlas is to allow users to search for news articles from around the
 world giving examples or discussion of corruption in the health sector and download our data.
 We are not responsible for websites we link (including hyperlink) to and we have no control over the contents of
 linked sites, nor do we adopt or endorse any statements found on linked sites. We do not take a position on
-whether information found on linked sites is true or accurate. Where cHeatmap contains links to other sites, these
+whether information found on linked sites is true or accurate. Where Health Atlas contains links to other sites, these
 are selected using automated AI software and are provided on an 'as is' basis by us. Links should not be
 interpreted as approval or selection by us of those linked sites, or the information you may obtain from them.
-By providing links on cHeatmap we are not guaranteeing that you have the necessary intellectual property licences
+By providing links on Health Atlas we are not guaranteeing that you have the necessary intellectual property licences
 to click through to, view or use any part of the content found on the linked sites. It is your responsibility to
 review any terms and conditions for any linked sites, and to comply with them. We will not be liable for any loss
-caused as a result of you clicking on links on cHeatmap; or accessing, reading or using any of the content found
+caused as a result of you clicking on links on Health Atlas; or accessing, reading or using any of the content found
 on linked sites.</p>
 <p class="discl">To the extent permitted by law, we do not accept any responsibility for any use of, or statements
 on, linked sites. For the avoidance of confusion, we will not be liable for any loss caused as a result of your
 doing, or not doing, anything as a result of viewing or reading linked sites. In particular, we do not warrant
 that any linked site or any of its contents is virus or harm free. You must take your own precautions in this
 respect as we accept no responsibility for any infection by virus or other harm or contamination, or by anything
-which has destructive properties, from accessing linked sites via cHeatmap.
-Although we will do our best to provide constant, uninterrupted access to cHeatmap, we do not guarantee this. We
+which has destructive properties, from accessing linked sites via Health Atlas.
+Although we will do our best to provide constant, uninterrupted access to Health Atlas, we do not guarantee this. We
 accept no responsibility or liability for any unavailability, interruption or delay.
 </p>
 <section>

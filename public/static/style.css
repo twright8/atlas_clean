@@ -881,3 +881,78 @@ flex-wrap: nowrap;}
 
 #dc-data-table th:nth-child(5),
 #dc-data-table td:nth-child(5) { width: 25%!important; }
+#tigh {height:70px!important}
+/* Add these styles to your existing CSS */
+
+.industry-buttons {
+    display: flex;
+    gap: 10px;
+    align-content: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+	height:100%
+
+}
+
+.industry-btn {
+    padding: 8px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.industry-btn:hover {
+    border-color: #666;
+}
+
+.industry-btn.active {
+    background: #e6e6e6;
+    border-color: #666;
+}
+
+.industry-btn svg {
+    display: block;
+}
+#export-button-container{
+    background: #0f4c79;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+align-items: center;}
+.export-csv-button{    color: #0f4c79;
+background: white;}
+.export-csv-button:hover{    color: #0f4c79;
+background: #f0f7ff}
+ .industry-btn:hover {
+     background: #1a6a9e;
+     border: none!important;
+     outline:none
+}
+ .industry-btn{
+     width: 100%;
+	 display:flex;
+     max-width:40px;
+
+     outline:none;
+     padding: 5px;
+     // Adjust padding as necessary to fit the icon nicely display: flex;
+     justify-content: center;
+     align-items: center;
+     border: none;
+     border-radius: 2px;
+     cursor: pointer;
+     font-size: 16px;
+     background: #D3D3D3;
+}
+ .industry-btn.active {
+     background-color: #3694d1!important;
+     outline:none;
+     border: none!important;
+     color: black;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)
+}
+.date_filter{min-width:66.4%}
+.form-control{text-align:center}
