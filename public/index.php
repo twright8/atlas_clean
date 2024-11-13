@@ -39,6 +39,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <!-- Add these lines for datepicker -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,7 +72,7 @@
             <div class="col-md-8 mb-3 mb-md-0 bdd">
 			
 				<div class="col-md-5"><h1>HEALTH ATLAS</h1></div>
-                <div class="col-md-7"><p class="m-0">Healthcare systems worldwide struggle with integrity issues. Investigate recent news stories exposing these problems in various countries.</p></div>
+                <div class="col-md-7"><p class="m-0">Healthcare systems worldwide struggle with integrity issues. Navigate the map to investigate recent news stories exposing these problems in various countries.</p></div>
             </div>
             <div class="col-md-4 d-flex justify-content-end">
 <div class="switch-container">
@@ -81,18 +84,16 @@
     </div>
 
             <!-- Add this section for date range filter -->
-			    <div class="container-fluid footer-bar">
-        <div class="row"><div class="fil"/>
-            <div id="clicker2" class="footer-col col-9 col-sm-9 footer-counts">			  
+			    <div class="container-fluid footer-bar fil">
+            <div id="clicker2" class="footer-col footer-counts">			  
                 <div id="data-count" class="dc-data-count count-box">
                     <div class="filter-count">0</div>out of <strong class="total-count">0</strong> articles
                 </div>
-                <div class="footer-input">
+                <div id="searcherer"><div class="footer-input">
                     <input type="text" id="search-input" placeholder="SEARCH BY TITLE OF ARTICLE">
-                    <i class="material-icons"></i>
-                </div>
-            </div>      <div class="col-1 col-sm-1" id="export-button-container"></div>  <div id="clicker" class="footer-col col-2 col-sm-2 footer-counts filters">		 <h3 class="filter_head">Filters </h3><span class="expand-icon" style="font-size:large">▼</span></div></div>
-        </div>
+                    <i class="fa fa-search"></i>
+                </div></div>
+            </div>      <div id="filters_buts"><div id="export-button-container"></div>  <div id="clicker" class="footer-col col-2 col-sm-2 footer-counts filters">		 <h3 class="filter_head">Filters </h3><span class="expand-icon" style="font-size:large">▼</span></div></div>
     </div>
         <div class="row">
 
