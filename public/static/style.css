@@ -720,6 +720,8 @@ table.dataTable{margin:0px;width:100%!important}
 
 @media only screen and (max-width: 768px){.bdd{ ;padding-bottom:30px;row-gap:15px}}
 
+
+
 @media only screen and (max-width: 992px) {
 .disclaimers {padding:20px}}
 
@@ -1120,3 +1122,6 @@ a{color:#e5007d}}}}
       }
     }
 
+@media only screen and (max-width: 768px){
+#resetFilters{max-width:999px;            writing-mode: horizontal-tb;
+}}
