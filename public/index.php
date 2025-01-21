@@ -123,15 +123,12 @@
                 <input type="text" class="form-control" id="endDate" placeholder="End Date">
             </div>
         </div><div class="filter-group">
-    <label class="space_b">Industry <span class="info-icon" id="industry-info" data-filter="industry">i</span></label>
-    <div class="industry-buttons">
-        <button id="health-industry" class="industry-btn" title="Health">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="100%"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M228.3 469.1L47.6 300.4c-4.2-3.9-8.2-8.1-11.9-12.4l87 0c22.6 0 43-13.6 51.7-34.5l10.5-25.2 49.3 109.5c3.8 8.5 12.1 14 21.4 14.1s17.8-5 22-13.3L320 253.7l1.7 3.4c9.5 19 28.9 31 50.1 31l104.5 0c-3.7 4.3-7.7 8.5-11.9 12.4L283.7 469.1c-7.5 7-17.4 10.9-27.7 10.9s-20.2-3.9-27.7-10.9zM503.7 240l-132 0c-3 0-5.8-1.7-7.2-4.4l-23.2-46.3c-4.1-8.1-12.4-13.3-21.5-13.3s-17.4 5.1-21.5 13.3l-41.4 82.8L205.9 158.2c-3.9-8.7-12.7-14.3-22.2-14.1s-18.1 5.9-21.8 14.8l-31.8 76.3c-1.2 3-4.2 4.9-7.4 4.9L16 240c-2.6 0-5 .4-7.3 1.1C3 225.2 0 208.2 0 190.9l0-5.8c0-69.9 50.5-129.5 119.4-141C165 36.5 211.4 51.4 244 84l12 12 12-12c32.6-32.6 79-47.5 124.6-39.9C461.5 55.6 512 115.2 512 185.1l0 5.8c0 16.9-2.8 33.5-8.3 49.1z" fill="white"/></svg>
-
-        </button>
-        <button id="defence-industry" class="industry-btn" title="Defence">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="100%"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0zm0 66.8l0 378.1C394 378 431.1 230.1 432 141.4L256 66.8s0 0 0 0z" fill="white"/></svg>
-        </button>
+    <label class="space_b" for="countryLevelFilter">
+       Country-Level switch <span class="info-icon" id="country-level-info" data-filter="countryLevel">i</span>
+    </label>
+    <div id="arch" class="custom-checkbox">
+        <input type="checkbox" id="countryLevelFilter" checked>
+        <label for="countryLevelFilter">Include country-level only articles</label>
     </div>
 </div>
 		            <div class="filter-group">
