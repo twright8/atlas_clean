@@ -17,6 +17,22 @@ document.addEventListener('DOMContentLoaded', function() {
     console.time('Map Initialization');
     var map = L.map('map').setView([0, 0], 2);  // Start with a global view
 
+    // Define marker icons
+var countryIcon = L.divIcon({
+    className: 'custom-div-icon',
+    html: '<i style="color: #e5007d;" class="fa fa-map-marker fa-3x"></i>',
+    iconSize: [30, 42],
+    iconAnchor: [15, 42]
+});
+
+var specificIcon = L.divIcon({
+    className: 'custom-div-icon',
+    html: '<i style="color: #3694d1;" class="fa fa-map-marker fa-3x"></i>',
+    iconSize: [30, 42],
+    iconAnchor: [15, 42]
+});
+
+
     var openStreetMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 10
@@ -92,6 +108,24 @@ document.addEventListener('DOMContentLoaded', function() {
         chunkDelay: 50
     });
     map.addLayer(markers);
+
+    // Add the legend
+var legend = L.control({position: 'bottomright'});
+legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info legend');
+    div.innerHTML = `
+        <div class="legend-content">
+            <h4>Location Precision</h4>
+            <i style="color: #3694d1;" class="fa fa-map-marker"></i> Specific Location in Country (e.g., city, facility)<br>
+            <i style="color: #e5007d;" class="fa fa-map-marker"></i> Country Only (no specific location)
+        </div>
+    `;
+    return div;
+};
+
+// Add this variable to track if legend is currently added
+var legendAdded = false;
+
     console.timeEnd('Map Initialization');
 
     console.time('DataTable Initialization');
@@ -213,16 +247,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         $('#resetFilters').on('click', function() {
             if (isAnyFilterActive()) {
-                $('#corruptionCategoriesFilter, #healthCategoriesFilter').val(null).trigger('change');
-				$('#countryFilter').val(null).trigger('change.select2');
+                $('#countryFilter, #corruptionCategoriesFilter, #healthCategoriesFilter').val(null).trigger('change');
                 $('#startDate').datepicker('setDate', minDate);
                 $('#endDate').datepicker('setDate', maxDate);
+                $('#search-input').val('');
                 archivedFilter.checked = true;
                 caseFilter.checked = false;
                 unreliableFilter.checked = false;
-                countryLevelFilter.checked = true;
+                countryLevelFilter.checked = false;
                 updateFilters();
                 updateResetButtonVisibility();
+				        if (legendAdded) {
+            legend.remove();
+            legendAdded = false;
+        }
             }
         });
 
@@ -257,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isArchivedFilterActive = !archivedFilter.checked;
         const isUnreliableFilterActive = unreliableFilter.checked;
         const isCaseFilterActive = caseFilter.checked;
-        const isCountryLevelFilterActive = !countryLevelFilter.checked;
+        const isCountryLevelFilterActive = countryLevelFilter.checked;
 
         const isDateFilterActive = (startDate && minDate && startDate.getTime() !== minDate.getTime()) || 
                                  (endDate && maxDate && endDate.getTime() !== maxDate.getTime());
@@ -356,7 +394,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     const uniqueId = `${location.lat}-${location.long}-${location.Title}`;
 
                     if (!markerMap.has(uniqueId)) {
-                        const marker = L.marker([location.lat, location.long])
+                        // Use country or specific icon based on country_level
+                        const icon = location.country_level ? countryIcon : specificIcon;
+                        
+                        const marker = L.marker([location.lat, location.long], {icon: icon})
                             .bindPopup(`
                                 <div class="popup-content">
                                     <h3 class="popup-title">"${location.Title}"</h3>
@@ -431,7 +472,7 @@ document.addEventListener('DOMContentLoaded', function() {
         archived: "When checked, this includes articles collected using our earlier data gathering methods. We've since improved our collection process. Unchecked shows only articles collected with our current methods.",
         cased: "When unchecked, this filters out general discussions and commentaries to focus on stories about specific corruption cases. Check it to include all articles.",
         unreliable: "We use AI to identify potentially unreliable news stories based on their writing style and content. While keeping this unchecked can help reduce exposure to low-quality news, please note: The filter works automatically and cannot fully understand context. It may incorrectly flag legitimate stories as unreliable. It may miss unreliable stories. It can reflect biases present in AI training data. Think of it as a helpful but unverified first pass rather than a definitive assessment of reliability.",
-        countryLevel: "When unchecked, this shows only articles where a specific location within the country could be determined. Check it to include articles where only the country-level location was identified. These two groups have different markers on the map."
+        countryLevel: "When unchecked, this shows only articles where a specific location within the country could be determined. Check it to include articles where only the country-level location was identified."
     };
 
     let currentInfoBox = null;
@@ -451,11 +492,20 @@ document.addEventListener('DOMContentLoaded', function() {
         updateResetButtonVisibility();
     });
 
-    countryLevelFilter.addEventListener('change', function() {
-        updateFilters();
-        updateResetButtonVisibility();
-    });
-
+countryLevelFilter.addEventListener('change', function() {
+    // Show/hide legend based on filter state
+    if (this.checked && !legendAdded) {
+        legend.addTo(map);
+        legendAdded = true;
+    } else if (!this.checked && legendAdded) {
+        legend.remove();
+        legendAdded = false;
+    }
+    
+    // Existing filter updates
+    updateFilters();
+    updateResetButtonVisibility();
+});
     function createInfoBox(content, target) {
         console.log('Creating info box for:', content);
         if (currentInfoBox) {

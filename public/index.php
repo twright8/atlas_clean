@@ -124,10 +124,10 @@
             </div>
         </div><div class="filter-group">
     <label class="space_b" for="countryLevelFilter">
-       Country-Level switch <span class="info-icon" id="country-level-info" data-filter="countryLevel">i</span>
+       Location precision <span class="info-icon" id="country-level-info" data-filter="countryLevel">i</span>
     </label>
     <div id="arch" class="custom-checkbox">
-        <input type="checkbox" id="countryLevelFilter" checked>
+        <input type="checkbox" id="countryLevelFilter">
         <label for="countryLevelFilter">Include country-level only articles</label>
     </div>
 </div>
