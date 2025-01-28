@@ -127,8 +127,8 @@
        Location precision <span class="info-icon" id="country-level-info" data-filter="countryLevel">i</span>
     </label>
     <div id="arch" class="custom-checkbox">
-        <input type="checkbox" id="countryLevelFilter">
-        <label for="countryLevelFilter">Include country-level only articles</label>
+        <input type="checkbox" id="countryLevelFilter" checked>
+        <label for="countryLevelFilter">Exclude country-level only articles</label>
     </div>
 </div>
 		            <div class="filter-group">
@@ -136,8 +136,8 @@
                     Show Archived <span class="info-icon" id="archived-info" data-filter="archived">i</span>
                 </label>
 <div id="arch" class="custom-checkbox">
-    <input type="checkbox" id="archivedFilter" checked>
-    <label for="archivedFilter">Include archived articles</label>
+    <input type="checkbox" id="archivedFilter">
+    <label for="archivedFilter">Exclude archived articles</label>
 </div>
             </div>
 					            <div class="filter-group">
@@ -145,8 +145,8 @@
                     Cases <span class="info-icon" id="case-info" data-filter="cased">i</span>
                 </label>
 <div id="arch" class="custom-checkbox">
-    <input type="checkbox" id="caseFilter">
-    <label for="caseFilter">Include non-case articles</label>
+    <input type="checkbox" id="caseFilter" checked>
+    <label for="caseFilter">Exclude non-case articles</label>
 </div>
             </div>
 								            <div class="filter-group">
@@ -154,8 +154,8 @@
                     Unreliable articles <span class="info-icon" id="unreliable-info" data-filter="unreliable">i</span>
                 </label>
 <div id="arch" class="custom-checkbox">
-    <input type="checkbox" id="unreliableFilter">
-    <label for="unreliableFilter">Include unreliable articles (beta)</label>
+    <input type="checkbox" id="unreliableFilter" checked>
+    <label for="unreliableFilter">Exclude unreliable articles (beta)</label>
 </div>
             </div>
 			<!-- Add this inside the filter-content div, after the existing filter groups -->
