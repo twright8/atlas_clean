@@ -33,9 +33,33 @@ body {
 @media only screen and (max-width: 992px){
 .fil{    flex-wrap: wrap;
 }}
-@media only screen and (max-width: 992px){
-#filters_buts{    width:100%;border-top: 1px solid white;
-}}
+@media only screen and (max-width: 992px) {
+  #filters_buts {
+    width: 100%;
+    border-top: 1px solid white;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+	background-color:#0f4c79;
+  }
+  
+  #export-button-container, #help-button-container {
+    padding: 10px;
+    flex: 0 0 auto;
+  }
+  
+  .fil {
+    padding: 0;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  #clicker {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+  }
+}
 
 
 #countryFilter {
@@ -284,7 +308,7 @@ padding: 10px 10px;}
   @media only screen and (max-width: 992px){
   #clicker{    width: 100%;            flex: 0 0 calc(100% - 170px);}}
   @media only screen and (max-width: 768px){
-  #clicker{    width: 100%;            flex: 0 0 80%;}}
+  #clicker{    width: 100%;}}
     #clicker2{    border-top-left-radius: 10px;width:100%;
     display: flex;
     align-content: center;
@@ -867,62 +891,197 @@ flex-wrap: nowrap;}
     transform: rotate(45deg);
 }
 
+/* Base styles (desktop/1080p) */
 .custom-checkbox input:checked ~ label::after {
     display: block;
 }
-   .info-card-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-        }
-        .info-card-overlay.show {
-            display: flex;
-            opacity: 1;
-        }
-        .info-card {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 90%;
-        }
-        .info-card h2 {
-            color: #333;
-            margin-top: 0;
-        }
-        .info-card p {
-            color: #666;
-            line-height: 1.6;
-        }
-        .info-card button {
-            background-color: #3694d1;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 1rem;
-        }
-        .info-card button:hover {
-            background-color: #0056b3;
-		}
-		.disclaimers{max-width:1024px;margin:auto}
-		.logods{display:flex;
-    justify-content: space-evenly;}
-	table.dataTable tbody tr:hover {
-  cursor: default;
-  background: #eee;
+
+.info-card-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.info-card-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.info-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh; /* Prevent card from being too tall on small screens */
+    overflow-y: auto; /* Allow scrolling if content is too long */
+}
+
+.info-card h2 {
+    color: #333;
+    margin-top: 0;
+    font-size: 1.5rem; /* Base font size */
+}
+
+.info-card p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 1rem; /* Base font size */
+}
+
+.info-card button {
+    background-color: #3694d1;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 1rem;
+}
+
+.info-card button:hover {
+    background-color: #0056b3;
+}
+
+.disclaimers {
+    max-width: 1024px;
+    margin: auto;
+    padding: 0 20px; /* Add padding on the sides */
+}
+
+.logods {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap; /* Allow logos to wrap on smaller screens */
+    gap: 15px; /* Add gap between logos */
+}
+
+table.dataTable tbody tr:hover {
+    cursor: default;
+    background: #eee;
+}
+/* Tablet styles */
+@media screen and (max-width: 1024px) {
+    .info-card {
+				margin-top:90px;
+
+        padding: 1.5rem;
+        max-width: 500px;
+    }
+    
+    .info-card h2 {
+        font-size: 1.3rem;
+    }
+    
+    .info-card p {
+        font-size: 0.95rem;
+    }
+    
+    .info-card button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    
+    .logods {
+        padding: 0 10px;
+    }
+}
+/* Tablet styles */
+@media screen and (max-width: 768px) {
+    .info-card {
+				margin-top:60px;
+
+        padding: 1.5rem;
+        max-width: 500px;
+    }
+    
+    .info-card h2 {
+        font-size: 1.3rem;
+    }
+    
+    .info-card p {
+        font-size: 0.95rem;
+    }
+    
+    .info-card button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    
+    .logods {
+        padding: 0 10px;
+    }
+}
+
+/* Mobile styles */
+@media screen and (max-width: 480px) {
+    .info-card {
+		margin-top:60px;
+        padding: 1rem;
+        width: 95%;
+        max-width: none;
+    }
+    
+    .info-card h2 {
+        font-size: 1.2rem;
+    }
+    
+    .info-card p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    
+    .info-card button {
+        padding: 8px 16px;
+        font-size: 14px;
+        width: 100%; /* Full width buttons on mobile */
+    }
+    
+    .disclaimers {
+        padding: 0 15px;
+    }
+    
+    /* Adjust table display for mobile */
+    table.dataTable {
+        font-size: 0.9rem;
+    }
+}
+
+/* For very small screens */
+@media screen and (max-width: 320px) {
+    .info-card {
+				margin-top:60px;
+
+        padding: 0.8rem;
+    }
+    
+    .info-card h2 {
+        font-size: 1.1rem;
+    }
+    
+    .info-card p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Additional responsive adjustments for table if needed */
+@media screen and (max-width: 600px) {
+    /* Make tables scrollable horizontally on small screens */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 }
 #dc-data-table {
     width: 100%;
