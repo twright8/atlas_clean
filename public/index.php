@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIMon</title>
+    <title>Health Atlas</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
@@ -56,11 +56,60 @@
         <div class="info-card">
             <h2>Welcome to the Health Atlas</h2>
 
-            <p>Explore global health sector integrity issues and scandals on our interactive map as reported by english language news providers. Use the filters to narrow down your search and click on markers to learn more about specific cases.</p>
+            <p>See healthcare integrity cases mapped worldwide. Filter by country, health sector area or issue type, and click points to read full news stories. Download and analyse data or identify case studies</p>
+			<p>This dashboard shows thousands of news articles from 2023. Data is updated monthly and coverage varies by region. See About page for details.</p>
+			<hr>
+			<p><strong>Quickstart</strong></p>
+
+<div style="display: flex; flex-direction: column; gap: 25px; max-width: 600px;">
+    <div style="display: flex; align-items: center;">
+        <p style="margin: 0; flex: 1;">Zoom in, drag, or click the map to discover recent news stories exposing these problems.</p>
+        <div style="width: 60px; display: flex; justify-content: center;">
+            <i class="fa fa-arrows" aria-hidden="true" style="font-size: 24px;"></i>
+        </div>
+    </div>
+    
+    <div style="display: flex; align-items: center;">
+        <p style="margin: 0; flex: 1;">Articles appear as heat circles when clustered together...</p>
+        <div style="width: 60px; display: flex; justify-content: center;">
+            <img src="hm.png" style="width: 40px; height: 40px;" alt="Heat map cluster"/>
+        </div>
+    </div>
+
+    <div style="display: flex; align-items: center;">
+        <p style="margin: 0; flex: 1;">... or individual pins when zoomed in.</p>
+        <div style="width: 60px; display: flex; justify-content: center;">
+            <i style="color: #3694d1;" class="fa fa-map-marker fa-3x"></i>
+        </div>
+    </div>
+
+    <div style="display: flex; align-items: center;">
+        <p style="margin: 0; flex: 1;">Click the 'i' next to filters for explanations.</p>
+        <div style="width: 60px; display: flex; justify-content: center;">
+            <img src="i.png" style="width: 24px;" alt="Information icon"/>
+        </div>
+    </div>
+	    <div style="display: flex; align-items: center;">
+<p style="margin: 0; flex: 1;">Enter keywords in the search bar to find articles that interest you.</p>
+        <div style="width: 60px; display: flex; justify-content: center;">
+            <i class="fa fa-search" style="font-size:2rem"></i>
+        </div>
+    </div>
+		    <div style="display: flex; align-items: center;">
+<p style="margin: 0; flex: 1;">Click the question mark to re-open this guide.</p>
+        <div style="width: 60px; display: flex; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM169.8 165.3c7.9-22.3 29.1-37.3 52.8-37.3l58.3 0c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24l0-13.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1l-58.3 0c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>
+
+        </div>
+    </div>
+</div>
+			
+			<hr>
+			<br>
 			<div class="logods">
-			            <button id="closeInfoCard">Got it, thanks!</button>
+			            <button id="closeInfoCard" style="margin-top:0px">Got it, thanks!</button>
 			<div class="logos">
-			<p>Data provided by:</p>
+			<p style="margin-bottom:0px">Data provided by:</p>
 			<img src="/images/newscatcher.png" loading="lazy" alt="" style="width:100%; max-width:150px"></div>
 
         </div></div>
@@ -72,7 +121,7 @@
             <div class="col-md-8 mb-3 mb-md-0 bdd">
 			
 				<div class="col-md-5"><h1>HEALTH ATLAS</h1></div>
-                <div class="col-md-7"><p class="m-0">Healthcare systems worldwide struggle with integrity issues. Navigate the map to investigate recent news stories exposing these problems in various countries.</p></div>
+                <div class="col-md-7"><p class="m-0">Healthcare systems worldwide struggle with integrity issues. Explore the map to investigate recent news stories exposing these problems in various countries.</p></div>
             </div>
             <div class="col-md-4 d-flex justify-content-end">
 <div class="switch-container">
@@ -84,17 +133,26 @@
     </div>
 
             <!-- Add this section for date range filter -->
-			    <div class="container-fluid footer-bar fil">
-            <div id="clicker2" class="footer-col footer-counts">			  
-                <div id="data-count" class="dc-data-count count-box">
-                    <div class="filter-count">0</div>out of <strong class="total-count">0</strong> articles
-                </div>
-                <div id="searcherer"><div class="footer-input">
-                    <input type="text" id="search-input" placeholder="SEARCH BY TITLE OF ARTICLE">
-                    <i class="fa fa-search"></i>
-                </div></div>
-            </div>      <div id="filters_buts"><div id="export-button-container"></div>  <div id="clicker" class="footer-col col-2 col-sm-2 footer-counts filters">		 <h3 class="filter_head">Filters </h3><span class="expand-icon" style="font-size:large">▼</span></div></div>
+<div class="container-fluid footer-bar fil">
+    <div id="clicker2" class="footer-col footer-counts">			  
+        <div id="data-count" class="dc-data-count count-box">
+            <div class="filter-count">0</div>out of <strong class="total-count">0</strong> articles
+        </div>
+        <div id="searcherer">
+            <div class="footer-input">
+                <input type="text" id="search-input" placeholder="SEARCH BY TITLE OF ARTICLE">
+                <i class="fa fa-search"></i>
+            </div>
+        </div>
+    </div>      
+    <div id="filters_buts">
+        <div id="export-button-container"></div>
+		<div id="help-button-container"></div>
+        <div id="clicker" class="footer-col col-2 col-sm-2 footer-counts filters">		 
+            <h3 class="filter_head">Filters </h3><span class="expand-icon" style="font-size:large">▼</span>
+        </div>
     </div>
+</div>
         <div class="row">
 
 <div class="filter-box">
@@ -106,7 +164,7 @@
             <select id="countryFilter" multiple="multiple" class="form-control"></select>
         </div>
         <div class="filter-group">
-            <label class="space_b"  for="corruptionCategoriesFilter">Corruption Type <span class="info-icon" id="corruption-info" data-filter="corruption">i</span></label>
+            <label class="space_b"  for="corruptionCategoriesFilter">Integrity Area <span class="info-icon" id="corruption-info" data-filter="corruption">i</span></label>
             <select id="corruptionCategoriesFilter" multiple="multiple" class="form-control"></select>
         </div>
         <div class="filter-group">
@@ -174,7 +232,7 @@
                             <th>Country/Region</th>
                             <th>URL</th>
                             <th>Date</th>
-							<th>Corruption Types</th>
+							<th>Integrity Area</th>
                         </tr>
                     </thead>
                 </table>

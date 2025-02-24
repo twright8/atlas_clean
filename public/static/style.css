@@ -299,6 +299,7 @@ padding: 10px;}
 @media only screen and (max-width: 992px){#clicker{padding:0px}}
 @media only screen and (max-width: 992px){#export-button-container{padding:0px}}
 
+@media only screen and (max-width: 992px){#help-button-container{padding:0px}}
 
 
 @media only screen and (max-width: 768px){#clicker2{height:150px;align-content:normal}}
@@ -977,8 +978,19 @@ flex-wrap: nowrap;}
 .industry-btn svg {
     display: block;
 }
+.btn-sharer {
+    min-height: 34px;
+}
 #export-button-container{
 	padding:0px 50px;
+    background: #0f4c79;
+    display: flex;
+    align-content: center;
+    justify-content: center;    
+align-items: center;}
+#help-button-container{
+	padding:0px 50px;
+	padding-left:0px;
     background: #0f4c79;
     display: flex;
     align-content: center;
@@ -988,8 +1000,16 @@ align-items: center;}
 #export-button-container{
 	width:100%;flex: 0 0 170px;
 }}
+@media only screen and (max-width: 992px){
+#help-button-container{
+	width:100%;flex: 0 0 170px;
+}}
 @media only screen and (max-width: 768px){
 #export-button-container{
+flex: 0 0 70px;
+}}
+@media only screen and (max-width: 768px){
+#help-button-container{
 flex: 0 0 70px;
 }}
 .export-csv-button{    color: #0f4c79;

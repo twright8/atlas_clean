@@ -251,10 +251,10 @@ var legendAdded = false;
                 $('#startDate').datepicker('setDate', minDate);
                 $('#endDate').datepicker('setDate', maxDate);
                 $('#search-input').val('');
-                archivedFilter.checked = true;
-                caseFilter.checked = false;
-                unreliableFilter.checked = false;
-                countryLevelFilter.checked = false;
+                archivedFilter.checked = false;
+                caseFilter.checked= true;
+                unreliableFilter.checked = true;
+                countryLevelFilter.checked = true;
                 updateFilters();
                 updateResetButtonVisibility();
 				        if (legendAdded) {
@@ -292,10 +292,10 @@ var legendAdded = false;
         const startDate = $('#startDate').datepicker('getDate');
         const endDate = $('#endDate').datepicker('getDate');
         const searchTerm = $('#search-input').val().trim();
-        const isArchivedFilterActive = !archivedFilter.checked;
-        const isUnreliableFilterActive = unreliableFilter.checked;
-        const isCaseFilterActive = caseFilter.checked;
-        const isCountryLevelFilterActive = countryLevelFilter.checked;
+        const isArchivedFilterActive = archivedFilter.checked;
+        const isUnreliableFilterActive = !unreliableFilter.checked;
+        const isCaseFilterActive = !caseFilter.checked;
+        const isCountryLevelFilterActive = !countryLevelFilter.checked;
 
         const isDateFilterActive = (startDate && minDate && startDate.getTime() !== minDate.getTime()) || 
                                  (endDate && maxDate && endDate.getTime() !== maxDate.getTime());
@@ -356,10 +356,10 @@ var legendAdded = false;
                 }
             }
 
-            const archivedMatch = showArchived || !d.Archived;
-            const caseMatch = showCase || d.c_n;
-            const unreliableMatch = unreliableCase || !d.f_n;
-            const countryLevelMatch = showCountryLevel || !d.country_level;
+            const archivedMatch = !showArchived || !d.Archived;
+            const caseMatch = !showCase || d.c_n;
+            const unreliableMatch = !unreliableCase || !d.f_n;
+            const countryLevelMatch = !showCountryLevel || !d.country_level;
 
             return countryMatch && 
                    corruptionCategoryMatch && 
@@ -405,7 +405,7 @@ var legendAdded = false;
                                         <p><strong>Country:</strong> ${location.country}</p>
                                         <p><strong>URL:</strong> <a href="${location.url}" target="_blank">Link</a></p>
                                         <p><strong>Date:</strong> ${location['Date']}</p>
-                                        <p><strong>Corruption Type:</strong> ${String(location['Corruption Categories'] || '').replace(/,(?=[^\s])/g, ', ')}</p>
+                                        <p><strong>Integrity Area:</strong> ${String(location['Corruption Categories'] || '').replace(/,(?=[^\s])/g, ', ')}</p>
                                         <p><strong>Sector Area:</strong> ${String(location['Sector Categories'] || '').replace(/,(?=[^\s])/g, ', ')}</p>
                                     </div>
                                 </div>
@@ -466,13 +466,13 @@ var legendAdded = false;
 
     const infoBoxes = {
         country: "Country mentioned in the article. This is usually, but not always, where the story occured.",
-        corruption: "We used AI to identify when a story is related to a particular type of corruption. See our 'About' page for qualifications and limitations.",
+        corruption: "We used AI to identify when a story is related to a particular theme related to integrity. See our 'About' page for qualifications and limitations.",
         health: "We used AI to identify when a story is related to a particular area of health. See our 'About' page for qualifications and limitations.",
         date: "Set a date range to view which events have happened within a specific time period. Our archived data uses publication date.",
         archived: "When checked, this includes articles collected using our earlier data gathering methods. We've since improved our collection process. Unchecked shows only articles collected with our current methods.",
-        cased: "When unchecked, this filters out general discussions and commentaries to focus on stories about specific corruption cases. Check it to include all articles.",
-        unreliable: "We use AI to identify potentially unreliable news stories based on their writing style and content. While keeping this unchecked can help reduce exposure to low-quality news, please note: The filter works automatically and cannot fully understand context. It may incorrectly flag legitimate stories as unreliable. It may miss unreliable stories. It can reflect biases present in AI training data. Think of it as a helpful but unverified first pass rather than a definitive assessment of reliability.",
-        countryLevel: "When unchecked, this shows only articles where a specific location within the country could be determined. Check it to include articles where only the country-level location was identified."
+        cased: "When checked, this filters out general discussions and commentaries to focus on stories about specific corruption cases. Check it to include all articles.",
+        unreliable: "We use AI to identify potentially unreliable news stories based on their writing style and content. While keeping this checked can help reduce exposure to low-quality news, please note: The filter works automatically with no human oversight. It may incorrectly flag legitimate stories as unreliable. It may miss unreliable stories. It can reflect biases present in AI training data. Think of it as a helpful but unverified first pass rather than a definitive assessment of reliability.",
+        countryLevel: "When checked, this shows only articles where a specific location within the country could be determined. Check it to include articles where only the country-level location was identified."
     };
 
     let currentInfoBox = null;
@@ -494,14 +494,13 @@ var legendAdded = false;
 
 countryLevelFilter.addEventListener('change', function() {
     // Show/hide legend based on filter state
-    if (this.checked && !legendAdded) {
+    if (!this.checked && !legendAdded) {
         legend.addTo(map);
         legendAdded = true;
-    } else if (!this.checked && legendAdded) {
+    } else if (this.checked && legendAdded) {
         legend.remove();
         legendAdded = false;
     }
-    
     // Existing filter updates
     updateFilters();
     updateResetButtonVisibility();
@@ -592,7 +591,32 @@ countryLevelFilter.addEventListener('change', function() {
                 document.body.removeChild(link);
             }
         });
+// Help button to open the overlay
+var helpButton = $('<button>')
+    .addClass('btn btn-sm btn-outline-secondary export-csv-button btn-sharer')
+    .html('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM169.8 165.3c7.9-22.3 29.1-37.3 52.8-37.3l58.3 0c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24l0-13.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1l-58.3 0c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>')
+    .attr('title', 'Open the Quick start menu')
+    .appendTo('#help-button-container')
+	    .css({
+        'min-height': '34px',
+        'display': 'flex',
+        'align-items': 'center',
+        'justify-content': 'center'
+    })
+    .on('click', function(){
+        $('#infoCardOverlay').addClass('show');
+    });
+// Close button functionality
+$('#closeInfoCard').on('click', function(){
+    $('#infoCardOverlay').removeClass('show');
+});
 
+// Close when clicking overlay background
+$('#infoCardOverlay').on('click', function(e){
+    if (e.target === this) {
+        $(this).removeClass('show');
+    }
+});
     function shareOnTwitter() {
         var thisPage = window.location.href.split('?')[0];
         var shareText = 'Explore global health sector integrity issues and scandals: ' + thisPage;
