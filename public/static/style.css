@@ -1327,3 +1327,8 @@ a{color:#e5007d}}}}
 @media only screen and (max-width: 768px){
 #resetFilters{max-width:999px;            writing-mode: horizontal-tb;
 }}
+.custom-div-icon {
+margin-left: -9px!important;
+    margin-top: -32px!important   /* Adjust based on your icon height */
+}
+

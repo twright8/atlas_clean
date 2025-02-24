@@ -57,7 +57,7 @@
             <h2>Welcome to the Health Atlas</h2>
 
             <p>See healthcare integrity cases mapped worldwide. Filter by country, health sector area or issue type, and click points to read full news stories. Download and analyse data or identify case studies</p>
-			<p>This dashboard shows thousands of news articles from 2023. Data is updated monthly and coverage varies by region. See About page for details.</p>
+			<p>This dashboard shows thousands of news articles since 2023. Data is updated monthly and coverage varies by region. See About page for details.</p>
 			<hr>
 			<p><strong>Quickstart</strong></p>
 
