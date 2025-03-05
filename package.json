@@ -1,31 +1,23 @@
 {
-  "dependencies": {
-    "crossfilter2": "^1.4.6",
-    "d3": "^5.9.1",
-    "d3-request": "^1.0.6",
-    "datatables": "^1.10.18",
-    "datatables.net": "^1.10.19",
-    "datatables.net-dt": "^1.10.19",
-    "dc": "^2.2.2",
-    "jquery": "^3.3.1",
-    "jquery-ui-bundle": "^1.12.1-migrate",
-    "popper.js": "^1.14.7",
-    "scss": "^0.2.4",
-    "underscore": "^1.9.1",
-    "vue": "^2.6.6",
-    "vue-hot-reload-api": "^2.3.2"
-  },
+  "name": "health-atlas",
+  "version": "1.0.0",
+  "description": "Interactive map of healthcare integrity issues worldwide",
+  "main": "src/index.js",
   "scripts": {
-    "dev": "parcel watch ./src/*.js -d public/static --no-source-maps",
-  "build": "parcel build ./src/*.js -d public/static --no-source-maps"
+    "dev": "parcel public/index.php --hmr-port 1235",
+    "build": "parcel build public/index.php --public-url ./"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "d3": "^5.16.0",
+    "jquery": "^3.5.1",
+    "leaflet": "^1.6.0",
+    "leaflet.markercluster": "^1.4.1"
   },
   "devDependencies": {
-    "@vue/component-compiler-utils": "^2.5.2",
-    "cssnano": "^4.1.10",
-    "sass": "^1.17.1",
-    "vue-template-compiler": "^2.6.6"
-  },
-  "alias": {
-    "vue": "./node_modules/vue/dist/vue.esm.js"
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "parcel-bundler": "^1.12.4"
   }
 }
