@@ -710,7 +710,7 @@ overflow: hidden;}
   border-radius: 9999px;
   padding: 4px;
   width: 100%;
-  max-width: 320px;
+  max-width: 380px;
 }
 
 .switch-button {
@@ -1114,6 +1114,42 @@ table.dataTable tbody tr:hover {
     align-items: center;
 	height:100%
 
+}
+
+/* Analytics styles */
+#analytics-container {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+#analytics-container svg {
+  overflow: visible;
+}
+
+#analytics-container .line {
+  fill: none;
+  stroke-width: 2px;
+}
+
+#analytics-container .tooltip rect {
+  opacity: 0.9;
+}
+
+#analytics-container .dot {
+  cursor: pointer;
+}
+
+#analytics-container .axis-label {
+  font-size: 12px;
+  text-anchor: middle;
+}
+
+#analytics-container .no-data-message {
+  font-size: 16px;
+  text-anchor: middle;
+  fill: #666;
 }
 
 .industry-btn {

@@ -16,22 +16,38 @@ export function initializeUI() {
 }
 
 /**
- * Setup view toggle (Map/List)
+ * Setup view toggle (Map/List/Analytics)
  */
 function setupViewToggle() {
     const buttons = document.querySelectorAll('.switch-button');
     const mapOverviewBtn = document.getElementById('map-overview-btn');
     const listBtn = document.getElementById('list-btn');
+    const analyticsBtn = document.getElementById('analytics-btn');
     const mapElement = document.getElementById('map');
     const dataTables = document.getElementById('mask');
+    const analyticsContainer = document.getElementById('analytics-container');
 
     function updateVisibility() {
         if (mapOverviewBtn.classList.contains('active')) {
             mapElement.style.display = 'block';
             dataTables.style.display = 'none';
-        } else {
+            analyticsContainer.style.display = 'none';
+        } else if (listBtn.classList.contains('active')) {
             mapElement.style.display = 'none';
             dataTables.style.display = 'block';
+            analyticsContainer.style.display = 'none';
+        } else if (analyticsBtn.classList.contains('active')) {
+            mapElement.style.display = 'none';
+            dataTables.style.display = 'none';
+            analyticsContainer.style.display = 'block';
+            
+            // Trigger a resize event to ensure the chart redraws correctly
+            window.dispatchEvent(new Event('resize'));
+            
+            // Update analytics chart if needed
+            if (window.appState && window.appState.updateAnalyticsChart) {
+                window.appState.updateAnalyticsChart();
+            }
         }
     }
 
