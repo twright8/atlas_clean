@@ -2,6 +2,7 @@ import * as mapModule from './modules/map';
 import * as dataModule from './modules/data';
 import * as uiModule from './modules/ui';
 import * as tableModule from './modules/table';
+import * as dashboardModule from './modules/dashboard';
 
 // App state
 let markerMap = new Map();
@@ -24,6 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize data table
     tableModule.initializeDataTable();
+    
+    // Initialize dashboard
+    const dashboardContainer = document.getElementById('dashboard');
+    dashboardModule.initializeDashboard(dashboardContainer);
     
     // Get filter checkbox elements
     const archivedFilter = document.getElementById('archivedFilter');
@@ -226,16 +231,20 @@ function updateResetButtonVisibility() {
 }
 
 /**
- * Update map markers and data table with filtered data
+ * Update map markers, data table, and dashboard with filtered data
  */
 function updateMapAndTable() {
-    console.time('Updating Map and Table');
+    console.time('Updating Map, Table, and Dashboard');
     
     // Clear existing markers
     mapModule.clearMarkers();
     markerMap.clear();
     
     const filteredData = dataModule.getFilteredData();
+    const dateRange = dataModule.getDateRange();
+    
+    // Update dashboard with filtered data
+    dashboardModule.updateDashboard(filteredData, dateRange);
     
     if (filteredData.length > 0) {
         const chunk = 1000;
@@ -272,7 +281,7 @@ function updateMapAndTable() {
         updateVisibleData();
     }
 
-    console.timeEnd('Updating Map and Table');
+    console.timeEnd('Updating Map, Table, and Dashboard');
 }
 
 /**
@@ -296,3 +305,8 @@ const updateVisibleData = uiModule.debounce(function() {
 
 // Make updateVisibleData available to map event handlers
 mapModule.onMoveEnd = updateVisibleData;
+
+// Make dashboard resize handler available globally
+window.handleDashboardResize = function() {
+    dashboardModule.handleDashboardResize();
+};

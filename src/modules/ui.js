@@ -3,22 +3,30 @@ import { infoBoxes } from './constants';
 let currentInfoBox = null;
 
 /**
- * Initialize view toggling between map and table
+ * Initialize view toggling between map, dashboard, and table
  */
 export function initializeViewToggle() {
     const buttons = document.querySelectorAll('.switch-button');
     const mapOverviewBtn = document.getElementById('map-overview-btn');
-    const listBtn = document.getElementById('list-btn');
+    const dashboardBtn = document.getElementById('dashboard-btn');
+    const listBtn = document.getElementById('cases-btn');
     const mapElement = document.getElementById('map');
+    const dashboardElement = document.getElementById('dashboard');
     const dataTables = document.getElementById('mask');
 
     function updateVisibility() {
         if (mapOverviewBtn.classList.contains('active')) {
             mapElement.style.display = 'block';
+            dashboardElement.style.display = 'none';
             dataTables.style.display = 'none';
-        } else {
+        } else if (listBtn.classList.contains('active')) {
             mapElement.style.display = 'none';
+            dashboardElement.style.display = 'none';
             dataTables.style.display = 'block';
+        } else if (dashboardBtn.classList.contains('active')) {
+            mapElement.style.display = 'none';
+            dashboardElement.style.display = 'block';
+            dataTables.style.display = 'none';
         }
     }
 
@@ -27,6 +35,11 @@ export function initializeViewToggle() {
             buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
             updateVisibility();
+            
+            // Force dashboard refresh when dashboard tab is selected
+            if (button.id === 'dashboard-btn' && typeof window.handleDashboardResize === 'function') {
+                setTimeout(window.handleDashboardResize, 300);
+            }
         });
     });
 

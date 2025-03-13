@@ -48,6 +48,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="static/style.css"> <!-- Custom styles -->
+    <link rel="stylesheet" href="static/dashboard.css"> <!-- Dashboard styles -->
 </head>
 
 <body>
@@ -127,6 +128,7 @@
 <div class="switch-container">
     <button id="map-overview-btn" class="switch-button active">Map Overview</button>
     <button id="cases-btn" class="switch-button">List</button>
+    <button id="dashboard-btn" class="switch-button">Dashboard</button>
 </div>
             </div>
         </div>
@@ -223,7 +225,8 @@
 </div>
         </div>
             <div id="mapholder" class="col-12 mb-3">
-                <div id="map" ></div>
+                <div id="map"></div>
+                <div id="dashboard"></div>
 				<div id="mask">
                 <table id="dc-data-table" class="table table-hover dc-data-table">
                     <thead>
@@ -249,6 +252,14 @@
     </div>
 
     <script src="static/map.js"></script>
+    <!-- Add event listener for window resize to make dashboard responsive -->
+    <script>
+        window.addEventListener('resize', function() {
+            if (typeof handleDashboardResize === 'function') {
+                handleDashboardResize();
+            }
+        });
+    </script>
 	<hr style="padding:20px">
 <section class="disclaimers">
 <h4 class="title">Disclaimers</h4>
