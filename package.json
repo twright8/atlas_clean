@@ -16,8 +16,8 @@
     "vue-hot-reload-api": "^2.3.2"
   },
   "scripts": {
-    "dev": "parcel watch ./src/*.js -d public/static --no-source-maps",
-  "build": "parcel build ./src/*.js -d public/static --no-source-maps"
+    "dev": "parcel watch ./src/map.js -d public/static --no-source-maps",
+    "build": "parcel build ./src/map.js -d public/static --no-source-maps"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^2.5.2",
