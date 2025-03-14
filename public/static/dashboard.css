@@ -76,6 +76,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     overflow: hidden;
     transition: box-shadow 0.3s ease;
+    margin-bottom: 10px; /* Added spacing at bottom of cards */
 }
 
 .dashboard-card:hover {
@@ -133,11 +134,21 @@
 /* Charts */
 #time-series-chart,
 #category-chart,
-#top-countries-chart {
+#top-countries-chart,
+#interconnection-chart {
     height: 260px;
     width: 100%;
     position: relative;
-    padding: 10px 20px 20px 10px;
+    padding: 10px 20px 30px 10px; /* Increased bottom padding for labels */
+}
+
+/* Interconnection chart specific styles */
+.link {
+    pointer-events: none;
+}
+
+.node {
+    cursor: pointer;
 }
 
 /* Summary stats grid */
@@ -194,56 +205,6 @@
 .stat-label {
     font-size: 0.85rem;
     color: #666;
-}
-
-/* Trends section */
-#trends-content {
-    padding: 20px;
-}
-
-#trend-indicators {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.trend-indicator {
-    flex: 1 1 calc(33.333% - 15px);
-    min-width: 150px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.trend-title {
-    font-size: 0.9rem;
-    color: #555;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.trend-value {
-    font-size: 1.2rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.trend-up {
-    color: #28a745;
-}
-
-.trend-down {
-    color: #dc3545;
-}
-
-.trend-neutral {
-    color: #6c757d;
 }
 
 /* Recent articles list */
@@ -310,6 +271,26 @@
     font-weight: 500;
 }
 
+/* No data messages */
+.no-data-message {
+    font-size: 14px;
+    fill: #666;
+    text-anchor: middle;
+}
+
+/* Axis labels */
+.x-axis text, .y-axis text {
+    font-size: 12px;
+    fill: #333;
+}
+
+/* Ensure proper spacing for x-axis labels */
+.x-axis text {
+    text-anchor: end;
+    transform: rotate(-45deg);
+    transform-origin: top right;
+}
+
 /* Responsive adjustments */
 @media (max-width: 992px) {
     .dashboard-header-content {
@@ -332,10 +313,6 @@
         grid-template-columns: 1fr;
     }
     
-    .trend-indicator {
-        flex: 1 1 100%;
-    }
-    
     .key-metric {
         flex: 1 1 calc(50% - 12px);
     }
@@ -348,6 +325,15 @@
     
     .date-range-indicator {
         align-self: flex-start;
+    }
+    
+    /* Ensure chart containers have enough height on mobile */
+    #time-series-chart,
+    #category-chart,
+    #top-countries-chart,
+    #interconnection-chart {
+        height: 300px;
+        padding-bottom: 40px; /* Extra padding for labels on mobile */
     }
 }
 

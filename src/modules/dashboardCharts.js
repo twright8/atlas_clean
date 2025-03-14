@@ -2,6 +2,7 @@
  * Module for enhanced dashboard chart visualizations with animations and interactive features
  */
 import * as d3 from 'd3';
+import { initializeInterconnectionChart, updateInterconnectionChart } from './interconnectionChart';
 
 // Chart references
 let timeSeriesChart;
@@ -391,14 +392,21 @@ export function updateTimeSeriesChart(chart, data, dateRange, options = { yearly
  * @param {Array} data Filtered data array
  * @param {Object} options Chart options
  */
-export function updateCategoryChart(chart, data, options = { showAll: false }) {
-    // Flatten and count all corruption categories
+export function updateCategoryChart(chart, data, options = { showHealthCategories: false }) {
+    // Determine which category type to show based on options
+    const categoryType = options.showHealthCategories ? 'Sector Categories' : 'Corruption Categories';
+    
+    // Update chart title to reflect current view
+    d3.select('#category-breakdown-card .card-header h3')
+        .text(options.showHealthCategories ? 'Health Sector Categories' : 'Integrity Issues Categories');
+    
+    // Flatten and count all selected categories
     const categoryData = [];
     const categoryCounts = {};
     
     data.forEach(item => {
-        if (Array.isArray(item['Corruption Categories'])) {
-            item['Corruption Categories'].forEach(category => {
+        if (Array.isArray(item[categoryType])) {
+            item[categoryType].forEach(category => {
                 if (category && category.trim()) {
                     categoryCounts[category] = (categoryCounts[category] || 0) + 1;
                 }
@@ -414,9 +422,8 @@ export function updateCategoryChart(chart, data, options = { showAll: false }) {
     // Sort by count descending
     categoryData.sort((a, b) => b.count - a.count);
     
-    // Limit categories based on option
-    const limit = options.showAll ? categoryData.length : Math.min(10, categoryData.length);
-    const topCategories = categoryData.slice(0, limit);
+    // Get top 10 categories
+    const topCategories = categoryData.slice(0, 10);
     
     if (topCategories.length === 0) {
         // Clear the chart if no data
@@ -468,6 +475,9 @@ export function updateCategoryChart(chart, data, options = { showAll: false }) {
         .selectAll('text')
         .style('text-anchor', 'end');
     
+    // Set bar color based on category type
+    const barColor = options.showHealthCategories ? '#e5007d' : '#3694d1';
+    
     // Handle bars with enter/update/exit pattern
     const bars = chart.selectAll('.category-bar')
         .data(topCategories, d => d.category);
@@ -485,7 +495,7 @@ export function updateCategoryChart(chart, data, options = { showAll: false }) {
         .attr('y', d => y(d.category))
         .attr('height', y.bandwidth())
         .attr('width', d => x(d.count))
-        .attr('fill', '#3694d1');
+        .attr('fill', barColor);
     
     // Add new bars with animation
     bars.enter()
@@ -495,7 +505,7 @@ export function updateCategoryChart(chart, data, options = { showAll: false }) {
         .attr('y', d => y(d.category))
         .attr('height', y.bandwidth())
         .attr('width', 0)
-        .attr('fill', '#3694d1')
+        .attr('fill', barColor)
         .transition()
         .duration(800)
         .attr('width', d => x(d.count));
@@ -506,7 +516,7 @@ export function updateCategoryChart(chart, data, options = { showAll: false }) {
             d3.select(this)
                 .transition()
                 .duration(100)
-                .attr('fill', '#e5007d');
+                .attr('fill', options.showHealthCategories ? '#3694d1' : '#e5007d');
             
             const tooltip = d3.select('#category-chart')
                 .append('div')
@@ -525,7 +535,7 @@ export function updateCategoryChart(chart, data, options = { showAll: false }) {
             d3.select(this)
                 .transition()
                 .duration(100)
-                .attr('fill', '#3694d1');
+                .attr('fill', barColor);
             
             d3.selectAll('.chart-tooltip').remove();
         });
@@ -564,15 +574,8 @@ export function updateCategoryChart(chart, data, options = { showAll: false }) {
  * Update the top countries chart with data
  * @param {Object} chart The chart reference
  * @param {Array} data Filtered data array
- * @param {Object} options Chart options
  */
-export function updateTopCountriesChart(chart, data, options = { mapView: false }) {
-    // If map view is selected, show the map chart instead of bars
-    if (options.mapView) {
-        updateCountryMapChart(chart, data);
-        return;
-    }
-    
+export function updateTopCountriesChart(chart, data) {
     // Count articles by country
     const countryData = [];
     const countryCounts = {};
@@ -734,51 +737,19 @@ export function updateTopCountriesChart(chart, data, options = { mapView: false 
         .attr('opacity', 1);
 }
 
-/**
- * Update the countries chart with a map visualization
- * @param {Object} chart The chart reference
- * @param {Array} data Filtered data array
- */
-function updateCountryMapChart(chart, data) {
-    // Clear existing chart content
-    chart.selectAll('*').remove();
-    
-    // Show message that this is just a placeholder - in a real implementation, 
-    // we'd integrate with a proper map visualization
-    chart.append('text')
-        .attr('class', 'map-placeholder')
-        .attr('x', chart.node().getBBox().width / 2)
-        .attr('y', chart.node().getBBox().height / 2 - 20)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '14px')
-        .attr('fill', '#666')
-        .text('Map view is active');
-    
-    chart.append('text')
-        .attr('class', 'map-placeholder-note')
-        .attr('x', chart.node().getBBox().width / 2)
-        .attr('y', chart.node().getBBox().height / 2 + 10)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '12px')
-        .attr('fill', '#666')
-        .text('Use the main map view for more detailed geographic analysis');
-    
-    // Add instruction to toggle back
-    chart.append('text')
-        .attr('class', 'map-placeholder-instruction')
-        .attr('x', chart.node().getBBox().width / 2)
-        .attr('y', chart.node().getBBox().height / 2 + 40)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '12px')
-        .attr('fill', '#3694d1')
-        .text('Click the globe icon to return to bar chart view');
-}
+// Export the interconnection chart functions for use elsewhere
+export {
+    initializeInterconnectionChart,
+    updateInterconnectionChart
+};
 
 export default {
     initializeTimeSeriesChart,
     initializeCategoryChart,
     initializeTopCountriesChart,
+    initializeInterconnectionChart,
     updateTimeSeriesChart,
     updateCategoryChart,
-    updateTopCountriesChart
+    updateTopCountriesChart,
+    updateInterconnectionChart
 };

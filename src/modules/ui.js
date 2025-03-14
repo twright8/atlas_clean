@@ -85,9 +85,9 @@ export function initializeDatePickers(onChange, dateRange) {
         autoclose: true
     }).on('changeDate', onChange);
 
-    // Set initial dates
-    $('#startDate').datepicker('setDate', dateRange.minDate);
-    $('#endDate').datepicker('setDate', dateRange.maxDate);
+    // Set the start date directly:
+    $('#startDate').datepicker('setDate', '01/01/2021');
+    $('#endDate').datepicker('setDate', dateRange.maxDate); // Keep maxDate from data
 }
 
 /**

@@ -39,10 +39,10 @@ export function createDashboardLayout(container) {
                 <!-- Categories Chart -->
                 <div class="dashboard-card" id="category-breakdown-card">
                     <div class="card-header">
-                        <h3>Integrity Issues by Category</h3>
+                        <h3>Categories Breakdown</h3>
                         <div class="card-tools">
-                            <button class="view-toggle" id="category-view-toggle" title="Toggle between top 5/all categories">
-                                <i class="fa fa-bars"></i>
+                            <button class="view-toggle" id="category-view-toggle" title="Toggle between Integrity/Health Sector categories">
+                                <i class="fa fa-exchange"></i>
                             </button>
                         </div>
                     </div>
@@ -55,11 +55,6 @@ export function createDashboardLayout(container) {
                 <div class="dashboard-card" id="top-countries-card">
                     <div class="card-header">
                         <h3>Top Countries by Articles</h3>
-                        <div class="card-tools">
-                            <button class="view-toggle" id="country-view-toggle" title="Toggle between chart/map view">
-                                <i class="fa fa-globe"></i>
-                            </button>
-                        </div>
                     </div>
                     <div id="top-countries-chart"></div>
                 </div>
@@ -89,10 +84,10 @@ export function createDashboardLayout(container) {
                             </div>
                         </div>
                         <div class="stat-box">
-                            <div class="stat-icon"><i class="fa fa-tags"></i></div>
+                            <div class="stat-icon"><i class="fa fa-area-chart"></i></div>
                             <div class="stat-content">
-                                <span class="stat-value" id="total-categories">0</span>
-                                <span class="stat-label">Categories</span>
+                                <span class="stat-value" id="articles-per-month">0</span>
+                                <span class="stat-label">Articles/Month</span>
                             </div>
                         </div>
                         <div class="stat-box">
@@ -108,14 +103,12 @@ export function createDashboardLayout(container) {
             
             <!-- New row for additional insights -->
             <div class="dashboard-row">
-                <!-- Trends Analysis Card -->
-                <div class="dashboard-card" id="trends-analysis-card">
+                <!-- Health Categories Interconnection Chart -->
+                <div class="dashboard-card" id="interconnection-chart-card">
                     <div class="card-header">
-                        <h3>Trend Analysis</h3>
+                        <h3>Categories Interconnection</h3>
                     </div>
-                    <div id="trends-content">
-                        <div id="trend-indicators"></div>
-                    </div>
+                    <div id="interconnection-chart"></div>
                 </div>
                 
                 <!-- Recent Articles Card -->
@@ -157,27 +150,14 @@ function initializeToggleButtons() {
         });
     }
     
-    // Category view toggle (Top 5/All)
+    // Category view toggle (Integrity/Health)
     const categoryViewToggle = document.getElementById('category-view-toggle');
     if (categoryViewToggle) {
         categoryViewToggle.addEventListener('click', function() {
             this.classList.toggle('active');
             // The toggle state will be checked in the chart update function
             const event = new CustomEvent('categoryViewToggle', {
-                detail: { showAll: this.classList.contains('active') }
-            });
-            document.dispatchEvent(event);
-        });
-    }
-    
-    // Country view toggle (Chart/Map)
-    const countryViewToggle = document.getElementById('country-view-toggle');
-    if (countryViewToggle) {
-        countryViewToggle.addEventListener('click', function() {
-            this.classList.toggle('active');
-            // The toggle state will be checked in the chart update function
-            const event = new CustomEvent('countryViewToggle', {
-                detail: { mapView: this.classList.contains('active') }
+                detail: { showHealthCategories: this.classList.contains('active') }
             });
             document.dispatchEvent(event);
         });

@@ -43,10 +43,14 @@ export function updateSummaryStats(data, dateRange) {
         timePeriodDisplayText = `${formatMonthYear(dateRange.minDate)} - ${formatMonthYear(dateRange.maxDate)}`;
     }
     
+    // Calculate articles per month
+    const monthsCount = getMonthsCount(data);
+    const articlesPerMonth = monthsCount > 0 ? Math.round(data.length / monthsCount * 10) / 10 : 0;
+    
     // Update DOM elements for stats
     document.getElementById('total-articles').textContent = totalArticles.toLocaleString();
     document.getElementById('total-countries').textContent = uniqueCountries.size.toLocaleString();
-    document.getElementById('total-categories').textContent = uniqueCategories.size.toLocaleString();
+    document.getElementById('articles-per-month').textContent = articlesPerMonth;
     document.getElementById('time-period').textContent = timePeriodText;
     
     // Update the date range indicator in the card header if it exists
@@ -55,142 +59,125 @@ export function updateSummaryStats(data, dateRange) {
         timeDisplayElement.textContent = timePeriodDisplayText;
     }
     
-    // Calculate and update additional metrics
-    updateTrendMetrics(data);
+    // Calculate and update key metrics for the header
+    updateKeyMetrics(data);
 }
 
 /**
- * Update trend metrics with data for key insights
+ * Update the key metrics in the header section
  * @param {Array} data Filtered data array
  */
-function updateTrendMetrics(data) {
+function updateKeyMetrics(data) {
     const metricsContainer = document.getElementById('key-metrics');
     if (!metricsContainer) return;
     
     // Calculate key metrics
     
-    // 1. Articles per month ratio
-    const monthsCount = getMonthsCount(data);
-    const articlesPerMonth = monthsCount > 0 ? Math.round(data.length / monthsCount * 10) / 10 : 0;
+    // 1. Latest article date
+    const latestDate = getLatestArticleDate(data);
     
-    // 2. Country coverage percentage (compared to all possible countries ~195)
-    const uniqueCountries = new Set();
-    data.forEach(item => {
-        if (item.country && item.country.trim()) {
-            uniqueCountries.add(item.country);
-        }
-    });
-    const countryCoverage = Math.round((uniqueCountries.size / 195) * 100);
+    // 2. Most mentioned country
+    const topCountry = getTopCountry(data);
     
-    // 3. Category distribution - dominant category percentage
-    const categoryData = getCategoryDistribution(data);
-    let topCategoryPercentage = 0;
-    let topCategoryName = "N/A";
-    
-    if (categoryData.length > 0) {
-        topCategoryName = categoryData[0].category;
-        topCategoryPercentage = Math.round((categoryData[0].count / data.length) * 100);
-    }
+    // 3. Most common integrity issue
+    const topCategory = getTopCategory(data);
     
     // Create metrics HTML
     const metricsHTML = `
         <div class="key-metric">
-            <span class="key-metric-value">${articlesPerMonth}</span>
-            <span class="key-metric-label">Articles/Month</span>
+            <span class="key-metric-value">${latestDate}</span>
+            <span class="key-metric-label">Latest Article</span>
         </div>
         <div class="key-metric">
-            <span class="key-metric-value">${countryCoverage}%</span>
-            <span class="key-metric-label">Country Coverage</span>
+            <span class="key-metric-value">${topCountry.name}</span>
+            <span class="key-metric-label">Most Mentioned Country</span>
         </div>
         <div class="key-metric">
-            <span class="key-metric-value">${topCategoryPercentage}%</span>
-            <span class="key-metric-label">${topCategoryName}</span>
-        </div>
-        <div class="key-metric">
-            <span class="key-metric-value">${data.length.toLocaleString()}</span>
-            <span class="key-metric-label">Total Articles</span>
+            <span class="key-metric-value">${topCategory.name}</span>
+            <span class="key-metric-label">Top Integrity Issue</span>
         </div>
     `;
     
     metricsContainer.innerHTML = metricsHTML;
-    
-    // Update trend indicators with insightful analysis
-    updateTrendIndicators(data);
 }
 
 /**
- * Update trend indicators with insightful analysis
+ * Get the date of the most recent article
  * @param {Array} data Filtered data array
+ * @returns {String} Formatted date string
  */
-function updateTrendIndicators(data) {
-    const trendContainer = document.getElementById('trend-indicators');
-    if (!trendContainer) return;
+function getLatestArticleDate(data) {
+    if (data.length === 0) return 'N/A';
     
-    // Initialize trend indicators
-    let trendsHTML = '';
+    const sortedByDate = [...data].sort((a, b) => {
+        if (!a.parsedDate || !b.parsedDate) return 0;
+        return b.parsedDate - a.parsedDate;
+    });
     
-    // If not enough data for trends, show appropriate message
-    if (data.length < 10) {
-        trendsHTML = `
-            <div class="trend-indicator">
-                <div class="trend-title">
-                    <i class="fa fa-info-circle"></i>
-                    <span>Dataset Analysis</span>
-                </div>
-                <div class="trend-value trend-neutral">
-                    <i class="fa fa-exclamation-circle"></i>
-                    <span>Need more data for detailed trends</span>
-                </div>
-            </div>
-        `;
-        trendContainer.innerHTML = trendsHTML;
-        return;
-    }
+    if (!sortedByDate[0].parsedDate) return 'N/A';
     
-    // 1. Time trend analysis - Are articles increasing or decreasing over time?
-    const timeTrend = analyzeTimeTrend(data);
+    // Format date to DD Month YYYY
+    const date = sortedByDate[0].parsedDate;
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
+}
+
+/**
+ * Get the most mentioned country and its count
+ * @param {Array} data Filtered data array
+ * @returns {Object} Object with country name and count
+ */
+function getTopCountry(data) {
+    if (data.length === 0) return { name: 'N/A', count: 0 };
     
-    // 2. Geographic focus - Is there a concentration in specific regions?
-    const geoFocus = analyzeGeographicFocus(data);
+    const countryCounts = {};
     
-    // 3. Category trend - Which integrity issues are gaining more attention?
-    const categoryTrend = analyzeCategoryTrend(data);
+    data.forEach(item => {
+        if (item.country && item.country.trim()) {
+            countryCounts[item.country] = (countryCounts[item.country] || 0) + 1;
+        }
+    });
     
-    trendsHTML = `
-        <div class="trend-indicator">
-            <div class="trend-title">
-                <i class="fa fa-calendar"></i>
-                <span>Time Pattern</span>
-            </div>
-            <div class="trend-value ${timeTrend.direction}">
-                <i class="fa fa-${getTrendIcon(timeTrend.direction)}"></i>
-                <span>${timeTrend.label}</span>
-            </div>
-        </div>
-        <div class="trend-indicator">
-            <div class="trend-title">
-                <i class="fa fa-globe"></i>
-                <span>Geographic Focus</span>
-            </div>
-            <div class="trend-value">
-                <span>${geoFocus.label}</span>
-            </div>
-        </div>
-        <div class="trend-indicator">
-            <div class="trend-title">
-                <i class="fa fa-tag"></i>
-                <span>Rising Issue</span>
-            </div>
-            <div class="trend-value">
-                <span>${categoryTrend.label}</span>
-            </div>
-        </div>
-    `;
+    if (Object.keys(countryCounts).length === 0) return { name: 'N/A', count: 0 };
     
-    trendContainer.innerHTML = trendsHTML;
+    const sortedCountries = Object.entries(countryCounts)
+        .sort((a, b) => b[1] - a[1]);
     
-    // Update recent articles
-    updateRecentArticles(data);
+    return {
+        name: sortedCountries[0][0],
+        count: sortedCountries[0][1]
+    };
+}
+
+/**
+ * Get the most common integrity issue category
+ * @param {Array} data Filtered data array
+ * @returns {Object} Object with category name and count
+ */
+function getTopCategory(data) {
+    if (data.length === 0) return { name: 'N/A', count: 0 };
+    
+    const categoryCounts = {};
+    
+    data.forEach(item => {
+        if (Array.isArray(item['Corruption Categories'])) {
+            item['Corruption Categories'].forEach(category => {
+                if (category && category.trim()) {
+                    categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+                }
+            });
+        }
+    });
+    
+    if (Object.keys(categoryCounts).length === 0) return { name: 'N/A', count: 0 };
+    
+    const sortedCategories = Object.entries(categoryCounts)
+        .sort((a, b) => b[1] - a[1]);
+    
+    return {
+        name: sortedCategories[0][0],
+        count: sortedCategories[0][1]
+    };
 }
 
 /**
@@ -482,5 +469,6 @@ function getTrendIcon(direction) {
 }
 
 export default {
-    updateSummaryStats
+    updateSummaryStats,
+    updateRecentArticles
 };

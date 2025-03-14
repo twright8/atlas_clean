@@ -5,6 +5,7 @@
 import * as dashboardLayout from './dashboardLayout';
 import * as dashboardCharts from './dashboardCharts';
 import * as dashboardStats from './dashboardStats';
+import * as d3 from 'd3';
 
 // Dashboard state
 let dashboardData = [];
@@ -12,11 +13,11 @@ let previousData = [];
 let timeSeriesChart;
 let categoryChart;
 let topCountriesChart;
+let interconnectionChart;
 let dateRange;
 let chartOptions = {
     timeSeries: { yearly: false },
-    category: { showAll: false },
-    country: { mapView: false }
+    category: { showHealthCategories: false }
 };
 
 /**
@@ -33,6 +34,7 @@ export function initializeDashboard(container) {
     timeSeriesChart = dashboardCharts.initializeTimeSeriesChart();
     categoryChart = dashboardCharts.initializeCategoryChart();
     topCountriesChart = dashboardCharts.initializeTopCountriesChart();
+    interconnectionChart = dashboardCharts.initializeInterconnectionChart();
     
     // Setup event listeners for dashboard interactions
     setupEventListeners();
@@ -53,22 +55,15 @@ function setupEventListeners() {
     });
     
     document.addEventListener('categoryViewToggle', function(e) {
-        chartOptions.category.showAll = e.detail.showAll;
+        chartOptions.category.showHealthCategories = e.detail.showHealthCategories;
         if (dashboardData.length > 0) {
             dashboardCharts.updateCategoryChart(categoryChart, dashboardData, chartOptions.category);
         }
     });
     
-    document.addEventListener('countryViewToggle', function(e) {
-        chartOptions.country.mapView = e.detail.mapView;
-        if (dashboardData.length > 0) {
-            dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData, chartOptions.country);
-        }
-    });
-    
     document.addEventListener('refreshRecentArticles', function() {
         if (dashboardData.length > 0) {
-            updateRecentArticles(dashboardData);
+            dashboardStats.updateRecentArticles(dashboardData);
         }
     });
 }
@@ -91,13 +86,17 @@ export function updateDashboard(data, dataDateRange) {
     // Update each visualization with the options
     dashboardCharts.updateTimeSeriesChart(timeSeriesChart, data, dateRange, chartOptions.timeSeries);
     dashboardCharts.updateCategoryChart(categoryChart, data, chartOptions.category);
-    dashboardCharts.updateTopCountriesChart(topCountriesChart, data, chartOptions.country);
+    dashboardCharts.updateTopCountriesChart(topCountriesChart, data);
+    dashboardCharts.updateInterconnectionChart(interconnectionChart, data);
     dashboardStats.updateSummaryStats(data, dateRange);
     
     // Update additional components
     updateKeyMetrics(data);
-    updateTrendAnalysis(data, previousData);
-    updateRecentArticles(data);
+    dashboardStats.updateRecentArticles(data);
+    
+    // Calculate articles per month for the summary stat
+    const articlesPerMonth = calculateArticlesPerMonth(data);
+    document.getElementById('articles-per-month').textContent = articlesPerMonth;
     
     console.timeEnd('Dashboard Update');
 }
@@ -223,191 +222,36 @@ function getTopCategory(data) {
 }
 
 /**
- * Update the trend analysis section
- * @param {Array} currentData Current filtered data array
- * @param {Array} previousData Previous filtered data array
- */
-function updateTrendAnalysis(currentData, previousData) {
-    const trendIndicatorsContainer = document.getElementById('trend-indicators');
-    if (!trendIndicatorsContainer) return;
-    
-    // Clear previous trends
-    trendIndicatorsContainer.innerHTML = '';
-    
-    // Skip if no previous data to compare with
-    if (previousData.length === 0) {
-        trendIndicatorsContainer.innerHTML = `
-            <div class="trend-indicator">
-                <div class="trend-title">Trend Analysis</div>
-                <div class="trend-value trend-neutral">
-                    <i class="fa fa-info-circle"></i>
-                    <span>Not enough data for trends</span>
-                </div>
-            </div>
-        `;
-        return;
-    }
-    
-    // Calculate trends
-    
-    // 1. Change in total articles
-    const totalArticlesTrend = calculatePercentageChange(
-        currentData.length, 
-        previousData.length
-    );
-    
-    // 2. Change in countries covered
-    const currentCountries = new Set(currentData.map(item => item.country).filter(Boolean)).size;
-    const previousCountries = new Set(previousData.map(item => item.country).filter(Boolean)).size;
-    const countriesTrend = calculatePercentageChange(currentCountries, previousCountries);
-    
-    // 3. Change in top category
-    const currentTopCategory = getTopCategory(currentData);
-    const previousTopCategory = getTopCategory(previousData);
-    let categoryTrendValue = 'New';
-    let categoryTrendClass = 'trend-neutral';
-    
-    if (currentTopCategory.name === previousTopCategory.name) {
-        const categoryTrend = calculatePercentageChange(
-            currentTopCategory.count, 
-            previousTopCategory.count
-        );
-        categoryTrendValue = `${categoryTrend.value}%`;
-        categoryTrendClass = categoryTrend.direction;
-    }
-    
-    // Create trends HTML
-    const trendsHTML = `
-        <div class="trend-indicator">
-            <div class="trend-title">
-                <i class="fa fa-newspaper-o"></i>
-                <span>Articles</span>
-            </div>
-            <div class="trend-value ${totalArticlesTrend.direction}">
-                <i class="fa fa-${getTrendIcon(totalArticlesTrend.direction)}"></i>
-                <span>${totalArticlesTrend.value}%</span>
-            </div>
-        </div>
-        <div class="trend-indicator">
-            <div class="trend-title">
-                <i class="fa fa-globe"></i>
-                <span>Countries</span>
-            </div>
-            <div class="trend-value ${countriesTrend.direction}">
-                <i class="fa fa-${getTrendIcon(countriesTrend.direction)}"></i>
-                <span>${countriesTrend.value}%</span>
-            </div>
-        </div>
-        <div class="trend-indicator">
-            <div class="trend-title">
-                <i class="fa fa-tag"></i>
-                <span>Top Category</span>
-            </div>
-            <div class="trend-value ${categoryTrendClass}">
-                <i class="fa fa-${getTrendIcon(categoryTrendClass)}"></i>
-                <span>${categoryTrendValue}</span>
-            </div>
-        </div>
-    `;
-    
-    trendIndicatorsContainer.innerHTML = trendsHTML;
-}
-
-/**
- * Calculate percentage change between two values
- * @param {Number} current Current value
- * @param {Number} previous Previous value
- * @returns {Object} Object with percentage value and direction
- */
-function calculatePercentageChange(current, previous) {
-    if (previous === 0) return { value: 0, direction: 'trend-neutral' };
-    
-    const change = current - previous;
-    const percentageChange = Math.round((change / previous) * 100);
-    
-    let direction;
-    if (percentageChange > 0) {
-        direction = 'trend-up';
-    } else if (percentageChange < 0) {
-        direction = 'trend-down';
-    } else {
-        direction = 'trend-neutral';
-    }
-    
-    return {
-        value: Math.abs(percentageChange),
-        direction: direction
-    };
-}
-
-/**
- * Get icon name based on trend direction
- * @param {String} direction Trend direction class
- * @returns {String} Icon name
- */
-function getTrendIcon(direction) {
-    switch (direction) {
-        case 'trend-up':
-            return 'arrow-up';
-        case 'trend-down':
-            return 'arrow-down';
-        default:
-            return 'minus';
-    }
-}
-
-/**
- * Update the recent articles section
+ * Calculate the average articles per month
  * @param {Array} data Filtered data array
+ * @returns {String} Articles per month (formatted)
  */
-function updateRecentArticles(data) {
-    const recentArticlesList = document.getElementById('recent-articles-list');
-    if (!recentArticlesList) return;
+function calculateArticlesPerMonth(data) {
+    if (data.length === 0) return '0';
     
-    // Clear previous articles
-    recentArticlesList.innerHTML = '';
+    // Get all dates
+    const dates = data
+        .map(item => item.parsedDate)
+        .filter(date => date !== null && date !== undefined);
     
-    if (data.length === 0) {
-        recentArticlesList.innerHTML = '<p class="no-data-message">No articles available</p>';
-        return;
-    }
+    if (dates.length === 0) return '0';
     
-    // Sort data by date (newest first)
-    const sortedData = [...data].sort((a, b) => {
-        if (!a.parsedDate || !b.parsedDate) return 0;
-        return b.parsedDate - a.parsedDate;
-    });
+    // Get min and max dates
+    const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+    const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
     
-    // Take only the 5 most recent articles
-    const recentArticles = sortedData.slice(0, 5);
+    // Calculate months between min and max dates
+    const yearDiff = maxDate.getFullYear() - minDate.getFullYear();
+    const monthDiff = maxDate.getMonth() - minDate.getMonth();
+    const totalMonths = yearDiff * 12 + monthDiff + 1; // +1 to include both start and end months
     
-    // Create HTML for recent articles
-    const articlesHTML = recentArticles.map(article => {
-        const title = article.Title || 'Untitled';
-        const country = article.country || 'Unknown';
-        
-        // Format date properly or use a fallback
-        let date = 'Unknown date';
-        if (article.parsedDate) {
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            date = article.parsedDate.toLocaleDateString(undefined, options);
-        } else if (article.Date) {
-            date = article.Date;
-        }
-        
-        return `
-            <div class="article-item" data-url="${article.url || '#'}" onclick="window.open('${article.url || '#'}', '_blank')">
-                <div class="article-title">${title}</div>
-                <div class="article-meta">
-                    <span><i class="fa fa-map-marker"></i> ${country}</span>
-                    <span><i class="fa fa-calendar"></i> ${date}</span>
-                </div>
-            </div>
-        `;
-    }).join('');
+    // Calculate average articles per month
+    const avgArticlesPerMonth = (data.length / totalMonths).toFixed(1);
     
-    recentArticlesList.innerHTML = articlesHTML;
+    return avgArticlesPerMonth;
 }
+
+
 
 /**
  * Handle window resize event to make charts responsive
@@ -417,7 +261,8 @@ export function handleDashboardResize() {
         // Only update the charts, not the entire dashboard
         dashboardCharts.updateTimeSeriesChart(timeSeriesChart, dashboardData, dateRange, chartOptions.timeSeries);
         dashboardCharts.updateCategoryChart(categoryChart, dashboardData, chartOptions.category);
-        dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData, chartOptions.country);
+        dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData);
+        dashboardCharts.updateInterconnectionChart(interconnectionChart, dashboardData);
     }
 }
 
