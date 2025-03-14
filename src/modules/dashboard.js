@@ -4,7 +4,7 @@
  */
 import * as dashboardLayout from './dashboardLayout';
 import * as dashboardCharts from './dashboardCharts';
-import * as dashboardStats from './dashboardStats';
+import dashboardStats from './dashboardStats';
 import * as d3 from 'd3';
 
 // Dashboard state

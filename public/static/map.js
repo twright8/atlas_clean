@@ -26916,8 +26916,9 @@ exports.initializeDashboard = initializeDashboard;
 exports.updateDashboard = updateDashboard;
 var dashboardLayout = _interopRequireWildcard(require("./dashboardLayout"));
 var dashboardCharts = _interopRequireWildcard(require("./dashboardCharts"));
-var dashboardStats = _interopRequireWildcard(require("./dashboardStats"));
+var _dashboardStats = _interopRequireDefault(require("./dashboardStats"));
 var d3 = _interopRequireWildcard(require("d3"));
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
@@ -26986,7 +26987,7 @@ function setupEventListeners() {
   });
   document.addEventListener('refreshRecentArticles', function () {
     if (dashboardData.length > 0) {
-      dashboardStats.updateRecentArticles(dashboardData);
+      _dashboardStats.default.updateRecentArticles(dashboardData);
     }
   });
 }
@@ -27011,11 +27012,11 @@ function updateDashboard(data, dataDateRange) {
   dashboardCharts.updateCategoryChart(categoryChart, data, chartOptions.category);
   dashboardCharts.updateTopCountriesChart(topCountriesChart, data);
   dashboardCharts.updateInterconnectionChart(interconnectionChart, data);
-  dashboardStats.updateSummaryStats(data, dateRange);
+  _dashboardStats.default.updateSummaryStats(data, dateRange);
 
   // Update additional components
   updateKeyMetrics(data);
-  dashboardStats.updateRecentArticles(data);
+  _dashboardStats.default.updateRecentArticles(data);
 
   // Calculate articles per month for the summary stat
   var articlesPerMonth = calculateArticlesPerMonth(data);
