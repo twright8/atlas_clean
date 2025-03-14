@@ -1119,7 +1119,30 @@ var _default = exports.default = {
   updateDataTable: updateDataTable,
   getDataTable: getDataTable
 };
-},{"./constants":"modules/constants.js"}],"../node_modules/d3/dist/package.js":[function(require,module,exports) {
+},{"./constants":"modules/constants.js"}],"modules/dashboardLayout.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createDashboardLayout = createDashboardLayout;
+exports.default = void 0;
+/**
+ * Module for dashboard layout creation
+ */
+
+/**
+ * Create the dashboard layout structure
+ * @param {HTMLElement} container The container element for the dashboard
+ */
+function createDashboardLayout(container) {
+  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <div class=\"dashboard-row\">\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <h3>Time Series Analysis</h3>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <h3>Integrity Issues by Category</h3>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            <div class=\"dashboard-row\">\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <h3>Top Countries by Articles</h3>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <h3>Summary Statistics</h3>\n                    <div id=\"summary-stats\">\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Total Articles</span>\n                            <span class=\"stat-value\" id=\"total-articles\">0</span>\n                        </div>\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Countries Represented</span>\n                            <span class=\"stat-value\" id=\"total-countries\">0</span>\n                        </div>\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Categories</span>\n                            <span class=\"stat-value\" id=\"total-categories\">0</span>\n                        </div>\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Time Period</span>\n                            <span class=\"stat-value\" id=\"time-period\">-</span>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    ";
+  container.innerHTML = dashboardHTML;
+}
+var _default = exports.default = {
+  createDashboardLayout: createDashboardLayout
+};
+},{}],"../node_modules/d3/dist/package.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25451,16 +25474,19 @@ Object.keys(_d3Zoom).forEach(function (key) {
     }
   });
 });
-},{"./dist/package.js":"../node_modules/d3/dist/package.js","d3-array":"../node_modules/d3-array/src/index.js","d3-axis":"../node_modules/d3-axis/src/index.js","d3-brush":"../node_modules/d3-brush/src/index.js","d3-chord":"../node_modules/d3-chord/src/index.js","d3-collection":"../node_modules/d3-collection/src/index.js","d3-color":"../node_modules/d3-color/src/index.js","d3-contour":"../node_modules/d3-contour/src/index.js","d3-dispatch":"../node_modules/d3-dispatch/src/index.js","d3-drag":"../node_modules/d3-drag/src/index.js","d3-dsv":"../node_modules/d3-dsv/src/index.js","d3-ease":"../node_modules/d3-ease/src/index.js","d3-fetch":"../node_modules/d3-fetch/src/index.js","d3-force":"../node_modules/d3-force/src/index.js","d3-format":"../node_modules/d3-format/src/index.js","d3-geo":"../node_modules/d3-geo/src/index.js","d3-hierarchy":"../node_modules/d3-hierarchy/src/index.js","d3-interpolate":"../node_modules/d3-interpolate/src/index.js","d3-path":"../node_modules/d3-path/src/index.js","d3-polygon":"../node_modules/d3-polygon/src/index.js","d3-quadtree":"../node_modules/d3-quadtree/src/index.js","d3-random":"../node_modules/d3-random/src/index.js","d3-scale":"../node_modules/d3-scale/src/index.js","d3-scale-chromatic":"../node_modules/d3-scale-chromatic/src/index.js","d3-selection":"../node_modules/d3-selection/src/index.js","d3-shape":"../node_modules/d3-shape/src/index.js","d3-time":"../node_modules/d3-time/src/index.js","d3-time-format":"../node_modules/d3-time-format/src/index.js","d3-timer":"../node_modules/d3-timer/src/index.js","d3-transition":"../node_modules/d3-transition/src/index.js","d3-voronoi":"../node_modules/d3-voronoi/src/index.js","d3-zoom":"../node_modules/d3-zoom/src/index.js"}],"modules/dashboard.js":[function(require,module,exports) {
+},{"./dist/package.js":"../node_modules/d3/dist/package.js","d3-array":"../node_modules/d3-array/src/index.js","d3-axis":"../node_modules/d3-axis/src/index.js","d3-brush":"../node_modules/d3-brush/src/index.js","d3-chord":"../node_modules/d3-chord/src/index.js","d3-collection":"../node_modules/d3-collection/src/index.js","d3-color":"../node_modules/d3-color/src/index.js","d3-contour":"../node_modules/d3-contour/src/index.js","d3-dispatch":"../node_modules/d3-dispatch/src/index.js","d3-drag":"../node_modules/d3-drag/src/index.js","d3-dsv":"../node_modules/d3-dsv/src/index.js","d3-ease":"../node_modules/d3-ease/src/index.js","d3-fetch":"../node_modules/d3-fetch/src/index.js","d3-force":"../node_modules/d3-force/src/index.js","d3-format":"../node_modules/d3-format/src/index.js","d3-geo":"../node_modules/d3-geo/src/index.js","d3-hierarchy":"../node_modules/d3-hierarchy/src/index.js","d3-interpolate":"../node_modules/d3-interpolate/src/index.js","d3-path":"../node_modules/d3-path/src/index.js","d3-polygon":"../node_modules/d3-polygon/src/index.js","d3-quadtree":"../node_modules/d3-quadtree/src/index.js","d3-random":"../node_modules/d3-random/src/index.js","d3-scale":"../node_modules/d3-scale/src/index.js","d3-scale-chromatic":"../node_modules/d3-scale-chromatic/src/index.js","d3-selection":"../node_modules/d3-selection/src/index.js","d3-shape":"../node_modules/d3-shape/src/index.js","d3-time":"../node_modules/d3-time/src/index.js","d3-time-format":"../node_modules/d3-time-format/src/index.js","d3-timer":"../node_modules/d3-timer/src/index.js","d3-transition":"../node_modules/d3-transition/src/index.js","d3-voronoi":"../node_modules/d3-voronoi/src/index.js","d3-zoom":"../node_modules/d3-zoom/src/index.js"}],"modules/dashboardCharts.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-exports.handleDashboardResize = handleDashboardResize;
-exports.initializeDashboard = initializeDashboard;
-exports.updateDashboard = updateDashboard;
+exports.initializeCategoryChart = initializeCategoryChart;
+exports.initializeTimeSeriesChart = initializeTimeSeriesChart;
+exports.initializeTopCountriesChart = initializeTopCountriesChart;
+exports.updateCategoryChart = updateCategoryChart;
+exports.updateTimeSeriesChart = updateTimeSeriesChart;
+exports.updateTopCountriesChart = updateTopCountriesChart;
 var d3 = _interopRequireWildcard(require("d3"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
@@ -25470,42 +25496,16 @@ function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) 
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; } /**
- * Module for dashboard visualization
+ * Module for dashboard chart visualizations
  */
-// Dashboard state
-var dashboardData = [];
+// Chart references
 var timeSeriesChart;
 var categoryChart;
 var topCountriesChart;
 
 /**
- * Initialize the dashboard visualizations
- * @param {HTMLElement} container The container element for the dashboard
- */
-function initializeDashboard(container) {
-  console.time('Dashboard Initialization');
-
-  // Create dashboard layout
-  createDashboardLayout(container);
-
-  // Initialize charts with empty data
-  initializeTimeSeriesChart();
-  initializeCategoryChart();
-  initializeTopCountriesChart();
-  console.timeEnd('Dashboard Initialization');
-}
-
-/**
- * Create the dashboard layout structure
- * @param {HTMLElement} container The container element for the dashboard
- */
-function createDashboardLayout(container) {
-  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <div class=\"dashboard-row\">\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <h3>Time Series Analysis</h3>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <h3>Integrity Issues by Category</h3>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            <div class=\"dashboard-row\">\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <h3>Top Countries by Articles</h3>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <h3>Summary Statistics</h3>\n                    <div id=\"summary-stats\">\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Total Articles</span>\n                            <span class=\"stat-value\" id=\"total-articles\">0</span>\n                        </div>\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Countries Represented</span>\n                            <span class=\"stat-value\" id=\"total-countries\">0</span>\n                        </div>\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Categories</span>\n                            <span class=\"stat-value\" id=\"total-categories\">0</span>\n                        </div>\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Time Period</span>\n                            <span class=\"stat-value\" id=\"time-period\">-</span>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    ";
-  container.innerHTML = dashboardHTML;
-}
-
-/**
  * Initialize the time series chart
+ * @returns {Object} The chart reference
  */
 function initializeTimeSeriesChart() {
   var container = d3.select('#time-series-chart');
@@ -25532,10 +25532,12 @@ function initializeTimeSeriesChart() {
 
   // Store reference to chart
   timeSeriesChart = svg;
+  return svg;
 }
 
 /**
  * Initialize the category breakdown chart
+ * @returns {Object} The chart reference
  */
 function initializeCategoryChart() {
   var container = d3.select('#category-chart');
@@ -25562,10 +25564,12 @@ function initializeCategoryChart() {
 
   // Store reference to chart
   categoryChart = svg;
+  return svg;
 }
 
 /**
  * Initialize the top countries chart
+ * @returns {Object} The chart reference
  */
 function initializeTopCountriesChart() {
   var container = d3.select('#top-countries-chart');
@@ -25592,33 +25596,16 @@ function initializeTopCountriesChart() {
 
   // Store reference to chart
   topCountriesChart = svg;
-}
-
-/**
- * Update the dashboard with filtered data
- * @param {Array} data Filtered data array
- * @param {Object} dateRange Object with minDate and maxDate
- */
-function updateDashboard(data, dateRange) {
-  console.time('Dashboard Update');
-
-  // Store the filtered data
-  dashboardData = data;
-
-  // Update each visualization
-  updateTimeSeriesChart(data, dateRange);
-  updateCategoryChart(data);
-  updateTopCountriesChart(data);
-  updateSummaryStats(data, dateRange);
-  console.timeEnd('Dashboard Update');
+  return svg;
 }
 
 /**
  * Update the time series chart with data
+ * @param {Object} chart The chart reference
  * @param {Array} data Filtered data array
  * @param {Object} dateRange Object with minDate and maxDate
  */
-function updateTimeSeriesChart(data, dateRange) {
+function updateTimeSeriesChart(chart, data, dateRange) {
   // Group data by month
   var timeData = d3.nest().key(function (d) {
     var date = d.parsedDate;
@@ -25657,13 +25644,13 @@ function updateTimeSeriesChart(data, dateRange) {
   }) * 1.1]).range([height, 0]);
 
   // Update axes
-  timeSeriesChart.select('.x-axis').call(d3.axisBottom(x).ticks(Math.min(timeData.length, 10)).tickFormat(d3.timeFormat('%b %Y'))).selectAll('text').style('text-anchor', 'end').attr('dx', '-.8em').attr('dy', '.15em').attr('transform', 'rotate(-45)');
-  timeSeriesChart.select('.y-axis').call(d3.axisLeft(y));
+  chart.select('.x-axis').call(d3.axisBottom(x).ticks(Math.min(timeData.length, 10)).tickFormat(d3.timeFormat('%b %Y'))).selectAll('text').style('text-anchor', 'end').attr('dx', '-.8em').attr('dy', '.15em').attr('transform', 'rotate(-45)');
+  chart.select('.y-axis').call(d3.axisLeft(y));
 
   // Remove existing line and dots
-  timeSeriesChart.selectAll('.line-path').remove();
-  timeSeriesChart.selectAll('.data-point').remove();
-  timeSeriesChart.selectAll('.hover-area').remove();
+  chart.selectAll('.line-path').remove();
+  chart.selectAll('.data-point').remove();
+  chart.selectAll('.hover-area').remove();
 
   // Create line
   var line = d3.line().x(function (d) {
@@ -25671,17 +25658,17 @@ function updateTimeSeriesChart(data, dateRange) {
   }).y(function (d) {
     return y(d.value);
   }).curve(d3.curveMonotoneX);
-  timeSeriesChart.append('path').datum(timeData).attr('class', 'line-path').attr('fill', 'none').attr('stroke', '#3694d1').attr('stroke-width', 2).attr('d', line);
+  chart.append('path').datum(timeData).attr('class', 'line-path').attr('fill', 'none').attr('stroke', '#3694d1').attr('stroke-width', 2).attr('d', line);
 
   // Add data points
-  timeSeriesChart.selectAll('.data-point').data(timeData).enter().append('circle').attr('class', 'data-point').attr('cx', function (d) {
+  chart.selectAll('.data-point').data(timeData).enter().append('circle').attr('class', 'data-point').attr('cx', function (d) {
     return x(d.date);
   }).attr('cy', function (d) {
     return y(d.value);
   }).attr('r', 4).attr('fill', '#e5007d');
 
   // Add hover area with tooltips
-  timeSeriesChart.append('g').attr('class', 'hover-area').selectAll('rect').data(timeData).enter().append('rect').attr('x', function (d) {
+  chart.append('g').attr('class', 'hover-area').selectAll('rect').data(timeData).enter().append('rect').attr('x', function (d) {
     return x(d.date) - width / (2 * timeData.length);
   }).attr('y', 0).attr('width', width / timeData.length).attr('height', height).attr('fill', 'transparent').on('mouseover', function (d) {
     var tooltip = d3.select('#time-series-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('background', 'rgba(255,255,255,0.9)').style('padding', '8px').style('border-radius', '4px').style('border', '1px solid #ddd').style('box-shadow', '0 2px 4px rgba(0,0,0,0.1)').style('pointer-events', 'none').style('z-index', 999).style('left', "".concat(d3.event.pageX - d3.select('#time-series-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#time-series-chart').node().getBoundingClientRect().top - 40, "px"));
@@ -25693,9 +25680,10 @@ function updateTimeSeriesChart(data, dateRange) {
 
 /**
  * Update the category breakdown chart with data
+ * @param {Object} chart The chart reference
  * @param {Array} data Filtered data array
  */
-function updateCategoryChart(data) {
+function updateCategoryChart(chart, data) {
   // Flatten and count all corruption categories
   var categoryData = [];
   var categoryCounts = {};
@@ -25747,14 +25735,14 @@ function updateCategoryChart(data) {
   })).range([0, height]).padding(0.1);
 
   // Update axes
-  categoryChart.select('.x-axis').call(d3.axisBottom(x).ticks(5));
-  categoryChart.select('.y-axis').call(d3.axisLeft(y)).selectAll('text').style('text-anchor', 'end');
+  chart.select('.x-axis').call(d3.axisBottom(x).ticks(5));
+  chart.select('.y-axis').call(d3.axisLeft(y)).selectAll('text').style('text-anchor', 'end');
 
   // Remove existing bars
-  categoryChart.selectAll('.category-bar').remove();
+  chart.selectAll('.category-bar').remove();
 
   // Create bars
-  categoryChart.selectAll('.category-bar').data(topCategories).enter().append('rect').attr('class', 'category-bar').attr('x', 0).attr('y', function (d) {
+  chart.selectAll('.category-bar').data(topCategories).enter().append('rect').attr('class', 'category-bar').attr('x', 0).attr('y', function (d) {
     return y(d.category);
   }).attr('width', function (d) {
     return x(d.count);
@@ -25768,7 +25756,7 @@ function updateCategoryChart(data) {
   });
 
   // Add count labels
-  categoryChart.selectAll('.count-label').data(topCategories).enter().append('text').attr('class', 'count-label').attr('x', function (d) {
+  chart.selectAll('.count-label').data(topCategories).enter().append('text').attr('class', 'count-label').attr('x', function (d) {
     return x(d.count) + 5;
   }).attr('y', function (d) {
     return y(d.category) + y.bandwidth() / 2 + 5;
@@ -25779,9 +25767,10 @@ function updateCategoryChart(data) {
 
 /**
  * Update the top countries chart with data
+ * @param {Object} chart The chart reference
  * @param {Array} data Filtered data array
  */
-function updateTopCountriesChart(data) {
+function updateTopCountriesChart(chart, data) {
   // Count articles by country
   var countryData = [];
   var countryCounts = {};
@@ -25829,14 +25818,14 @@ function updateTopCountriesChart(data) {
   })).range([0, height]).padding(0.1);
 
   // Update axes
-  topCountriesChart.select('.x-axis').call(d3.axisBottom(x).ticks(5));
-  topCountriesChart.select('.y-axis').call(d3.axisLeft(y)).selectAll('text').style('text-anchor', 'end');
+  chart.select('.x-axis').call(d3.axisBottom(x).ticks(5));
+  chart.select('.y-axis').call(d3.axisLeft(y)).selectAll('text').style('text-anchor', 'end');
 
   // Remove existing bars
-  topCountriesChart.selectAll('.country-bar').remove();
+  chart.selectAll('.country-bar').remove();
 
   // Create bars
-  topCountriesChart.selectAll('.country-bar').data(topCountries).enter().append('rect').attr('class', 'country-bar').attr('x', 0).attr('y', function (d) {
+  chart.selectAll('.country-bar').data(topCountries).enter().append('rect').attr('class', 'country-bar').attr('x', 0).attr('y', function (d) {
     return y(d.country);
   }).attr('width', function (d) {
     return x(d.count);
@@ -25850,7 +25839,7 @@ function updateTopCountriesChart(data) {
   });
 
   // Add count labels
-  topCountriesChart.selectAll('.count-label').data(topCountries).enter().append('text').attr('class', 'count-label').attr('x', function (d) {
+  chart.selectAll('.count-label').data(topCountries).enter().append('text').attr('class', 'count-label').attr('x', function (d) {
     return x(d.count) + 5;
   }).attr('y', function (d) {
     return y(d.country) + y.bandwidth() / 2 + 5;
@@ -25858,6 +25847,28 @@ function updateTopCountriesChart(data) {
     return d.count;
   }).attr('fill', '#333').attr('font-size', '12px');
 }
+var _default = exports.default = {
+  initializeTimeSeriesChart: initializeTimeSeriesChart,
+  initializeCategoryChart: initializeCategoryChart,
+  initializeTopCountriesChart: initializeTopCountriesChart,
+  updateTimeSeriesChart: updateTimeSeriesChart,
+  updateCategoryChart: updateCategoryChart,
+  updateTopCountriesChart: updateTopCountriesChart
+};
+},{"d3":"../node_modules/d3/index.js"}],"modules/dashboardStats.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+exports.updateSummaryStats = updateSummaryStats;
+var d3 = _interopRequireWildcard(require("d3"));
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+/**
+ * Module for dashboard statistics functionality
+ */
 
 /**
  * Update the summary statistics with data
@@ -25901,16 +25912,77 @@ function updateSummaryStats(data, dateRange) {
   document.getElementById('total-categories').textContent = uniqueCategories.size.toLocaleString();
   document.getElementById('time-period').textContent = timePeriodText;
 }
+var _default = exports.default = {
+  updateSummaryStats: updateSummaryStats
+};
+},{"d3":"../node_modules/d3/index.js"}],"modules/dashboard.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+exports.handleDashboardResize = handleDashboardResize;
+exports.initializeDashboard = initializeDashboard;
+exports.updateDashboard = updateDashboard;
+var dashboardLayout = _interopRequireWildcard(require("./dashboardLayout"));
+var dashboardCharts = _interopRequireWildcard(require("./dashboardCharts"));
+var dashboardStats = _interopRequireWildcard(require("./dashboardStats"));
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+/**
+ * Main dashboard module that orchestrates dashboard functionality
+ */
+
+// Dashboard state
+var dashboardData = [];
+var timeSeriesChart;
+var categoryChart;
+var topCountriesChart;
+var dateRange;
+
+/**
+ * Initialize the dashboard visualizations
+ * @param {HTMLElement} container The container element for the dashboard
+ */
+function initializeDashboard(container) {
+  console.time('Dashboard Initialization');
+
+  // Create dashboard layout
+  dashboardLayout.createDashboardLayout(container);
+
+  // Initialize charts with empty data
+  timeSeriesChart = dashboardCharts.initializeTimeSeriesChart();
+  categoryChart = dashboardCharts.initializeCategoryChart();
+  topCountriesChart = dashboardCharts.initializeTopCountriesChart();
+  console.timeEnd('Dashboard Initialization');
+}
+
+/**
+ * Update the dashboard with filtered data
+ * @param {Array} data Filtered data array
+ * @param {Object} dataDateRange Object with minDate and maxDate
+ */
+function updateDashboard(data, dataDateRange) {
+  console.time('Dashboard Update');
+
+  // Store the filtered data and date range
+  dashboardData = data;
+  dateRange = dataDateRange;
+
+  // Update each visualization
+  dashboardCharts.updateTimeSeriesChart(timeSeriesChart, data, dateRange);
+  dashboardCharts.updateCategoryChart(categoryChart, data);
+  dashboardCharts.updateTopCountriesChart(topCountriesChart, data);
+  dashboardStats.updateSummaryStats(data, dateRange);
+  console.timeEnd('Dashboard Update');
+}
 
 /**
  * Handle window resize event to make charts responsive
  */
 function handleDashboardResize() {
   if (dashboardData.length > 0) {
-    var dateRange = {
-      minDate: minDate,
-      maxDate: maxDate
-    };
     updateDashboard(dashboardData, dateRange);
   }
 }
@@ -25919,7 +25991,7 @@ var _default = exports.default = {
   updateDashboard: updateDashboard,
   handleDashboardResize: handleDashboardResize
 };
-},{"d3":"../node_modules/d3/index.js"}],"app.js":[function(require,module,exports) {
+},{"./dashboardLayout":"modules/dashboardLayout.js","./dashboardCharts":"modules/dashboardCharts.js","./dashboardStats":"modules/dashboardStats.js"}],"app.js":[function(require,module,exports) {
 "use strict";
 
 var mapModule = _interopRequireWildcard(require("./modules/map"));
@@ -26253,7 +26325,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53518" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52892" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
