@@ -126,9 +126,9 @@
             </div>
             <div class="col-md-4 d-flex justify-content-end">
 <div class="switch-container">
-    <button id="map-overview-btn" class="switch-button active">Map Overview</button>
+    <button id="map-overview-btn" class="switch-button active">Map</button>
     <button id="cases-btn" class="switch-button">List</button>
-    <button id="dashboard-btn" class="switch-button">Dashboard</button>
+    <button id="dashboard-btn" class="switch-button"><i class="fa fa-bar-chart"></i></button>
 </div>
             </div>
         </div>

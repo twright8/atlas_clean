@@ -736,6 +736,60 @@ overflow: hidden;}
 .switch-button:hover:not(.active) {
   background-color: rgba(59, 130, 246, 0.1);
 }
+
+/* View info box */
+.view-info {
+  background-color: #f0f7ff;
+  border-left: 4px solid #3694d1;
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #555;
+  position: relative;
+  display: block;
+  max-width: 400px;
+}
+
+.view-info p {
+  margin: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Dashboard help button */
+.dashboard-help-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 5px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.dashboard-help-btn:hover {
+  background-color: #f0f0f0;
+  color: #3694d1;
+}
+
+/* Body classes for view-specific styling */
+body.dashboard-view #search-input {
+  background-color: rgba(54, 148, 209, 0.1);
+}
+
+body.dashboard-view .switch-container {
+  border: 1px solid #e6e6e6;
+}
 .mb{        max-width: 1280px;
     margin:32px auto;
     padding: 0px 16px;

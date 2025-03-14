@@ -1136,8 +1136,70 @@ exports.default = void 0;
  * @param {HTMLElement} container The container element for the dashboard
  */
 function createDashboardLayout(container) {
-  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <div class=\"dashboard-row\">\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <h3>Time Series Analysis</h3>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <h3>Integrity Issues by Category</h3>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            <div class=\"dashboard-row\">\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <h3>Top Countries by Articles</h3>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <h3>Summary Statistics</h3>\n                    <div id=\"summary-stats\">\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Total Articles</span>\n                            <span class=\"stat-value\" id=\"total-articles\">0</span>\n                        </div>\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Countries Represented</span>\n                            <span class=\"stat-value\" id=\"total-countries\">0</span>\n                        </div>\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Categories</span>\n                            <span class=\"stat-value\" id=\"total-categories\">0</span>\n                        </div>\n                        <div class=\"stat-box\">\n                            <span class=\"stat-label\">Time Period</span>\n                            <span class=\"stat-value\" id=\"time-period\">-</span>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    ";
+  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <!-- Dashboard header with key insights -->\n            <div class=\"dashboard-header-card\">\n                <div class=\"dashboard-header-content\">\n                    <div class=\"dashboard-header-title\">\n                        <h2>Health Integrity Insights</h2>\n                        <p class=\"dashboard-subtitle\">Analysis of healthcare integrity issues worldwide</p>\n                    </div>\n                    <div class=\"dashboard-key-metrics\" id=\"key-metrics\">\n                        <!-- Filled dynamically -->\n                    </div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Time Series Chart -->\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <div class=\"card-header\">\n                        <h3>Articles Over Time</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"time-view-toggle\" title=\"Toggle between monthly/yearly view\">\n                                <i class=\"fa fa-calendar\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                \n                <!-- Categories Chart -->\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <div class=\"card-header\">\n                        <h3>Integrity Issues by Category</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"category-view-toggle\" title=\"Toggle between top 5/all categories\">\n                                <i class=\"fa fa-bars\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Top Countries Chart -->\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <div class=\"card-header\">\n                        <h3>Top Countries by Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"country-view-toggle\" title=\"Toggle between chart/map view\">\n                                <i class=\"fa fa-globe\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                \n                <!-- Summary Statistics -->\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <div class=\"card-header\">\n                        <h3>Summary Statistics</h3>\n                        <div class=\"date-range-indicator\">\n                            <i class=\"fa fa-calendar-o\"></i>\n                            <span id=\"time-period-display\">-</span>\n                        </div>\n                    </div>\n                    <div id=\"summary-stats\" class=\"summary-stats-grid\">\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-newspaper-o\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-articles\">0</span>\n                                <span class=\"stat-label\">Total Articles</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-globe\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-countries\">0</span>\n                                <span class=\"stat-label\">Countries</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-tags\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-categories\">0</span>\n                                <span class=\"stat-label\">Categories</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-calendar\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"time-period\">-</span>\n                                <span class=\"stat-label\">Time Period</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <!-- New row for additional insights -->\n            <div class=\"dashboard-row\">\n                <!-- Trends Analysis Card -->\n                <div class=\"dashboard-card\" id=\"trends-analysis-card\">\n                    <div class=\"card-header\">\n                        <h3>Trend Analysis</h3>\n                    </div>\n                    <div id=\"trends-content\">\n                        <div id=\"trend-indicators\"></div>\n                    </div>\n                </div>\n                \n                <!-- Recent Articles Card -->\n                <div class=\"dashboard-card\" id=\"recent-articles-card\">\n                    <div class=\"card-header\">\n                        <h3>Recent Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"refresh-btn\" id=\"recent-refresh\" title=\"Refresh list\">\n                                <i class=\"fa fa-refresh\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"recent-articles-list\"></div>\n                </div>\n            </div>\n        </div>\n    ";
   container.innerHTML = dashboardHTML;
+
+  // Initialize event listeners for toggle buttons
+  initializeToggleButtons();
+}
+
+/**
+ * Initialize event listeners for dashboard toggle buttons
+ */
+function initializeToggleButtons() {
+  // Time view toggle (Monthly/Yearly)
+  var timeViewToggle = document.getElementById('time-view-toggle');
+  if (timeViewToggle) {
+    timeViewToggle.addEventListener('click', function () {
+      this.classList.toggle('active');
+      // The toggle state will be checked in the chart update function
+      var event = new CustomEvent('timeViewToggle', {
+        detail: {
+          yearly: this.classList.contains('active')
+        }
+      });
+      document.dispatchEvent(event);
+    });
+  }
+
+  // Category view toggle (Top 5/All)
+  var categoryViewToggle = document.getElementById('category-view-toggle');
+  if (categoryViewToggle) {
+    categoryViewToggle.addEventListener('click', function () {
+      this.classList.toggle('active');
+      // The toggle state will be checked in the chart update function
+      var event = new CustomEvent('categoryViewToggle', {
+        detail: {
+          showAll: this.classList.contains('active')
+        }
+      });
+      document.dispatchEvent(event);
+    });
+  }
+
+  // Country view toggle (Chart/Map)
+  var countryViewToggle = document.getElementById('country-view-toggle');
+  if (countryViewToggle) {
+    countryViewToggle.addEventListener('click', function () {
+      this.classList.toggle('active');
+      // The toggle state will be checked in the chart update function
+      var event = new CustomEvent('countryViewToggle', {
+        detail: {
+          mapView: this.classList.contains('active')
+        }
+      });
+      document.dispatchEvent(event);
+    });
+  }
+
+  // Recent articles refresh button
+  var recentRefreshBtn = document.getElementById('recent-refresh');
+  if (recentRefreshBtn) {
+    recentRefreshBtn.addEventListener('click', function () {
+      var event = new CustomEvent('refreshRecentArticles');
+      document.dispatchEvent(event);
+    });
+  }
 }
 var _default = exports.default = {
   createDashboardLayout: createDashboardLayout
@@ -25496,7 +25558,7 @@ function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) 
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; } /**
- * Module for dashboard chart visualizations
+ * Module for enhanced dashboard chart visualizations with animations and interactive features
  */
 // Chart references
 var timeSeriesChart;
@@ -25514,12 +25576,12 @@ function initializeTimeSeriesChart() {
   var margin = {
     top: 20,
     right: 30,
-    bottom: 50,
+    bottom: 60,
     left: 60
   };
   var containerWidth = document.getElementById('time-series-chart').clientWidth || 500;
   var width = Math.max(containerWidth - margin.left - margin.right, 100);
-  var height = 250 - margin.top - margin.bottom;
+  var height = 260 - margin.top - margin.bottom;
 
   // Create SVG
   var svg = container.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', "translate(".concat(margin.left, ",").concat(margin.top, ")"));
@@ -25529,6 +25591,9 @@ function initializeTimeSeriesChart() {
 
   // Add Y axis placeholder
   svg.append('g').attr('class', 'y-axis').append('text').attr('transform', 'rotate(-90)').attr('y', -40).attr('x', -height / 2).attr('fill', '#333').style('text-anchor', 'middle').text('Articles');
+
+  // Add grid lines
+  svg.append('g').attr('class', 'grid-lines').style('stroke-dasharray', '3,3').style('stroke', '#e0e0e0').style('stroke-width', 0.5);
 
   // Store reference to chart
   timeSeriesChart = svg;
@@ -25551,7 +25616,7 @@ function initializeCategoryChart() {
   };
   var containerWidth = document.getElementById('category-chart').clientWidth || 500;
   var width = Math.max(containerWidth - margin.left - margin.right, 100);
-  var height = 250 - margin.top - margin.bottom;
+  var height = 260 - margin.top - margin.bottom;
 
   // Create SVG
   var svg = container.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', "translate(".concat(margin.left, ",").concat(margin.top, ")"));
@@ -25579,11 +25644,11 @@ function initializeTopCountriesChart() {
     top: 20,
     right: 30,
     bottom: 50,
-    left: 100
+    left: 110
   };
   var containerWidth = document.getElementById('top-countries-chart').clientWidth || 500;
   var width = Math.max(containerWidth - margin.left - margin.right, 100);
-  var height = 250 - margin.top - margin.bottom;
+  var height = 260 - margin.top - margin.bottom;
 
   // Create SVG
   var svg = container.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', "translate(".concat(margin.left, ",").concat(margin.top, ")"));
@@ -25604,12 +25669,18 @@ function initializeTopCountriesChart() {
  * @param {Object} chart The chart reference
  * @param {Array} data Filtered data array
  * @param {Object} dateRange Object with minDate and maxDate
+ * @param {Object} options Chart options
  */
 function updateTimeSeriesChart(chart, data, dateRange) {
-  // Group data by month
+  var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {
+    yearly: false
+  };
+  // Group data by month or year based on options
+  var timeFormat = options.yearly ? '%Y' : '%Y-%m';
+  var displayFormat = options.yearly ? '%Y' : '%b %Y';
   var timeData = d3.nest().key(function (d) {
     var date = d.parsedDate;
-    return date ? d3.timeFormat('%Y-%m')(date) : 'Unknown';
+    return date ? d3.timeFormat(timeFormat)(date) : 'Unknown';
   }).rollup(function (v) {
     return v.length;
   }).entries(data).filter(function (d) {
@@ -25617,40 +25688,73 @@ function updateTimeSeriesChart(chart, data, dateRange) {
   }).sort(function (a, b) {
     return d3.ascending(a.key, b.key);
   });
-  if (timeData.length === 0) return;
+  if (timeData.length === 0) {
+    // Clear the chart if no data
+    chart.selectAll('.line-path, .data-point, .hover-area, .annotation, .grid-lines line').remove();
+
+    // Show 'No data' message
+    if (chart.select('.no-data-message').empty()) {
+      chart.append('text').attr('class', 'no-data-message').attr('x', chart.node().getBBox().width / 2).attr('y', chart.node().getBBox().height / 2).attr('text-anchor', 'middle').style('font-size', '14px').style('fill', '#666').text('No data available for the selected filters');
+    }
+    return;
+  } else {
+    // Remove 'No data' message if it exists
+    chart.select('.no-data-message').remove();
+  }
 
   // Convert string dates back to Date objects for the chart
   timeData.forEach(function (d) {
-    d.date = d3.timeParse('%Y-%m')(d.key);
+    if (options.yearly) {
+      // For yearly view, set to January 1st of the year
+      d.date = d3.timeParse('%Y')(d.key);
+    } else {
+      // For monthly view, set to the 1st of the month
+      d.date = d3.timeParse('%Y-%m')(d.key);
+    }
   });
 
   // Set up dimensions and margins
   var margin = {
     top: 20,
     right: 30,
-    bottom: 50,
+    bottom: 60,
     left: 60
   };
   var containerWidth = document.getElementById('time-series-chart').clientWidth || 500;
   var width = Math.max(containerWidth - margin.left - margin.right, 100);
-  var height = 250 - margin.top - margin.bottom;
+  var height = 260 - margin.top - margin.bottom;
 
   // Set scales
   var x = d3.scaleTime().domain(d3.extent(timeData, function (d) {
     return d.date;
-  })).range([0, width]);
+  })).range([0, width]).nice();
   var y = d3.scaleLinear().domain([0, d3.max(timeData, function (d) {
     return d.value;
-  }) * 1.1]).range([height, 0]);
+  }) * 1.1]).range([height, 0]).nice();
 
   // Update axes
-  chart.select('.x-axis').call(d3.axisBottom(x).ticks(Math.min(timeData.length, 10)).tickFormat(d3.timeFormat('%b %Y'))).selectAll('text').style('text-anchor', 'end').attr('dx', '-.8em').attr('dy', '.15em').attr('transform', 'rotate(-45)');
-  chart.select('.y-axis').call(d3.axisLeft(y));
+  chart.select('.x-axis').transition().duration(500).call(d3.axisBottom(x).ticks(options.yearly ? timeData.length : Math.min(timeData.length, 12)).tickFormat(d3.timeFormat(displayFormat))).selectAll('text').style('text-anchor', 'end').attr('dx', '-.8em').attr('dy', '.15em').attr('transform', 'rotate(-45)');
+  chart.select('.y-axis').transition().duration(500).call(d3.axisLeft(y).ticks(5));
 
-  // Remove existing line and dots
-  chart.selectAll('.line-path').remove();
-  chart.selectAll('.data-point').remove();
-  chart.selectAll('.hover-area').remove();
+  // Update grid lines
+  var gridLines = chart.select('.grid-lines').selectAll('line.horizontal').data(y.ticks(5));
+  gridLines.exit().remove();
+  gridLines.enter().append('line').attr('class', 'horizontal').merge(gridLines).attr('x1', 0).attr('x2', width).attr('y1', function (d) {
+    return y(d);
+  }).attr('y2', function (d) {
+    return y(d);
+  });
+
+  // Remove existing elements
+  chart.selectAll('.line-path, .area-path, .data-point, .hover-area, .annotation').remove();
+
+  // Add area underneath the line
+  var area = d3.area().x(function (d) {
+    return x(d.date);
+  }).y0(height).y1(function (d) {
+    return y(d.value);
+  }).curve(d3.curveMonotoneX);
+  chart.append('path').datum(timeData).attr('class', 'area-path').attr('fill', 'rgba(54, 148, 209, 0.1)').attr('d', area);
 
   // Create line
   var line = d3.line().x(function (d) {
@@ -25658,32 +25762,58 @@ function updateTimeSeriesChart(chart, data, dateRange) {
   }).y(function (d) {
     return y(d.value);
   }).curve(d3.curveMonotoneX);
-  chart.append('path').datum(timeData).attr('class', 'line-path').attr('fill', 'none').attr('stroke', '#3694d1').attr('stroke-width', 2).attr('d', line);
 
-  // Add data points
+  // Add line with animation
+  var path = chart.append('path').datum(timeData).attr('class', 'line-path').attr('fill', 'none').attr('stroke', '#3694d1').attr('stroke-width', 3).attr('d', line);
+
+  // Animate the line
+  var pathLength = path.node().getTotalLength();
+  path.attr('stroke-dasharray', pathLength + ' ' + pathLength).attr('stroke-dashoffset', pathLength).transition().duration(1000).ease(d3.easeLinear).attr('stroke-dashoffset', 0);
+
+  // Add data points with animation
   chart.selectAll('.data-point').data(timeData).enter().append('circle').attr('class', 'data-point').attr('cx', function (d) {
     return x(d.date);
   }).attr('cy', function (d) {
     return y(d.value);
-  }).attr('r', 4).attr('fill', '#e5007d');
+  }).attr('r', 0).attr('fill', '#e5007d').transition().delay(function (d, i) {
+    return i * 50;
+  }).duration(500).attr('r', 5);
 
-  // Add hover area with tooltips
+  // Add hover area with improved tooltips
   chart.append('g').attr('class', 'hover-area').selectAll('rect').data(timeData).enter().append('rect').attr('x', function (d) {
     return x(d.date) - width / (2 * timeData.length);
   }).attr('y', 0).attr('width', width / timeData.length).attr('height', height).attr('fill', 'transparent').on('mouseover', function (d) {
-    var tooltip = d3.select('#time-series-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('background', 'rgba(255,255,255,0.9)').style('padding', '8px').style('border-radius', '4px').style('border', '1px solid #ddd').style('box-shadow', '0 2px 4px rgba(0,0,0,0.1)').style('pointer-events', 'none').style('z-index', 999).style('left', "".concat(d3.event.pageX - d3.select('#time-series-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#time-series-chart').node().getBoundingClientRect().top - 40, "px"));
-    tooltip.html("\n                <div><strong>".concat(d3.timeFormat('%B %Y')(d.date), "</strong></div>\n                <div>Articles: ").concat(d.value, "</div>\n            "));
+    // Highlight the point
+    d3.select(this.parentNode.parentNode).selectAll('.data-point').filter(function (point) {
+      return point.key === d.key;
+    }).transition().duration(100).attr('r', 7).attr('fill', '#ff4081');
+    var tooltip = d3.select('#time-series-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', "".concat(d3.event.pageX - d3.select('#time-series-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#time-series-chart').node().getBoundingClientRect().top - 60, "px"));
+    var formatDate = options.yearly ? '%Y' : '%B %Y';
+    tooltip.html("\n                <div class=\"chart-tooltip-title\">".concat(d3.timeFormat(formatDate)(d.date), "</div>\n                <div><span class=\"chart-tooltip-value\">").concat(d.value, "</span> articles</div>\n                <div>").concat(Math.round(d.value / data.length * 100), "% of selected data</div>\n            "));
   }).on('mouseout', function () {
+    // Restore point style
+    d3.select(this.parentNode.parentNode).selectAll('.data-point').transition().duration(100).attr('r', 5).attr('fill', '#e5007d');
     d3.selectAll('.chart-tooltip').remove();
   });
+
+  // Add annotation for max value
+  var maxPoint = timeData.reduce(function (max, current) {
+    return current.value > max.value ? current : max;
+  }, timeData[0]);
+  chart.append('circle').attr('class', 'annotation').attr('cx', x(maxPoint.date)).attr('cy', y(maxPoint.value)).attr('r', 7).attr('fill', 'none').attr('stroke', '#e5007d').attr('stroke-width', 2).attr('opacity', 0).transition().delay(1200).duration(300).attr('opacity', 1);
+  chart.append('text').attr('class', 'annotation').attr('x', x(maxPoint.date)).attr('y', y(maxPoint.value) - 15).attr('text-anchor', 'middle').attr('font-size', '12px').attr('fill', '#e5007d').text("Peak: ".concat(maxPoint.value)).attr('opacity', 0).transition().delay(1200).duration(300).attr('opacity', 1);
 }
 
 /**
  * Update the category breakdown chart with data
  * @param {Object} chart The chart reference
  * @param {Array} data Filtered data array
+ * @param {Object} options Chart options
  */
 function updateCategoryChart(chart, data) {
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
+    showAll: false
+  };
   // Flatten and count all corruption categories
   var categoryData = [];
   var categoryCounts = {};
@@ -25708,12 +25838,27 @@ function updateCategoryChart(chart, data) {
     });
   });
 
-  // Sort by count descending and limit to top 10
+  // Sort by count descending
   categoryData.sort(function (a, b) {
     return b.count - a.count;
   });
-  var topCategories = categoryData.slice(0, 10);
-  if (topCategories.length === 0) return;
+
+  // Limit categories based on option
+  var limit = options.showAll ? categoryData.length : Math.min(10, categoryData.length);
+  var topCategories = categoryData.slice(0, limit);
+  if (topCategories.length === 0) {
+    // Clear the chart if no data
+    chart.selectAll('.category-bar, .count-label').remove();
+
+    // Show 'No data' message
+    if (chart.select('.no-data-message').empty()) {
+      chart.append('text').attr('class', 'no-data-message').attr('x', chart.node().getBBox().width / 2).attr('y', chart.node().getBBox().height / 2).attr('text-anchor', 'middle').style('font-size', '14px').style('fill', '#666').text('No data available for the selected filters');
+    }
+    return;
+  } else {
+    // Remove 'No data' message if it exists
+    chart.select('.no-data-message').remove();
+  }
 
   // Set up dimensions and margins
   var margin = {
@@ -25724,7 +25869,7 @@ function updateCategoryChart(chart, data) {
   };
   var containerWidth = document.getElementById('category-chart').clientWidth || 500;
   var width = Math.max(containerWidth - margin.left - margin.right, 100);
-  var height = 250 - margin.top - margin.bottom;
+  var height = 260 - margin.top - margin.bottom;
 
   // Set scales
   var x = d3.scaleLinear().domain([0, d3.max(topCategories, function (d) {
@@ -25732,45 +25877,87 @@ function updateCategoryChart(chart, data) {
   }) * 1.1]).range([0, width]);
   var y = d3.scaleBand().domain(topCategories.map(function (d) {
     return d.category;
-  })).range([0, height]).padding(0.1);
+  })).range([0, height]).padding(0.2);
 
-  // Update axes
-  chart.select('.x-axis').call(d3.axisBottom(x).ticks(5));
-  chart.select('.y-axis').call(d3.axisLeft(y)).selectAll('text').style('text-anchor', 'end');
+  // Update axes with transitions
+  chart.select('.x-axis').transition().duration(500).call(d3.axisBottom(x).ticks(5));
+  chart.select('.y-axis').transition().duration(500).call(d3.axisLeft(y)).selectAll('text').style('text-anchor', 'end');
 
-  // Remove existing bars
-  chart.selectAll('.category-bar').remove();
+  // Handle bars with enter/update/exit pattern
+  var bars = chart.selectAll('.category-bar').data(topCategories, function (d) {
+    return d.category;
+  });
 
-  // Create bars
-  chart.selectAll('.category-bar').data(topCategories).enter().append('rect').attr('class', 'category-bar').attr('x', 0).attr('y', function (d) {
+  // Remove bars that are no longer in the data
+  bars.exit().transition().duration(300).attr('width', 0).remove();
+
+  // Update existing bars
+  bars.transition().duration(500).attr('y', function (d) {
     return y(d.category);
-  }).attr('width', function (d) {
+  }).attr('height', y.bandwidth()).attr('width', function (d) {
     return x(d.count);
-  }).attr('height', y.bandwidth()).attr('fill', '#3694d1').on('mouseover', function (d) {
-    d3.select(this).attr('fill', '#e5007d');
-    var tooltip = d3.select('#category-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('background', 'rgba(255,255,255,0.9)').style('padding', '8px').style('border-radius', '4px').style('border', '1px solid #ddd').style('box-shadow', '0 2px 4px rgba(0,0,0,0.1)').style('pointer-events', 'none').style('z-index', 999).style('left', "".concat(d3.event.pageX - d3.select('#category-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#category-chart').node().getBoundingClientRect().top - 40, "px"));
-    tooltip.html("\n                <div><strong>".concat(d.category, "</strong></div>\n                <div>Articles: ").concat(d.count, "</div>\n                <div>Percentage: ").concat((d.count / data.length * 100).toFixed(1), "%</div>\n            "));
+  }).attr('fill', '#3694d1');
+
+  // Add new bars with animation
+  bars.enter().append('rect').attr('class', 'category-bar').attr('x', 0).attr('y', function (d) {
+    return y(d.category);
+  }).attr('height', y.bandwidth()).attr('width', 0).attr('fill', '#3694d1').transition().duration(800).attr('width', function (d) {
+    return x(d.count);
+  });
+
+  // Handle interactive hover effects
+  chart.selectAll('.category-bar').on('mouseover', function (d) {
+    d3.select(this).transition().duration(100).attr('fill', '#e5007d');
+    var tooltip = d3.select('#category-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', "".concat(d3.event.pageX - d3.select('#category-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#category-chart').node().getBoundingClientRect().top - 40, "px"));
+    tooltip.html("\n                <div class=\"chart-tooltip-title\">".concat(d.category, "</div>\n                <div><span class=\"chart-tooltip-value\">").concat(d.count, "</span> articles</div>\n                <div>").concat((d.count / data.length * 100).toFixed(1), "% of selected data</div>\n            "));
   }).on('mouseout', function () {
-    d3.select(this).attr('fill', '#3694d1');
+    d3.select(this).transition().duration(100).attr('fill', '#3694d1');
     d3.selectAll('.chart-tooltip').remove();
   });
 
-  // Add count labels
-  chart.selectAll('.count-label').data(topCategories).enter().append('text').attr('class', 'count-label').attr('x', function (d) {
+  // Update count labels
+  var labels = chart.selectAll('.count-label').data(topCategories, function (d) {
+    return d.category;
+  });
+
+  // Remove old labels
+  labels.exit().remove();
+
+  // Update existing labels
+  labels.transition().duration(500).attr('x', function (d) {
     return x(d.count) + 5;
   }).attr('y', function (d) {
     return y(d.category) + y.bandwidth() / 2 + 5;
   }).text(function (d) {
     return d.count;
-  }).attr('fill', '#333').attr('font-size', '12px');
+  });
+
+  // Add new labels
+  labels.enter().append('text').attr('class', 'count-label').attr('x', function (d) {
+    return x(d.count) + 5;
+  }).attr('y', function (d) {
+    return y(d.category) + y.bandwidth() / 2 + 5;
+  }).text(function (d) {
+    return d.count;
+  }).attr('fill', '#333').attr('font-size', '12px').attr('opacity', 0).transition().duration(500).attr('opacity', 1);
 }
 
 /**
  * Update the top countries chart with data
  * @param {Object} chart The chart reference
  * @param {Array} data Filtered data array
+ * @param {Object} options Chart options
  */
 function updateTopCountriesChart(chart, data) {
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
+    mapView: false
+  };
+  // If map view is selected, show the map chart instead of bars
+  if (options.mapView) {
+    updateCountryMapChart(chart, data);
+    return;
+  }
+
   // Count articles by country
   var countryData = [];
   var countryCounts = {};
@@ -25796,18 +25983,30 @@ function updateTopCountriesChart(chart, data) {
     return b.count - a.count;
   });
   var topCountries = countryData.slice(0, 10);
-  if (topCountries.length === 0) return;
+  if (topCountries.length === 0) {
+    // Clear the chart if no data
+    chart.selectAll('.country-bar, .count-label').remove();
+
+    // Show 'No data' message
+    if (chart.select('.no-data-message').empty()) {
+      chart.append('text').attr('class', 'no-data-message').attr('x', chart.node().getBBox().width / 2).attr('y', chart.node().getBBox().height / 2).attr('text-anchor', 'middle').style('font-size', '14px').style('fill', '#666').text('No data available for the selected filters');
+    }
+    return;
+  } else {
+    // Remove 'No data' message if it exists
+    chart.select('.no-data-message').remove();
+  }
 
   // Set up dimensions and margins
   var margin = {
     top: 20,
     right: 30,
     bottom: 50,
-    left: 100
+    left: 110
   };
   var containerWidth = document.getElementById('top-countries-chart').clientWidth || 500;
   var width = Math.max(containerWidth - margin.left - margin.right, 100);
-  var height = 250 - margin.top - margin.bottom;
+  var height = 260 - margin.top - margin.bottom;
 
   // Set scales
   var x = d3.scaleLinear().domain([0, d3.max(topCountries, function (d) {
@@ -25815,37 +26014,87 @@ function updateTopCountriesChart(chart, data) {
   }) * 1.1]).range([0, width]);
   var y = d3.scaleBand().domain(topCountries.map(function (d) {
     return d.country;
-  })).range([0, height]).padding(0.1);
+  })).range([0, height]).padding(0.2);
 
-  // Update axes
-  chart.select('.x-axis').call(d3.axisBottom(x).ticks(5));
-  chart.select('.y-axis').call(d3.axisLeft(y)).selectAll('text').style('text-anchor', 'end');
+  // Update axes with transitions
+  chart.select('.x-axis').transition().duration(500).call(d3.axisBottom(x).ticks(5));
+  chart.select('.y-axis').transition().duration(500).call(d3.axisLeft(y)).selectAll('text').style('text-anchor', 'end');
 
-  // Remove existing bars
-  chart.selectAll('.country-bar').remove();
+  // Handle bars with enter/update/exit pattern
+  var bars = chart.selectAll('.country-bar').data(topCountries, function (d) {
+    return d.country;
+  });
 
-  // Create bars
-  chart.selectAll('.country-bar').data(topCountries).enter().append('rect').attr('class', 'country-bar').attr('x', 0).attr('y', function (d) {
+  // Remove bars that are no longer in the data
+  bars.exit().transition().duration(300).attr('width', 0).remove();
+
+  // Update existing bars
+  bars.transition().duration(500).attr('y', function (d) {
     return y(d.country);
-  }).attr('width', function (d) {
+  }).attr('height', y.bandwidth()).attr('width', function (d) {
     return x(d.count);
-  }).attr('height', y.bandwidth()).attr('fill', '#e5007d').on('mouseover', function (d) {
-    d3.select(this).attr('fill', '#3694d1');
-    var tooltip = d3.select('#top-countries-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('background', 'rgba(255,255,255,0.9)').style('padding', '8px').style('border-radius', '4px').style('border', '1px solid #ddd').style('box-shadow', '0 2px 4px rgba(0,0,0,0.1)').style('pointer-events', 'none').style('z-index', 999).style('left', "".concat(d3.event.pageX - d3.select('#top-countries-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#top-countries-chart').node().getBoundingClientRect().top - 40, "px"));
-    tooltip.html("\n                <div><strong>".concat(d.country, "</strong></div>\n                <div>Articles: ").concat(d.count, "</div>\n                <div>Percentage: ").concat((d.count / data.length * 100).toFixed(1), "%</div>\n            "));
+  }).attr('fill', '#e5007d');
+
+  // Add new bars with animation
+  bars.enter().append('rect').attr('class', 'country-bar').attr('x', 0).attr('y', function (d) {
+    return y(d.country);
+  }).attr('height', y.bandwidth()).attr('width', 0).attr('fill', '#e5007d').transition().duration(800).attr('width', function (d) {
+    return x(d.count);
+  });
+
+  // Handle interactive hover effects
+  chart.selectAll('.country-bar').on('mouseover', function (d) {
+    d3.select(this).transition().duration(100).attr('fill', '#3694d1');
+    var tooltip = d3.select('#top-countries-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', "".concat(d3.event.pageX - d3.select('#top-countries-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#top-countries-chart').node().getBoundingClientRect().top - 40, "px"));
+    tooltip.html("\n                <div class=\"chart-tooltip-title\">".concat(d.country, "</div>\n                <div><span class=\"chart-tooltip-value\">").concat(d.count, "</span> articles</div>\n                <div>").concat((d.count / data.length * 100).toFixed(1), "% of selected data</div>\n            "));
   }).on('mouseout', function () {
-    d3.select(this).attr('fill', '#e5007d');
+    d3.select(this).transition().duration(100).attr('fill', '#e5007d');
     d3.selectAll('.chart-tooltip').remove();
   });
 
-  // Add count labels
-  chart.selectAll('.count-label').data(topCountries).enter().append('text').attr('class', 'count-label').attr('x', function (d) {
+  // Update count labels
+  var labels = chart.selectAll('.count-label').data(topCountries, function (d) {
+    return d.country;
+  });
+
+  // Remove old labels
+  labels.exit().remove();
+
+  // Update existing labels
+  labels.transition().duration(500).attr('x', function (d) {
     return x(d.count) + 5;
   }).attr('y', function (d) {
     return y(d.country) + y.bandwidth() / 2 + 5;
   }).text(function (d) {
     return d.count;
-  }).attr('fill', '#333').attr('font-size', '12px');
+  });
+
+  // Add new labels
+  labels.enter().append('text').attr('class', 'count-label').attr('x', function (d) {
+    return x(d.count) + 5;
+  }).attr('y', function (d) {
+    return y(d.country) + y.bandwidth() / 2 + 5;
+  }).text(function (d) {
+    return d.count;
+  }).attr('fill', '#333').attr('font-size', '12px').attr('opacity', 0).transition().duration(500).attr('opacity', 1);
+}
+
+/**
+ * Update the countries chart with a map visualization
+ * @param {Object} chart The chart reference
+ * @param {Array} data Filtered data array
+ */
+function updateCountryMapChart(chart, data) {
+  // Clear existing chart content
+  chart.selectAll('*').remove();
+
+  // Show message that this is just a placeholder - in a real implementation, 
+  // we'd integrate with a proper map visualization
+  chart.append('text').attr('class', 'map-placeholder').attr('x', chart.node().getBBox().width / 2).attr('y', chart.node().getBBox().height / 2 - 20).attr('text-anchor', 'middle').attr('font-size', '14px').attr('fill', '#666').text('Map view is active');
+  chart.append('text').attr('class', 'map-placeholder-note').attr('x', chart.node().getBBox().width / 2).attr('y', chart.node().getBBox().height / 2 + 10).attr('text-anchor', 'middle').attr('font-size', '12px').attr('fill', '#666').text('Use the main map view for more detailed geographic analysis');
+
+  // Add instruction to toggle back
+  chart.append('text').attr('class', 'map-placeholder-instruction').attr('x', chart.node().getBBox().width / 2).attr('y', chart.node().getBBox().height / 2 + 40).attr('text-anchor', 'middle').attr('font-size', '12px').attr('fill', '#3694d1').text('Click the globe icon to return to bar chart view');
 }
 var _default = exports.default = {
   initializeTimeSeriesChart: initializeTimeSeriesChart,
@@ -25866,10 +26115,19 @@ exports.updateSummaryStats = updateSummaryStats;
 var d3 = _interopRequireWildcard(require("d3"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
-/**
- * Module for dashboard statistics functionality
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; } /**
+ * Enhanced module for dashboard statistics functionality
+ * Provides detailed statistics and metrics for the dashboard
  */
-
 /**
  * Update the summary statistics with data
  * @param {Array} data Filtered data array
@@ -25901,16 +26159,422 @@ function updateSummaryStats(data, dateRange) {
 
   // Format date range
   var timePeriodText = '-';
+  var timePeriodDisplayText = '-';
   if (dateRange && dateRange.minDate && dateRange.maxDate) {
     var formatDate = d3.timeFormat('%b %Y');
+    var formatMonthYear = d3.timeFormat('%B %Y');
     timePeriodText = "".concat(formatDate(dateRange.minDate), " - ").concat(formatDate(dateRange.maxDate));
+    timePeriodDisplayText = "".concat(formatMonthYear(dateRange.minDate), " - ").concat(formatMonthYear(dateRange.maxDate));
   }
 
-  // Update DOM elements
+  // Update DOM elements for stats
   document.getElementById('total-articles').textContent = totalArticles.toLocaleString();
   document.getElementById('total-countries').textContent = uniqueCountries.size.toLocaleString();
   document.getElementById('total-categories').textContent = uniqueCategories.size.toLocaleString();
   document.getElementById('time-period').textContent = timePeriodText;
+
+  // Update the date range indicator in the card header if it exists
+  var timeDisplayElement = document.getElementById('time-period-display');
+  if (timeDisplayElement) {
+    timeDisplayElement.textContent = timePeriodDisplayText;
+  }
+
+  // Calculate and update additional metrics
+  updateTrendMetrics(data);
+}
+
+/**
+ * Update trend metrics with data for key insights
+ * @param {Array} data Filtered data array
+ */
+function updateTrendMetrics(data) {
+  var metricsContainer = document.getElementById('key-metrics');
+  if (!metricsContainer) return;
+
+  // Calculate key metrics
+
+  // 1. Articles per month ratio
+  var monthsCount = getMonthsCount(data);
+  var articlesPerMonth = monthsCount > 0 ? Math.round(data.length / monthsCount * 10) / 10 : 0;
+
+  // 2. Country coverage percentage (compared to all possible countries ~195)
+  var uniqueCountries = new Set();
+  data.forEach(function (item) {
+    if (item.country && item.country.trim()) {
+      uniqueCountries.add(item.country);
+    }
+  });
+  var countryCoverage = Math.round(uniqueCountries.size / 195 * 100);
+
+  // 3. Category distribution - dominant category percentage
+  var categoryData = getCategoryDistribution(data);
+  var topCategoryPercentage = 0;
+  var topCategoryName = "N/A";
+  if (categoryData.length > 0) {
+    topCategoryName = categoryData[0].category;
+    topCategoryPercentage = Math.round(categoryData[0].count / data.length * 100);
+  }
+
+  // Create metrics HTML
+  var metricsHTML = "\n        <div class=\"key-metric\">\n            <span class=\"key-metric-value\">".concat(articlesPerMonth, "</span>\n            <span class=\"key-metric-label\">Articles/Month</span>\n        </div>\n        <div class=\"key-metric\">\n            <span class=\"key-metric-value\">").concat(countryCoverage, "%</span>\n            <span class=\"key-metric-label\">Country Coverage</span>\n        </div>\n        <div class=\"key-metric\">\n            <span class=\"key-metric-value\">").concat(topCategoryPercentage, "%</span>\n            <span class=\"key-metric-label\">").concat(topCategoryName, "</span>\n        </div>\n        <div class=\"key-metric\">\n            <span class=\"key-metric-value\">").concat(data.length.toLocaleString(), "</span>\n            <span class=\"key-metric-label\">Total Articles</span>\n        </div>\n    ");
+  metricsContainer.innerHTML = metricsHTML;
+
+  // Update trend indicators with insightful analysis
+  updateTrendIndicators(data);
+}
+
+/**
+ * Update trend indicators with insightful analysis
+ * @param {Array} data Filtered data array
+ */
+function updateTrendIndicators(data) {
+  var trendContainer = document.getElementById('trend-indicators');
+  if (!trendContainer) return;
+
+  // Initialize trend indicators
+  var trendsHTML = '';
+
+  // If not enough data for trends, show appropriate message
+  if (data.length < 10) {
+    trendsHTML = "\n            <div class=\"trend-indicator\">\n                <div class=\"trend-title\">\n                    <i class=\"fa fa-info-circle\"></i>\n                    <span>Dataset Analysis</span>\n                </div>\n                <div class=\"trend-value trend-neutral\">\n                    <i class=\"fa fa-exclamation-circle\"></i>\n                    <span>Need more data for detailed trends</span>\n                </div>\n            </div>\n        ";
+    trendContainer.innerHTML = trendsHTML;
+    return;
+  }
+
+  // 1. Time trend analysis - Are articles increasing or decreasing over time?
+  var timeTrend = analyzeTimeTrend(data);
+
+  // 2. Geographic focus - Is there a concentration in specific regions?
+  var geoFocus = analyzeGeographicFocus(data);
+
+  // 3. Category trend - Which integrity issues are gaining more attention?
+  var categoryTrend = analyzeCategoryTrend(data);
+  trendsHTML = "\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-calendar\"></i>\n                <span>Time Pattern</span>\n            </div>\n            <div class=\"trend-value ".concat(timeTrend.direction, "\">\n                <i class=\"fa fa-").concat(getTrendIcon(timeTrend.direction), "\"></i>\n                <span>").concat(timeTrend.label, "</span>\n            </div>\n        </div>\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-globe\"></i>\n                <span>Geographic Focus</span>\n            </div>\n            <div class=\"trend-value\">\n                <span>").concat(geoFocus.label, "</span>\n            </div>\n        </div>\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-tag\"></i>\n                <span>Rising Issue</span>\n            </div>\n            <div class=\"trend-value\">\n                <span>").concat(categoryTrend.label, "</span>\n            </div>\n        </div>\n    ");
+  trendContainer.innerHTML = trendsHTML;
+
+  // Update recent articles
+  updateRecentArticles(data);
+}
+
+/**
+ * Update recent articles list
+ * @param {Array} data Filtered data array
+ */
+function updateRecentArticles(data) {
+  var recentArticlesList = document.getElementById('recent-articles-list');
+  if (!recentArticlesList) return;
+  if (data.length === 0) {
+    recentArticlesList.innerHTML = '<p class="no-data-message">No articles available</p>';
+    return;
+  }
+
+  // Sort by date (newest first)
+  var sortedData = _toConsumableArray(data).sort(function (a, b) {
+    if (!a.parsedDate || !b.parsedDate) return 0;
+    return b.parsedDate - a.parsedDate;
+  });
+
+  // Take the 5 most recent
+  var recentArticles = sortedData.slice(0, 5);
+
+  // Create HTML for article list
+  var articlesHTML = recentArticles.map(function (article) {
+    var title = article.Title || 'Untitled';
+    var country = article.country || 'Unknown location';
+
+    // Format date
+    var date = 'Unknown date';
+    if (article.parsedDate) {
+      var options = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      };
+      date = article.parsedDate.toLocaleDateString(undefined, options);
+    } else if (article.Date) {
+      date = article.Date;
+    }
+
+    // Get categories
+    var categories = 'No categories';
+    if (Array.isArray(article['Corruption Categories']) && article['Corruption Categories'].length > 0) {
+      categories = article['Corruption Categories'].slice(0, 2).join(', ');
+      if (article['Corruption Categories'].length > 2) {
+        categories += '...';
+      }
+    }
+    return "\n            <div class=\"article-item\" data-url=\"".concat(article.url || '#', "\" onclick=\"window.open('").concat(article.url || '#', "', '_blank')\">\n                <div class=\"article-title\">").concat(title, "</div>\n                <div class=\"article-meta\">\n                    <span><i class=\"fa fa-map-marker\"></i> ").concat(country, "</span>\n                    <span><i class=\"fa fa-calendar\"></i> ").concat(date, "</span>\n                </div>\n            </div>\n        ");
+  }).join('');
+  recentArticlesList.innerHTML = articlesHTML;
+}
+
+/**
+ * Get the number of months represented in the data
+ * @param {Array} data Filtered data array
+ * @returns {Number} Number of months
+ */
+function getMonthsCount(data) {
+  if (data.length === 0) return 0;
+
+  // Get all dates
+  var dates = data.map(function (item) {
+    return item.parsedDate;
+  }).filter(function (date) {
+    return date !== null && date !== undefined;
+  });
+  if (dates.length === 0) return 0;
+
+  // Get min and max dates
+  var minDate = new Date(Math.min.apply(Math, _toConsumableArray(dates.map(function (d) {
+    return d.getTime();
+  }))));
+  var maxDate = new Date(Math.max.apply(Math, _toConsumableArray(dates.map(function (d) {
+    return d.getTime();
+  }))));
+
+  // Calculate months between min and max dates
+  var yearDiff = maxDate.getFullYear() - minDate.getFullYear();
+  var monthDiff = maxDate.getMonth() - minDate.getMonth();
+  var totalMonths = yearDiff * 12 + monthDiff + 1; // +1 to include both start and end months
+
+  return totalMonths;
+}
+
+/**
+ * Get the distribution of categories in the data
+ * @param {Array} data Filtered data array
+ * @returns {Array} Array of category objects with counts, sorted by count
+ */
+function getCategoryDistribution(data) {
+  var categoryCounts = {};
+  data.forEach(function (item) {
+    if (Array.isArray(item['Corruption Categories'])) {
+      item['Corruption Categories'].forEach(function (category) {
+        if (category && category.trim()) {
+          categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+        }
+      });
+    }
+  });
+
+  // Convert to array and sort
+  var categoryData = Object.entries(categoryCounts).map(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+      category = _ref2[0],
+      count = _ref2[1];
+    return {
+      category: category,
+      count: count
+    };
+  }).sort(function (a, b) {
+    return b.count - a.count;
+  });
+  return categoryData;
+}
+
+/**
+ * Analyze the time trend in the data
+ * @param {Array} data Filtered data array
+ * @returns {Object} Trend object with direction and label
+ */
+function analyzeTimeTrend(data) {
+  if (data.length < 10) {
+    return {
+      direction: 'trend-neutral',
+      label: 'Insufficient data'
+    };
+  }
+
+  // Group by month
+  var monthGroups = d3.nest().key(function (d) {
+    var date = d.parsedDate;
+    return date ? d3.timeFormat('%Y-%m')(date) : 'Unknown';
+  }).rollup(function (v) {
+    return v.length;
+  }).entries(data).filter(function (d) {
+    return d.key !== 'Unknown';
+  }).sort(function (a, b) {
+    return d3.ascending(a.key, b.key);
+  });
+  if (monthGroups.length < 3) {
+    return {
+      direction: 'trend-neutral',
+      label: 'Insufficient time span'
+    };
+  }
+
+  // Compare first third vs last third
+  var thirdSize = Math.floor(monthGroups.length / 3);
+  var firstThird = monthGroups.slice(0, thirdSize);
+  var lastThird = monthGroups.slice(-thirdSize);
+  var firstThirdAvg = d3.mean(firstThird, function (d) {
+    return d.value;
+  });
+  var lastThirdAvg = d3.mean(lastThird, function (d) {
+    return d.value;
+  });
+  var percentChange = (lastThirdAvg - firstThirdAvg) / firstThirdAvg * 100;
+  if (percentChange > 20) {
+    return {
+      direction: 'trend-up',
+      label: 'Increasing coverage'
+    };
+  } else if (percentChange < -20) {
+    return {
+      direction: 'trend-down',
+      label: 'Decreasing coverage'
+    };
+  } else {
+    return {
+      direction: 'trend-neutral',
+      label: 'Stable coverage'
+    };
+  }
+}
+
+/**
+ * Analyze the geographic focus in the data
+ * @param {Array} data Filtered data array
+ * @returns {Object} Focus object with label
+ */
+function analyzeGeographicFocus(data) {
+  // Count by country
+  var countryData = [];
+  var countryCounts = {};
+  data.forEach(function (item) {
+    if (item.country && item.country.trim()) {
+      countryCounts[item.country] = (countryCounts[item.country] || 0) + 1;
+    }
+  });
+
+  // Convert to array
+  Object.entries(countryCounts).forEach(function (_ref3) {
+    var _ref4 = _slicedToArray(_ref3, 2),
+      country = _ref4[0],
+      count = _ref4[1];
+    countryData.push({
+      country: country,
+      count: count
+    });
+  });
+
+  // Sort by count
+  countryData.sort(function (a, b) {
+    return b.count - a.count;
+  });
+
+  // Calculate concentration metrics
+  var totalCountries = countryData.length;
+  if (totalCountries === 0) return {
+    label: 'No geographic data'
+  };
+  var top3Count = countryData.slice(0, 3).reduce(function (sum, item) {
+    return sum + item.count;
+  }, 0);
+  var top3Percentage = Math.round(top3Count / data.length * 100);
+  if (top3Percentage > 60) {
+    return {
+      label: "High focus on top 3 (".concat(top3Percentage, "%)")
+    };
+  } else if (top3Percentage > 40) {
+    return {
+      label: "Moderate regional focus (".concat(top3Percentage, "%)")
+    };
+  } else {
+    return {
+      label: "Broad global coverage"
+    };
+  }
+}
+
+/**
+ * Analyze the category trends in the data
+ * @param {Array} data Filtered data array
+ * @returns {Object} Trend object with label
+ */
+function analyzeCategoryTrend(data) {
+  if (data.length < 10) {
+    return {
+      label: 'Insufficient data'
+    };
+  }
+
+  // Sort by date
+  var sortedData = _toConsumableArray(data).sort(function (a, b) {
+    if (!a.parsedDate || !b.parsedDate) return 0;
+    return a.parsedDate - b.parsedDate;
+  });
+
+  // Split into two halves by time
+  var halfPoint = Math.floor(sortedData.length / 2);
+  var firstHalf = sortedData.slice(0, halfPoint);
+  var secondHalf = sortedData.slice(halfPoint);
+
+  // Get category counts for each half
+  var firstHalfCounts = {};
+  var secondHalfCounts = {};
+  firstHalf.forEach(function (item) {
+    if (Array.isArray(item['Corruption Categories'])) {
+      item['Corruption Categories'].forEach(function (category) {
+        if (category && category.trim()) {
+          firstHalfCounts[category] = (firstHalfCounts[category] || 0) + 1;
+        }
+      });
+    }
+  });
+  secondHalf.forEach(function (item) {
+    if (Array.isArray(item['Corruption Categories'])) {
+      item['Corruption Categories'].forEach(function (category) {
+        if (category && category.trim()) {
+          secondHalfCounts[category] = (secondHalfCounts[category] || 0) + 1;
+        }
+      });
+    }
+  });
+
+  // Find categories with the most growth
+  var maxGrowth = -Infinity;
+  var growingCategory = null;
+  Object.keys(secondHalfCounts).forEach(function (category) {
+    var firstCount = firstHalfCounts[category] || 0;
+    var secondCount = secondHalfCounts[category];
+
+    // Only consider categories with at least 3 mentions
+    if (secondCount >= 3) {
+      var growthRate = firstCount > 0 ? (secondCount - firstCount) / firstCount : Infinity;
+      if (growthRate > maxGrowth) {
+        maxGrowth = growthRate;
+        growingCategory = category;
+      }
+    }
+  });
+  if (growingCategory) {
+    // Truncate long category names
+    var displayCategory = growingCategory.length > 18 ? growingCategory.slice(0, 15) + '...' : growingCategory;
+    return {
+      label: displayCategory
+    };
+  } else {
+    return {
+      label: 'No clear trend'
+    };
+  }
+}
+
+/**
+ * Get icon name based on trend direction
+ * @param {String} direction Trend direction class
+ * @returns {String} Icon name
+ */
+function getTrendIcon(direction) {
+  switch (direction) {
+    case 'trend-up':
+      return 'arrow-up';
+    case 'trend-down':
+      return 'arrow-down';
+    default:
+      return 'minus';
+  }
 }
 var _default = exports.default = {
   updateSummaryStats: updateSummaryStats
@@ -25930,16 +26594,33 @@ var dashboardCharts = _interopRequireWildcard(require("./dashboardCharts"));
 var dashboardStats = _interopRequireWildcard(require("./dashboardStats"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
-/**
- * Main dashboard module that orchestrates dashboard functionality
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; } /**
+ * Enhanced dashboard module that orchestrates dashboard functionality
+ * with improved visualizations and insights
  */
-
 // Dashboard state
 var dashboardData = [];
+var previousData = [];
 var timeSeriesChart;
 var categoryChart;
 var topCountriesChart;
 var dateRange;
+var chartOptions = {
+  timeSeries: {
+    yearly: false
+  },
+  category: {
+    showAll: false
+  },
+  country: {
+    mapView: false
+  }
+};
 
 /**
  * Initialize the dashboard visualizations
@@ -25955,7 +26636,40 @@ function initializeDashboard(container) {
   timeSeriesChart = dashboardCharts.initializeTimeSeriesChart();
   categoryChart = dashboardCharts.initializeCategoryChart();
   topCountriesChart = dashboardCharts.initializeTopCountriesChart();
+
+  // Setup event listeners for dashboard interactions
+  setupEventListeners();
   console.timeEnd('Dashboard Initialization');
+}
+
+/**
+ * Setup event listeners for dashboard interactions
+ */
+function setupEventListeners() {
+  // Listen for view toggle events from the dashboardLayout
+  document.addEventListener('timeViewToggle', function (e) {
+    chartOptions.timeSeries.yearly = e.detail.yearly;
+    if (dashboardData.length > 0) {
+      dashboardCharts.updateTimeSeriesChart(timeSeriesChart, dashboardData, dateRange, chartOptions.timeSeries);
+    }
+  });
+  document.addEventListener('categoryViewToggle', function (e) {
+    chartOptions.category.showAll = e.detail.showAll;
+    if (dashboardData.length > 0) {
+      dashboardCharts.updateCategoryChart(categoryChart, dashboardData, chartOptions.category);
+    }
+  });
+  document.addEventListener('countryViewToggle', function (e) {
+    chartOptions.country.mapView = e.detail.mapView;
+    if (dashboardData.length > 0) {
+      dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData, chartOptions.country);
+    }
+  });
+  document.addEventListener('refreshRecentArticles', function () {
+    if (dashboardData.length > 0) {
+      updateRecentArticles(dashboardData);
+    }
+  });
 }
 
 /**
@@ -25966,16 +26680,273 @@ function initializeDashboard(container) {
 function updateDashboard(data, dataDateRange) {
   console.time('Dashboard Update');
 
+  // Store the previous data for trend analysis
+  previousData = _toConsumableArray(dashboardData);
+
   // Store the filtered data and date range
   dashboardData = data;
   dateRange = dataDateRange;
 
-  // Update each visualization
-  dashboardCharts.updateTimeSeriesChart(timeSeriesChart, data, dateRange);
-  dashboardCharts.updateCategoryChart(categoryChart, data);
-  dashboardCharts.updateTopCountriesChart(topCountriesChart, data);
+  // Update each visualization with the options
+  dashboardCharts.updateTimeSeriesChart(timeSeriesChart, data, dateRange, chartOptions.timeSeries);
+  dashboardCharts.updateCategoryChart(categoryChart, data, chartOptions.category);
+  dashboardCharts.updateTopCountriesChart(topCountriesChart, data, chartOptions.country);
   dashboardStats.updateSummaryStats(data, dateRange);
+
+  // Update additional components
+  updateKeyMetrics(data);
+  updateTrendAnalysis(data, previousData);
+  updateRecentArticles(data);
   console.timeEnd('Dashboard Update');
+}
+
+/**
+ * Update the key metrics in the dashboard header
+ * @param {Array} data Filtered data array
+ */
+function updateKeyMetrics(data) {
+  var keyMetricsContainer = document.getElementById('key-metrics');
+  if (!keyMetricsContainer) return;
+
+  // Clear previous metrics
+  keyMetricsContainer.innerHTML = '';
+
+  // Calculate key metrics
+
+  // 1. Latest article date
+  var latestDate = getLatestArticleDate(data);
+
+  // 2. Most mentioned country
+  var topCountry = getTopCountry(data);
+
+  // 3. Most common integrity issue
+  var topCategory = getTopCategory(data);
+
+  // Create metrics HTML
+  var metricsHTML = "\n        <div class=\"key-metric\">\n            <span class=\"key-metric-value\">".concat(latestDate, "</span>\n            <span class=\"key-metric-label\">Latest Article</span>\n        </div>\n        <div class=\"key-metric\">\n            <span class=\"key-metric-value\">").concat(topCountry.name, "</span>\n            <span class=\"key-metric-label\">Most Mentioned Country</span>\n        </div>\n        <div class=\"key-metric\">\n            <span class=\"key-metric-value\">").concat(topCategory.name, "</span>\n            <span class=\"key-metric-label\">Top Integrity Issue</span>\n        </div>\n    ");
+  keyMetricsContainer.innerHTML = metricsHTML;
+}
+
+/**
+ * Get the date of the most recent article
+ * @param {Array} data Filtered data array
+ * @returns {String} Formatted date string
+ */
+function getLatestArticleDate(data) {
+  if (data.length === 0) return 'N/A';
+  var sortedByDate = _toConsumableArray(data).sort(function (a, b) {
+    if (!a.parsedDate || !b.parsedDate) return 0;
+    return b.parsedDate - a.parsedDate;
+  });
+  if (!sortedByDate[0].parsedDate) return 'N/A';
+
+  // Format date to DD Month YYYY
+  var date = sortedByDate[0].parsedDate;
+  var options = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  };
+  return date.toLocaleDateString(undefined, options);
+}
+
+/**
+ * Get the most mentioned country and its count
+ * @param {Array} data Filtered data array
+ * @returns {Object} Object with country name and count
+ */
+function getTopCountry(data) {
+  if (data.length === 0) return {
+    name: 'N/A',
+    count: 0
+  };
+  var countryCounts = {};
+  data.forEach(function (item) {
+    if (item.country && item.country.trim()) {
+      countryCounts[item.country] = (countryCounts[item.country] || 0) + 1;
+    }
+  });
+  if (Object.keys(countryCounts).length === 0) return {
+    name: 'N/A',
+    count: 0
+  };
+  var sortedCountries = Object.entries(countryCounts).sort(function (a, b) {
+    return b[1] - a[1];
+  });
+  return {
+    name: sortedCountries[0][0],
+    count: sortedCountries[0][1]
+  };
+}
+
+/**
+ * Get the most common integrity issue category
+ * @param {Array} data Filtered data array
+ * @returns {Object} Object with category name and count
+ */
+function getTopCategory(data) {
+  if (data.length === 0) return {
+    name: 'N/A',
+    count: 0
+  };
+  var categoryCounts = {};
+  data.forEach(function (item) {
+    if (Array.isArray(item['Corruption Categories'])) {
+      item['Corruption Categories'].forEach(function (category) {
+        if (category && category.trim()) {
+          categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+        }
+      });
+    }
+  });
+  if (Object.keys(categoryCounts).length === 0) return {
+    name: 'N/A',
+    count: 0
+  };
+  var sortedCategories = Object.entries(categoryCounts).sort(function (a, b) {
+    return b[1] - a[1];
+  });
+  return {
+    name: sortedCategories[0][0],
+    count: sortedCategories[0][1]
+  };
+}
+
+/**
+ * Update the trend analysis section
+ * @param {Array} currentData Current filtered data array
+ * @param {Array} previousData Previous filtered data array
+ */
+function updateTrendAnalysis(currentData, previousData) {
+  var trendIndicatorsContainer = document.getElementById('trend-indicators');
+  if (!trendIndicatorsContainer) return;
+
+  // Clear previous trends
+  trendIndicatorsContainer.innerHTML = '';
+
+  // Skip if no previous data to compare with
+  if (previousData.length === 0) {
+    trendIndicatorsContainer.innerHTML = "\n            <div class=\"trend-indicator\">\n                <div class=\"trend-title\">Trend Analysis</div>\n                <div class=\"trend-value trend-neutral\">\n                    <i class=\"fa fa-info-circle\"></i>\n                    <span>Not enough data for trends</span>\n                </div>\n            </div>\n        ";
+    return;
+  }
+
+  // Calculate trends
+
+  // 1. Change in total articles
+  var totalArticlesTrend = calculatePercentageChange(currentData.length, previousData.length);
+
+  // 2. Change in countries covered
+  var currentCountries = new Set(currentData.map(function (item) {
+    return item.country;
+  }).filter(Boolean)).size;
+  var previousCountries = new Set(previousData.map(function (item) {
+    return item.country;
+  }).filter(Boolean)).size;
+  var countriesTrend = calculatePercentageChange(currentCountries, previousCountries);
+
+  // 3. Change in top category
+  var currentTopCategory = getTopCategory(currentData);
+  var previousTopCategory = getTopCategory(previousData);
+  var categoryTrendValue = 'New';
+  var categoryTrendClass = 'trend-neutral';
+  if (currentTopCategory.name === previousTopCategory.name) {
+    var categoryTrend = calculatePercentageChange(currentTopCategory.count, previousTopCategory.count);
+    categoryTrendValue = "".concat(categoryTrend.value, "%");
+    categoryTrendClass = categoryTrend.direction;
+  }
+
+  // Create trends HTML
+  var trendsHTML = "\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-newspaper-o\"></i>\n                <span>Articles</span>\n            </div>\n            <div class=\"trend-value ".concat(totalArticlesTrend.direction, "\">\n                <i class=\"fa fa-").concat(getTrendIcon(totalArticlesTrend.direction), "\"></i>\n                <span>").concat(totalArticlesTrend.value, "%</span>\n            </div>\n        </div>\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-globe\"></i>\n                <span>Countries</span>\n            </div>\n            <div class=\"trend-value ").concat(countriesTrend.direction, "\">\n                <i class=\"fa fa-").concat(getTrendIcon(countriesTrend.direction), "\"></i>\n                <span>").concat(countriesTrend.value, "%</span>\n            </div>\n        </div>\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-tag\"></i>\n                <span>Top Category</span>\n            </div>\n            <div class=\"trend-value ").concat(categoryTrendClass, "\">\n                <i class=\"fa fa-").concat(getTrendIcon(categoryTrendClass), "\"></i>\n                <span>").concat(categoryTrendValue, "</span>\n            </div>\n        </div>\n    ");
+  trendIndicatorsContainer.innerHTML = trendsHTML;
+}
+
+/**
+ * Calculate percentage change between two values
+ * @param {Number} current Current value
+ * @param {Number} previous Previous value
+ * @returns {Object} Object with percentage value and direction
+ */
+function calculatePercentageChange(current, previous) {
+  if (previous === 0) return {
+    value: 0,
+    direction: 'trend-neutral'
+  };
+  var change = current - previous;
+  var percentageChange = Math.round(change / previous * 100);
+  var direction;
+  if (percentageChange > 0) {
+    direction = 'trend-up';
+  } else if (percentageChange < 0) {
+    direction = 'trend-down';
+  } else {
+    direction = 'trend-neutral';
+  }
+  return {
+    value: Math.abs(percentageChange),
+    direction: direction
+  };
+}
+
+/**
+ * Get icon name based on trend direction
+ * @param {String} direction Trend direction class
+ * @returns {String} Icon name
+ */
+function getTrendIcon(direction) {
+  switch (direction) {
+    case 'trend-up':
+      return 'arrow-up';
+    case 'trend-down':
+      return 'arrow-down';
+    default:
+      return 'minus';
+  }
+}
+
+/**
+ * Update the recent articles section
+ * @param {Array} data Filtered data array
+ */
+function updateRecentArticles(data) {
+  var recentArticlesList = document.getElementById('recent-articles-list');
+  if (!recentArticlesList) return;
+
+  // Clear previous articles
+  recentArticlesList.innerHTML = '';
+  if (data.length === 0) {
+    recentArticlesList.innerHTML = '<p class="no-data-message">No articles available</p>';
+    return;
+  }
+
+  // Sort data by date (newest first)
+  var sortedData = _toConsumableArray(data).sort(function (a, b) {
+    if (!a.parsedDate || !b.parsedDate) return 0;
+    return b.parsedDate - a.parsedDate;
+  });
+
+  // Take only the 5 most recent articles
+  var recentArticles = sortedData.slice(0, 5);
+
+  // Create HTML for recent articles
+  var articlesHTML = recentArticles.map(function (article) {
+    var title = article.Title || 'Untitled';
+    var country = article.country || 'Unknown';
+
+    // Format date properly or use a fallback
+    var date = 'Unknown date';
+    if (article.parsedDate) {
+      var options = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      };
+      date = article.parsedDate.toLocaleDateString(undefined, options);
+    } else if (article.Date) {
+      date = article.Date;
+    }
+    return "\n            <div class=\"article-item\" data-url=\"".concat(article.url || '#', "\" onclick=\"window.open('").concat(article.url || '#', "', '_blank')\">\n                <div class=\"article-title\">").concat(title, "</div>\n                <div class=\"article-meta\">\n                    <span><i class=\"fa fa-map-marker\"></i> ").concat(country, "</span>\n                    <span><i class=\"fa fa-calendar\"></i> ").concat(date, "</span>\n                </div>\n            </div>\n        ");
+  }).join('');
+  recentArticlesList.innerHTML = articlesHTML;
 }
 
 /**
@@ -25983,7 +26954,10 @@ function updateDashboard(data, dataDateRange) {
  */
 function handleDashboardResize() {
   if (dashboardData.length > 0) {
-    updateDashboard(dashboardData, dateRange);
+    // Only update the charts, not the entire dashboard
+    dashboardCharts.updateTimeSeriesChart(timeSeriesChart, dashboardData, dateRange, chartOptions.timeSeries);
+    dashboardCharts.updateCategoryChart(categoryChart, dashboardData, chartOptions.category);
+    dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData, chartOptions.country);
   }
 }
 var _default = exports.default = {
@@ -26325,7 +27299,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52892" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54130" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
