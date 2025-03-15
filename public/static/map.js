@@ -256,7 +256,24 @@ function initializeMap() {
     chunkDelay: 50,
     maxClusterRadius: 80,
     disableClusteringAtZoom: 16,
-    spiderfyOnMaxZoom: true
+    spiderfyOnMaxZoom: true,
+    // Custom function to create heat circle icons
+    iconCreateFunction: function iconCreateFunction(cluster) {
+      var childCount = cluster.getChildCount();
+      var c = ' marker-cluster-';
+      if (childCount < 10) {
+        c += 'small';
+      } else if (childCount < 100) {
+        c += 'medium';
+      } else {
+        c += 'large';
+      }
+      return new L.DivIcon({
+        html: '<div><span>' + childCount + '</span></div>',
+        className: 'marker-cluster' + c,
+        iconSize: new L.Point(40, 40)
+      });
+    }
   });
   map.addLayer(markers);
 
@@ -27521,7 +27538,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57038" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54953" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

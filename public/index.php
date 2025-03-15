@@ -25,7 +25,7 @@
 <link rel="icon" type="image/png" src="https://ti-health.org/wp-content/themes/tiuk-pharma-18/media/favicons/favicon-128.png" sizes="128x128" />
 <link rel="icon" type="image/x-icon" href="https://ti-health.org/wp-content/themes/tiuk-pharma-18/media/favicons/favicon.ico" />
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
@@ -49,6 +49,7 @@
 
     <link rel="stylesheet" href="static/style.css"> <!-- Custom styles -->
     <link rel="stylesheet" href="static/dashboard.css"> <!-- Dashboard styles -->
+    <link rel="stylesheet" href="static/markercluster.css"> <!-- MarkerCluster styles -->
 </head>
 
 <body>

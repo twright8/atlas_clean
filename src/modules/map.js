@@ -29,7 +29,26 @@ export function initializeMap() {
         chunkDelay: 50,
         maxClusterRadius: 80,
         disableClusteringAtZoom: 16,
-        spiderfyOnMaxZoom: true
+        spiderfyOnMaxZoom: true,
+        // Custom function to create heat circle icons
+        iconCreateFunction: function(cluster) {
+            const childCount = cluster.getChildCount();
+            let c = ' marker-cluster-';
+            
+            if (childCount < 10) {
+                c += 'small';
+            } else if (childCount < 100) {
+                c += 'medium';
+            } else {
+                c += 'large';
+            }
+            
+            return new L.DivIcon({
+                html: '<div><span>' + childCount + '</span></div>',
+                className: 'marker-cluster' + c,
+                iconSize: new L.Point(40, 40)
+            });
+        }
     });
     map.addLayer(markers);
     
