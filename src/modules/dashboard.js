@@ -5,6 +5,7 @@
 import * as dashboardLayout from './dashboardLayout';
 import * as dashboardCharts from './dashboardCharts';
 import * as dashboardStats from './dashboardStats';
+import * as interconnectionChart from './interconnectionChart';
 
 // Dashboard state
 let dashboardData = [];
@@ -12,11 +13,13 @@ let previousData = [];
 let timeSeriesChart;
 let categoryChart;
 let topCountriesChart;
+let interconnectionViz;
 let dateRange;
 let chartOptions = {
     timeSeries: { yearly: false },
-    category: { showAll: false },
-    country: { mapView: false }
+    category: { showHealthCategories: false },
+    country: { mapView: false },
+    interconnection: { alternate: false }
 };
 
 /**
@@ -33,6 +36,7 @@ export function initializeDashboard(container) {
     timeSeriesChart = dashboardCharts.initializeTimeSeriesChart();
     categoryChart = dashboardCharts.initializeCategoryChart();
     topCountriesChart = dashboardCharts.initializeTopCountriesChart();
+    interconnectionViz = interconnectionChart.initializeInterconnectionChart();
     
     // Setup event listeners for dashboard interactions
     setupEventListeners();
@@ -53,7 +57,7 @@ function setupEventListeners() {
     });
     
     document.addEventListener('categoryViewToggle', function(e) {
-        chartOptions.category.showAll = e.detail.showAll;
+        chartOptions.category.showHealthCategories = e.detail.showHealthCategories;
         if (dashboardData.length > 0) {
             dashboardCharts.updateCategoryChart(categoryChart, dashboardData, chartOptions.category);
         }
@@ -63,6 +67,15 @@ function setupEventListeners() {
         chartOptions.country.mapView = e.detail.mapView;
         if (dashboardData.length > 0) {
             dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData, chartOptions.country);
+        }
+    });
+    
+    document.addEventListener('interconnectionViewToggle', function(e) {
+        chartOptions.interconnection.alternate = e.detail.alternate;
+        if (dashboardData.length > 0) {
+            // In a real implementation, we would have alternate visualization methods
+            // For now, we just redraw the current visualization
+            interconnectionChart.updateInterconnectionChart(interconnectionViz, dashboardData, chartOptions.interconnection);
         }
     });
     
@@ -81,7 +94,7 @@ function setupEventListeners() {
 export function updateDashboard(data, dataDateRange) {
     console.time('Dashboard Update');
     
-    // Store the previous data for trend analysis
+    // Store the previous data for analysis
     previousData = [...dashboardData];
     
     // Store the filtered data and date range
@@ -92,11 +105,11 @@ export function updateDashboard(data, dataDateRange) {
     dashboardCharts.updateTimeSeriesChart(timeSeriesChart, data, dateRange, chartOptions.timeSeries);
     dashboardCharts.updateCategoryChart(categoryChart, data, chartOptions.category);
     dashboardCharts.updateTopCountriesChart(topCountriesChart, data, chartOptions.country);
+    interconnectionChart.updateInterconnectionChart(interconnectionViz, data, chartOptions.interconnection);
     dashboardStats.updateSummaryStats(data, dateRange);
     
     // Update additional components
     updateKeyMetrics(data);
-    updateTrendAnalysis(data, previousData);
     updateRecentArticles(data);
     
     console.timeEnd('Dashboard Update');
@@ -418,6 +431,7 @@ export function handleDashboardResize() {
         dashboardCharts.updateTimeSeriesChart(timeSeriesChart, dashboardData, dateRange, chartOptions.timeSeries);
         dashboardCharts.updateCategoryChart(categoryChart, dashboardData, chartOptions.category);
         dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData, chartOptions.country);
+        interconnectionChart.updateInterconnectionChart(interconnectionViz, dashboardData, chartOptions.interconnection);
     }
 }
 

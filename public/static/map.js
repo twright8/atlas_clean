@@ -246,15 +246,18 @@ function initializeMap() {
   // Initialize map centered at [0, 0] with zoom level 2
   map = L.map('map', {
     maxZoom: 18,
-    minZoom: 2
+    minZoom: 2,
+    zoomAnimation: true,
+    fadeAnimation: true,
+    markerZoomAnimation: true,
+    zoomSnap: 0.5,
+    zoomDelta: 0.5,
+    wheelPxPerZoomLevel: 120
   }).setView([0, 0], 2);
 
   // Create marker cluster group for better performance with many markers
-  // Explicitly check if L.markerClusterGroup exists to prevent errors
-  if (typeof L.markerClusterGroup !== 'function') {
-    console.error('Leaflet.markercluster is not loaded, falling back to normal markers');
-    markers = L.layerGroup();
-  } else {
+  try {
+    // Try to create a MarkerClusterGroup directly
     markers = L.markerClusterGroup({
       chunkedLoading: true,
       chunkInterval: 200,
@@ -262,6 +265,11 @@ function initializeMap() {
       maxClusterRadius: 80,
       disableClusteringAtZoom: 16,
       spiderfyOnMaxZoom: true,
+      animate: true,
+      animateAddingMarkers: true,
+      spiderfyDistanceMultiplier: 1.5,
+      showCoverageOnHover: true,
+      zoomToBoundsOnClick: true,
       // Configure cluster icon sizes and colors
       iconCreateFunction: function iconCreateFunction(cluster) {
         var count = cluster.getChildCount();
@@ -285,6 +293,10 @@ function initializeMap() {
         });
       }
     });
+    console.log('Using MarkerClusterGroup for markers');
+  } catch (e) {
+    console.error('Leaflet.markercluster is not loaded, falling back to normal markers:', e);
+    markers = L.layerGroup();
   }
   map.addLayer(markers);
 
@@ -428,8 +440,38 @@ function toggleLegend(showLegend) {
  * Fit the map view to the marker bounds
  */
 function fitMapToBounds() {
-  if (markers.getBounds().isValid()) {
-    map.fitBounds(markers.getBounds());
+  try {
+    // Try the MarkerClusterGroup getBounds method first
+    var bounds = markers.getBounds();
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, {
+        padding: [30, 30],
+        maxZoom: 12,
+        animate: true,
+        duration: 0.5
+      });
+    }
+  } catch (e) {
+    // Fall back to calculating bounds manually if getBounds doesn't exist
+    try {
+      var layers = markers.getLayers();
+      if (layers && layers.length > 0) {
+        var _bounds = L.latLngBounds();
+        layers.forEach(function (marker) {
+          _bounds.extend(marker.getLatLng());
+        });
+        if (_bounds.isValid()) {
+          map.fitBounds(_bounds, {
+            padding: [30, 30],
+            maxZoom: 12,
+            animate: true,
+            duration: 0.5
+          });
+        }
+      }
+    } catch (e2) {
+      console.error('Error fitting map to bounds:', e2);
+    }
   }
 }
 
@@ -461,11 +503,11 @@ function clearMarkers() {
  * @param {Array} markerArray Array of Leaflet markers
  */
 function addMarkers(markerArray) {
-  if (typeof markers.addLayers === 'function') {
-    // Using MarkerClusterGroup
+  try {
+    // Try the MarkerClusterGroup addLayers method first
     markers.addLayers(markerArray);
-  } else {
-    // Fallback to LayerGroup for browsers without markercluster
+  } catch (e) {
+    // Fall back to adding markers individually
     markerArray.forEach(function (marker) {
       return markers.addLayer(marker);
     });
@@ -1172,7 +1214,7 @@ exports.default = void 0;
  * @param {HTMLElement} container The container element for the dashboard
  */
 function createDashboardLayout(container) {
-  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <!-- Dashboard header with key insights -->\n            <div class=\"dashboard-header-card\">\n                <div class=\"dashboard-header-content\">\n                    <div class=\"dashboard-header-title\">\n                        <h2>Health Integrity Insights</h2>\n                        <p class=\"dashboard-subtitle\">Analysis of healthcare integrity issues worldwide</p>\n                    </div>\n                    <div class=\"dashboard-key-metrics\" id=\"key-metrics\">\n                        <!-- Filled dynamically -->\n                    </div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Time Series Chart -->\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <div class=\"card-header\">\n                        <h3>Articles Over Time</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"time-view-toggle\" title=\"Toggle between monthly/yearly view\">\n                                <i class=\"fa fa-calendar\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                \n                <!-- Categories Chart -->\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <div class=\"card-header\">\n                        <h3>Integrity Issues by Category</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"category-view-toggle\" title=\"Toggle between top 5/all categories\">\n                                <i class=\"fa fa-bars\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Top Countries Chart -->\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <div class=\"card-header\">\n                        <h3>Top Countries by Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"country-view-toggle\" title=\"Toggle between chart/map view\">\n                                <i class=\"fa fa-globe\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                \n                <!-- Summary Statistics -->\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <div class=\"card-header\">\n                        <h3>Summary Statistics</h3>\n                        <div class=\"date-range-indicator\">\n                            <i class=\"fa fa-calendar-o\"></i>\n                            <span id=\"time-period-display\">-</span>\n                        </div>\n                    </div>\n                    <div id=\"summary-stats\" class=\"summary-stats-grid\">\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-newspaper-o\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-articles\">0</span>\n                                <span class=\"stat-label\">Total Articles</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-globe\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-countries\">0</span>\n                                <span class=\"stat-label\">Countries</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-tags\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-categories\">0</span>\n                                <span class=\"stat-label\">Categories</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-calendar\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"time-period\">-</span>\n                                <span class=\"stat-label\">Time Period</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <!-- New row for additional insights -->\n            <div class=\"dashboard-row\">\n                <!-- Trends Analysis Card -->\n                <div class=\"dashboard-card\" id=\"trends-analysis-card\">\n                    <div class=\"card-header\">\n                        <h3>Trend Analysis</h3>\n                    </div>\n                    <div id=\"trends-content\">\n                        <div id=\"trend-indicators\"></div>\n                    </div>\n                </div>\n                \n                <!-- Recent Articles Card -->\n                <div class=\"dashboard-card\" id=\"recent-articles-card\">\n                    <div class=\"card-header\">\n                        <h3>Recent Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"refresh-btn\" id=\"recent-refresh\" title=\"Refresh list\">\n                                <i class=\"fa fa-refresh\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"recent-articles-list\"></div>\n                </div>\n            </div>\n        </div>\n    ";
+  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <!-- Dashboard header with key insights -->\n            <div class=\"dashboard-header-card\">\n                <div class=\"dashboard-header-content\">\n                    <div class=\"dashboard-header-title\">\n                        <h2>Health Integrity Insights</h2>\n                        <p class=\"dashboard-subtitle\">Analysis of healthcare integrity issues worldwide</p>\n                    </div>\n                    <div class=\"dashboard-key-metrics\" id=\"key-metrics\">\n                        <!-- Filled dynamically -->\n                    </div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Time Series Chart -->\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <div class=\"card-header\">\n                        <h3>Articles Over Time</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"time-view-toggle\" title=\"Toggle between monthly/yearly view\">\n                                <i class=\"fa fa-calendar\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                \n                <!-- Categories Chart -->\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <div class=\"card-header\">\n                        <h3>Categories Breakdown</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"category-view-toggle\" title=\"Toggle between Integrity/Health Sector categories\">\n                                <i class=\"fa fa-exchange\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Top Countries Chart -->\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <div class=\"card-header\">\n                        <h3>Top Countries by Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"country-view-toggle\" title=\"Toggle between chart/map view\">\n                                <i class=\"fa fa-globe\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                \n                <!-- Summary Statistics -->\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <div class=\"card-header\">\n                        <h3>Summary Statistics</h3>\n                        <div class=\"date-range-indicator\">\n                            <i class=\"fa fa-calendar-o\"></i>\n                            <span id=\"time-period-display\">-</span>\n                        </div>\n                    </div>\n                    <div id=\"summary-stats\" class=\"summary-stats-grid\">\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-newspaper-o\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-articles\">0</span>\n                                <span class=\"stat-label\">Total Articles</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-globe\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-countries\">0</span>\n                                <span class=\"stat-label\">Countries</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-tags\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-categories\">0</span>\n                                <span class=\"stat-label\">Categories</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-calendar\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"time-period\">-</span>\n                                <span class=\"stat-label\">Time Period</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <!-- New row for additional insights -->\n            <div class=\"dashboard-row\">\n                <!-- Category Interconnection Chart -->\n                <div class=\"dashboard-card\" id=\"category-interconnection-card\">\n                    <div class=\"card-header\">\n                        <h3>Category Relationships</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"interconnection-toggle\" title=\"Toggle visualization type\">\n                                <i class=\"fa fa-random\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"interconnection-chart\"></div>\n                </div>\n                \n                <!-- Recent Articles Card -->\n                <div class=\"dashboard-card\" id=\"recent-articles-card\">\n                    <div class=\"card-header\">\n                        <h3>Recent Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"refresh-btn\" id=\"recent-refresh\" title=\"Refresh list\">\n                                <i class=\"fa fa-refresh\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"recent-articles-list\"></div>\n                </div>\n            </div>\n        </div>\n    ";
   container.innerHTML = dashboardHTML;
 
   // Initialize event listeners for toggle buttons
@@ -1198,7 +1240,7 @@ function initializeToggleButtons() {
     });
   }
 
-  // Category view toggle (Top 5/All)
+  // Category view toggle (Integrity/Health)
   var categoryViewToggle = document.getElementById('category-view-toggle');
   if (categoryViewToggle) {
     categoryViewToggle.addEventListener('click', function () {
@@ -1206,7 +1248,7 @@ function initializeToggleButtons() {
       // The toggle state will be checked in the chart update function
       var event = new CustomEvent('categoryViewToggle', {
         detail: {
-          showAll: this.classList.contains('active')
+          showHealthCategories: this.classList.contains('active')
         }
       });
       document.dispatchEvent(event);
@@ -1233,6 +1275,21 @@ function initializeToggleButtons() {
   if (recentRefreshBtn) {
     recentRefreshBtn.addEventListener('click', function () {
       var event = new CustomEvent('refreshRecentArticles');
+      document.dispatchEvent(event);
+    });
+  }
+
+  // Interconnection view toggle
+  var interconnectionToggle = document.getElementById('interconnection-toggle');
+  if (interconnectionToggle) {
+    interconnectionToggle.addEventListener('click', function () {
+      this.classList.toggle('active');
+      // The toggle state will be checked in the chart update function
+      var event = new CustomEvent('interconnectionViewToggle', {
+        detail: {
+          alternate: this.classList.contains('active')
+        }
+      });
       document.dispatchEvent(event);
     });
   }
@@ -25848,14 +25905,20 @@ function updateTimeSeriesChart(chart, data, dateRange) {
  */
 function updateCategoryChart(chart, data) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
-    showAll: false
+    showHealthCategories: false
   };
-  // Flatten and count all corruption categories
+  // Determine which category type to show based on options
+  var categoryType = options.showHealthCategories ? 'Sector Categories' : 'Corruption Categories';
+
+  // Update chart title to reflect current view
+  d3.select('#category-breakdown-card .card-header h3').text(options.showHealthCategories ? 'Health Sector Categories' : 'Integrity Issues Categories');
+
+  // Flatten and count all selected categories
   var categoryData = [];
   var categoryCounts = {};
   data.forEach(function (item) {
-    if (Array.isArray(item['Corruption Categories'])) {
-      item['Corruption Categories'].forEach(function (category) {
+    if (Array.isArray(item[categoryType])) {
+      item[categoryType].forEach(function (category) {
         if (category && category.trim()) {
           categoryCounts[category] = (categoryCounts[category] || 0) + 1;
         }
@@ -25879,9 +25942,8 @@ function updateCategoryChart(chart, data) {
     return b.count - a.count;
   });
 
-  // Limit categories based on option
-  var limit = options.showAll ? categoryData.length : Math.min(10, categoryData.length);
-  var topCategories = categoryData.slice(0, limit);
+  // Get top 10 categories (or all if fewer than 10)
+  var topCategories = categoryData.slice(0, 10);
   if (topCategories.length === 0) {
     // Clear the chart if no data
     chart.selectAll('.category-bar, .count-label').remove();
@@ -25919,6 +25981,9 @@ function updateCategoryChart(chart, data) {
   chart.select('.x-axis').transition().duration(500).call(d3.axisBottom(x).ticks(5));
   chart.select('.y-axis').transition().duration(500).call(d3.axisLeft(y)).selectAll('text').style('text-anchor', 'end');
 
+  // Set bar color based on category type
+  var barColor = options.showHealthCategories ? '#e5007d' : '#3694d1';
+
   // Handle bars with enter/update/exit pattern
   var bars = chart.selectAll('.category-bar').data(topCategories, function (d) {
     return d.category;
@@ -25932,22 +25997,22 @@ function updateCategoryChart(chart, data) {
     return y(d.category);
   }).attr('height', y.bandwidth()).attr('width', function (d) {
     return x(d.count);
-  }).attr('fill', '#3694d1');
+  }).attr('fill', barColor);
 
   // Add new bars with animation
   bars.enter().append('rect').attr('class', 'category-bar').attr('x', 0).attr('y', function (d) {
     return y(d.category);
-  }).attr('height', y.bandwidth()).attr('width', 0).attr('fill', '#3694d1').transition().duration(800).attr('width', function (d) {
+  }).attr('height', y.bandwidth()).attr('width', 0).attr('fill', barColor).transition().duration(800).attr('width', function (d) {
     return x(d.count);
   });
 
   // Handle interactive hover effects
   chart.selectAll('.category-bar').on('mouseover', function (d) {
-    d3.select(this).transition().duration(100).attr('fill', '#e5007d');
+    d3.select(this).transition().duration(100).attr('fill', options.showHealthCategories ? '#3694d1' : '#e5007d');
     var tooltip = d3.select('#category-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', "".concat(d3.event.pageX - d3.select('#category-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#category-chart').node().getBoundingClientRect().top - 40, "px"));
     tooltip.html("\n                <div class=\"chart-tooltip-title\">".concat(d.category, "</div>\n                <div><span class=\"chart-tooltip-value\">").concat(d.count, "</span> articles</div>\n                <div>").concat((d.count / data.length * 100).toFixed(1), "% of selected data</div>\n            "));
   }).on('mouseout', function () {
-    d3.select(this).transition().duration(100).attr('fill', '#3694d1');
+    d3.select(this).transition().duration(100).attr('fill', barColor);
     d3.selectAll('.chart-tooltip').remove();
   });
 
@@ -26615,6 +26680,312 @@ function getTrendIcon(direction) {
 var _default = exports.default = {
   updateSummaryStats: updateSummaryStats
 };
+},{"d3":"../node_modules/d3/index.js"}],"modules/interconnectionChart.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+exports.initializeInterconnectionChart = initializeInterconnectionChart;
+exports.updateInterconnectionChart = updateInterconnectionChart;
+var d3 = _interopRequireWildcard(require("d3"));
+function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; } /**
+ * Module for the advanced category interconnection visualization
+ */
+/**
+ * Initialize the categories interconnection chart
+ * @returns {Object} The chart reference
+ */
+function initializeInterconnectionChart() {
+  var container = d3.select('#interconnection-chart');
+
+  // Set up dimensions and margins
+  var margin = {
+    top: 40,
+    right: 40,
+    bottom: 40,
+    left: 40
+  };
+  var containerWidth = document.getElementById('interconnection-chart').clientWidth || 500;
+  var containerHeight = 300;
+  var width = Math.max(containerWidth - margin.left - margin.right, 100);
+  var height = containerHeight - margin.top - margin.bottom;
+
+  // Create SVG
+  var svg = container.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', "translate(".concat(width / 2 + margin.left, ",").concat(height / 2 + margin.top, ")"));
+
+  // Add placeholder text
+  svg.append('text').attr('class', 'placeholder-text').attr('x', 0).attr('y', 0).attr('text-anchor', 'middle').style('font-size', '14px').style('fill', '#666').text('Loading interconnection visualization...');
+  return svg;
+}
+
+/**
+ * Update the categories interconnection chart
+ * This creates an interactive radial bubble visualization showing how categories interconnect
+ * @param {Object} chart The chart reference
+ * @param {Array} data Filtered data array
+ */
+function updateInterconnectionChart(chart, data) {
+  // Clear existing content
+  chart.selectAll('*').remove();
+  if (data.length === 0) {
+    chart.append('text').attr('class', 'no-data-message').attr('x', 0).attr('y', 0).attr('text-anchor', 'middle').style('font-size', '14px').style('fill', '#666').text('No data available for the selected filters');
+    return;
+  }
+
+  // Extract unique corruption and health categories
+  var corruptionCategories = new Set();
+  var healthCategories = new Set();
+  data.forEach(function (item) {
+    if (Array.isArray(item['Corruption Categories'])) {
+      item['Corruption Categories'].forEach(function (cat) {
+        if (cat && cat.trim()) corruptionCategories.add(cat);
+      });
+    }
+    if (Array.isArray(item['Sector Categories'])) {
+      item['Sector Categories'].forEach(function (cat) {
+        if (cat && cat.trim()) healthCategories.add(cat);
+      });
+    }
+  });
+
+  // Convert to arrays and get top categories
+  var getTopCategories = function getTopCategories(categorySet, data, categoryType) {
+    var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 5;
+    var counts = {};
+    Array.from(categorySet).forEach(function (cat) {
+      counts[cat] = 0;
+      data.forEach(function (item) {
+        if (Array.isArray(item[categoryType]) && item[categoryType].includes(cat)) {
+          counts[cat]++;
+        }
+      });
+    });
+    return Object.entries(counts).sort(function (a, b) {
+      return b[1] - a[1];
+    }).slice(0, limit).map(function (_ref) {
+      var _ref2 = _slicedToArray(_ref, 2),
+        name = _ref2[0],
+        count = _ref2[1];
+      return {
+        name: name,
+        count: count,
+        type: categoryType
+      };
+    });
+  };
+  var topIntegrityCategories = getTopCategories(corruptionCategories, data, 'Corruption Categories', 5);
+  var topHealthCategories = getTopCategories(healthCategories, data, 'Sector Categories', 5);
+
+  // Create nodes and connections for visualization
+  var nodes = [];
+  var links = [];
+
+  // Create connections (links) matrix between corruption and health categories
+  topIntegrityCategories.forEach(function (integrity) {
+    topHealthCategories.forEach(function (health) {
+      var coOccurrenceCount = 0;
+
+      // Count co-occurrences in articles
+      data.forEach(function (item) {
+        var hasIntegrity = Array.isArray(item['Corruption Categories']) && item['Corruption Categories'].includes(integrity.name);
+        var hasHealth = Array.isArray(item['Sector Categories']) && item['Sector Categories'].includes(health.name);
+        if (hasIntegrity && hasHealth) {
+          coOccurrenceCount++;
+        }
+      });
+      if (coOccurrenceCount > 0) {
+        links.push({
+          source: integrity.name,
+          target: health.name,
+          value: coOccurrenceCount
+        });
+      }
+    });
+    nodes.push({
+      id: integrity.name,
+      group: 'integrity',
+      count: integrity.count
+    });
+  });
+  topHealthCategories.forEach(function (health) {
+    nodes.push({
+      id: health.name,
+      group: 'health',
+      count: health.count
+    });
+  });
+
+  // If no connections found, show message
+  if (links.length === 0) {
+    chart.append('text').attr('class', 'no-data-message').attr('x', 0).attr('y', 0).attr('text-anchor', 'middle').style('font-size', '14px').style('fill', '#666').text('No category connections found in the selected data');
+    return;
+  }
+
+  // Get dimensions
+  var containerWidth = document.getElementById('interconnection-chart').clientWidth || 600;
+  var containerHeight = 300;
+  var width = containerWidth;
+  var height = containerHeight;
+
+  // Create a radial layout
+  var radius = Math.min(width, height) * 0.4;
+
+  // Define color scale for nodes
+  var color = d3.scaleOrdinal().domain(['integrity', 'health']).range(['#3694d1', '#e5007d']);
+
+  // Define node size scale
+  var nodeSize = d3.scaleLinear().domain([0, d3.max(nodes, function (d) {
+    return d.count;
+  })]).range([5, 15]);
+
+  // Define link width scale
+  var linkWidth = d3.scaleLinear().domain([0, d3.max(links, function (d) {
+    return d.value;
+  })]).range([1, 5]);
+
+  // Create force simulation for node placement
+  var simulation = d3.forceSimulation(nodes).force('link', d3.forceLink(links).id(function (d) {
+    return d.id;
+  }).distance(radius * 0.7)).force('charge', d3.forceManyBody().strength(-50)).force('center', d3.forceCenter(0, 0)).force('collide', d3.forceCollide().radius(function (d) {
+    return nodeSize(d.count) + 5;
+  }));
+
+  // Add center circle as guide
+  chart.append('circle').attr('r', radius).style('fill', 'none').style('stroke', '#eee').style('stroke-width', 1).style('stroke-dasharray', '3,3');
+
+  // Create links with gradients for better visual effect
+  var link = chart.append('g').attr('class', 'links').selectAll('path').data(links).enter().append('path').attr('class', 'link').style('stroke', function (d) {
+    // Create unique gradient ID
+    var gradientId = "link-gradient-".concat(d.source.id.replace(/\s+/g, '-'), "-").concat(d.target.id.replace(/\s+/g, '-'));
+
+    // Define gradient
+    var gradient = chart.append('defs').append('linearGradient').attr('id', gradientId).attr('gradientUnits', 'userSpaceOnUse');
+
+    // Add gradient stops
+    gradient.append('stop').attr('offset', '0%').attr('stop-color', color('integrity'));
+    gradient.append('stop').attr('offset', '100%').attr('stop-color', color('health'));
+    return "url(#".concat(gradientId, ")");
+  }).style('stroke-width', function (d) {
+    return linkWidth(d.value);
+  }).style('stroke-opacity', 0.6).style('fill', 'none');
+
+  // Create nodes
+  var node = chart.append('g').attr('class', 'nodes').selectAll('g').data(nodes).enter().append('g').attr('class', 'node');
+
+  // Add circles to nodes
+  node.append('circle').attr('r', function (d) {
+    return nodeSize(d.count);
+  }).attr('fill', function (d) {
+    return color(d.group);
+  }).style('stroke', '#fff').style('stroke-width', 1.5).style('cursor', 'pointer').on('mouseover', function (d) {
+    // Highlight connected links and nodes
+    var connectedNodeIds = links.filter(function (link) {
+      return link.source.id === d.id || link.target.id === d.id;
+    }).map(function (link) {
+      return link.source.id === d.id ? link.target.id : link.source.id;
+    });
+    d3.selectAll('.link').style('stroke-opacity', function (l) {
+      return l.source.id === d.id || l.target.id === d.id ? 1 : 0.1;
+    });
+    d3.selectAll('.node circle').style('opacity', function (n) {
+      return n.id === d.id || connectedNodeIds.includes(n.id) ? 1 : 0.2;
+    });
+    d3.selectAll('.node text').style('opacity', function (n) {
+      return n.id === d.id || connectedNodeIds.includes(n.id) ? 1 : 0.2;
+    });
+
+    // Show tooltip
+    var tooltip = d3.select('#interconnection-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', "".concat(d3.event.pageX - d3.select('#interconnection-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#interconnection-chart').node().getBoundingClientRect().top - 40, "px"));
+    var connectionCount = links.filter(function (link) {
+      return link.source.id === d.id || link.target.id === d.id;
+    }).length;
+    tooltip.html("\n                <div class=\"chart-tooltip-title\">".concat(d.id, "</div>\n                <div><span class=\"chart-tooltip-value\">").concat(d.count, "</span> articles</div>\n                <div>Connected to ").concat(connectionCount, " ").concat(d.group === 'integrity' ? 'health' : 'integrity', " categories</div>\n            "));
+  }).on('mouseout', function () {
+    // Restore all elements
+    d3.selectAll('.link').style('stroke-opacity', 0.6);
+    d3.selectAll('.node circle').style('opacity', 1);
+    d3.selectAll('.node text').style('opacity', 1);
+
+    // Remove tooltip
+    d3.selectAll('.chart-tooltip').remove();
+  });
+
+  // Add labels to nodes
+  node.append('text').text(function (d) {
+    return d.id.length > 15 ? d.id.substring(0, 12) + '...' : d.id;
+  }).attr('dy', function (d) {
+    return nodeSize(d.count) + 12;
+  }).style('text-anchor', 'middle').style('font-size', '10px').style('fill', function (d) {
+    return d3.rgb(color(d.group)).darker();
+  }).style('pointer-events', 'none').style('font-weight', 'bold');
+
+  // Add highlight circles to highlight category types
+  chart.append('text').attr('x', -radius - 30).attr('y', -radius + 15).text('Integrity Categories').style('font-size', '11px').style('fill', color('integrity')).style('font-weight', 'bold');
+  chart.append('text').attr('x', radius - 50).attr('y', -radius + 15).text('Health Categories').style('font-size', '11px').style('fill', color('health')).style('font-weight', 'bold');
+
+  // Add animation for links
+  link.attr('stroke-dasharray', function () {
+    var length = this.getTotalLength();
+    return "".concat(length, " ").concat(length);
+  }).attr('stroke-dashoffset', function () {
+    return this.getTotalLength();
+  }).transition().duration(1000).ease(d3.easeLinear).attr('stroke-dashoffset', 0);
+
+  // Initial animation for nodes
+  node.attr('opacity', 0).transition().delay(function (d, i) {
+    return i * 50;
+  }).duration(500).attr('opacity', 1);
+
+  // Update position function for simulation
+  simulation.on('tick', function () {
+    // Position nodes in a radial layout
+    nodes.forEach(function (node) {
+      if (node.group === 'integrity') {
+        // Position integrity categories on the left side
+        var angle = Math.PI + Math.random() * Math.PI - Math.PI / 2;
+        node.x = Math.cos(angle) * radius * 0.8;
+        node.y = Math.sin(angle) * radius * 0.8;
+      } else {
+        // Position health categories on the right side
+        var _angle = Math.random() * Math.PI - Math.PI / 2;
+        node.x = Math.cos(_angle) * radius * 0.8;
+        node.y = Math.sin(_angle) * radius * 0.8;
+      }
+    });
+
+    // Update link paths
+    link.attr('d', function (d) {
+      var dx = d.target.x - d.source.x;
+      var dy = d.target.y - d.source.y;
+      var dr = Math.sqrt(dx * dx + dy * dy) * 1.5; // Adjust curve
+      return "M".concat(d.source.x, ",").concat(d.source.y, "A").concat(dr, ",").concat(dr, " 0 0,1 ").concat(d.target.x, ",").concat(d.target.y);
+    });
+
+    // Update node positions
+    node.attr('transform', function (d) {
+      return "translate(".concat(d.x, ",").concat(d.y, ")");
+    });
+  });
+
+  // Run simulation for a short time then stop
+  simulation.alpha(1).restart();
+  setTimeout(function () {
+    return simulation.stop();
+  }, 2000);
+}
+var _default = exports.default = {
+  initializeInterconnectionChart: initializeInterconnectionChart,
+  updateInterconnectionChart: updateInterconnectionChart
+};
 },{"d3":"../node_modules/d3/index.js"}],"modules/dashboard.js":[function(require,module,exports) {
 "use strict";
 
@@ -26628,6 +26999,7 @@ exports.updateDashboard = updateDashboard;
 var dashboardLayout = _interopRequireWildcard(require("./dashboardLayout"));
 var dashboardCharts = _interopRequireWildcard(require("./dashboardCharts"));
 var dashboardStats = _interopRequireWildcard(require("./dashboardStats"));
+var interconnectionChart = _interopRequireWildcard(require("./interconnectionChart"));
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
@@ -26645,16 +27017,20 @@ var previousData = [];
 var timeSeriesChart;
 var categoryChart;
 var topCountriesChart;
+var interconnectionViz;
 var dateRange;
 var chartOptions = {
   timeSeries: {
     yearly: false
   },
   category: {
-    showAll: false
+    showHealthCategories: false
   },
   country: {
     mapView: false
+  },
+  interconnection: {
+    alternate: false
   }
 };
 
@@ -26672,6 +27048,7 @@ function initializeDashboard(container) {
   timeSeriesChart = dashboardCharts.initializeTimeSeriesChart();
   categoryChart = dashboardCharts.initializeCategoryChart();
   topCountriesChart = dashboardCharts.initializeTopCountriesChart();
+  interconnectionViz = interconnectionChart.initializeInterconnectionChart();
 
   // Setup event listeners for dashboard interactions
   setupEventListeners();
@@ -26690,7 +27067,7 @@ function setupEventListeners() {
     }
   });
   document.addEventListener('categoryViewToggle', function (e) {
-    chartOptions.category.showAll = e.detail.showAll;
+    chartOptions.category.showHealthCategories = e.detail.showHealthCategories;
     if (dashboardData.length > 0) {
       dashboardCharts.updateCategoryChart(categoryChart, dashboardData, chartOptions.category);
     }
@@ -26699,6 +27076,14 @@ function setupEventListeners() {
     chartOptions.country.mapView = e.detail.mapView;
     if (dashboardData.length > 0) {
       dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData, chartOptions.country);
+    }
+  });
+  document.addEventListener('interconnectionViewToggle', function (e) {
+    chartOptions.interconnection.alternate = e.detail.alternate;
+    if (dashboardData.length > 0) {
+      // In a real implementation, we would have alternate visualization methods
+      // For now, we just redraw the current visualization
+      interconnectionChart.updateInterconnectionChart(interconnectionViz, dashboardData, chartOptions.interconnection);
     }
   });
   document.addEventListener('refreshRecentArticles', function () {
@@ -26716,7 +27101,7 @@ function setupEventListeners() {
 function updateDashboard(data, dataDateRange) {
   console.time('Dashboard Update');
 
-  // Store the previous data for trend analysis
+  // Store the previous data for analysis
   previousData = _toConsumableArray(dashboardData);
 
   // Store the filtered data and date range
@@ -26727,11 +27112,11 @@ function updateDashboard(data, dataDateRange) {
   dashboardCharts.updateTimeSeriesChart(timeSeriesChart, data, dateRange, chartOptions.timeSeries);
   dashboardCharts.updateCategoryChart(categoryChart, data, chartOptions.category);
   dashboardCharts.updateTopCountriesChart(topCountriesChart, data, chartOptions.country);
+  interconnectionChart.updateInterconnectionChart(interconnectionViz, data, chartOptions.interconnection);
   dashboardStats.updateSummaryStats(data, dateRange);
 
   // Update additional components
   updateKeyMetrics(data);
-  updateTrendAnalysis(data, previousData);
   updateRecentArticles(data);
   console.timeEnd('Dashboard Update');
 }
@@ -26994,6 +27379,7 @@ function handleDashboardResize() {
     dashboardCharts.updateTimeSeriesChart(timeSeriesChart, dashboardData, dateRange, chartOptions.timeSeries);
     dashboardCharts.updateCategoryChart(categoryChart, dashboardData, chartOptions.category);
     dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData, chartOptions.country);
+    interconnectionChart.updateInterconnectionChart(interconnectionViz, dashboardData, chartOptions.interconnection);
   }
 }
 var _default = exports.default = {
@@ -27001,7 +27387,7 @@ var _default = exports.default = {
   updateDashboard: updateDashboard,
   handleDashboardResize: handleDashboardResize
 };
-},{"./dashboardLayout":"modules/dashboardLayout.js","./dashboardCharts":"modules/dashboardCharts.js","./dashboardStats":"modules/dashboardStats.js"}],"app.js":[function(require,module,exports) {
+},{"./dashboardLayout":"modules/dashboardLayout.js","./dashboardCharts":"modules/dashboardCharts.js","./dashboardStats":"modules/dashboardStats.js","./interconnectionChart":"modules/interconnectionChart.js"}],"app.js":[function(require,module,exports) {
 "use strict";
 
 var mapModule = _interopRequireWildcard(require("./modules/map"));
@@ -27335,7 +27721,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57645" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58619" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

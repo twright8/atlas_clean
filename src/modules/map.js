@@ -19,46 +19,58 @@ export function initializeMap() {
     // Initialize map centered at [0, 0] with zoom level 2
     map = L.map('map', {
         maxZoom: 18,
-        minZoom: 2
+        minZoom: 2,
+        zoomAnimation: true,
+        fadeAnimation: true,
+        markerZoomAnimation: true,
+        zoomSnap: 0.5,
+        zoomDelta: 0.5,
+        wheelPxPerZoomLevel: 120
     }).setView([0, 0], 2);
     
     // Create marker cluster group for better performance with many markers
-    // Explicitly check if L.markerClusterGroup exists to prevent errors
-    if (typeof L.markerClusterGroup !== 'function') {
-        console.error('Leaflet.markercluster is not loaded, falling back to normal markers');
-        markers = L.layerGroup();
-    } else {
+    try {
+        // Try to create a MarkerClusterGroup directly
         markers = L.markerClusterGroup({
-        chunkedLoading: true,
-        chunkInterval: 200,
-        chunkDelay: 50,
-        maxClusterRadius: 80,
-        disableClusteringAtZoom: 16,
-        spiderfyOnMaxZoom: true,
-        // Configure cluster icon sizes and colors
-        iconCreateFunction: function(cluster) {
-            const count = cluster.getChildCount();
-            let size, className;
-            
-            // Define size and class based on marker count
-            if (count < 10) {
-                size = 'small';
-            } else if (count < 100) {
-                size = 'medium';
-            } else {
-                size = 'large';
+            chunkedLoading: true,
+            chunkInterval: 200,
+            chunkDelay: 50,
+            maxClusterRadius: 80,
+            disableClusteringAtZoom: 16,
+            spiderfyOnMaxZoom: true,
+            animate: true,
+            animateAddingMarkers: true,
+            spiderfyDistanceMultiplier: 1.5,
+            showCoverageOnHover: true,
+            zoomToBoundsOnClick: true,
+            // Configure cluster icon sizes and colors
+            iconCreateFunction: function(cluster) {
+                const count = cluster.getChildCount();
+                let size, className;
+                
+                // Define size and class based on marker count
+                if (count < 10) {
+                    size = 'small';
+                } else if (count < 100) {
+                    size = 'medium';
+                } else {
+                    size = 'large';
+                }
+                
+                // Apply appropriate CSS class
+                className = 'marker-cluster marker-cluster-' + size;
+                
+                return L.divIcon({ 
+                    html: '<div><span>' + count + '</span></div>', 
+                    className: className, 
+                    iconSize: L.point(40, 40) 
+                });
             }
-            
-            // Apply appropriate CSS class
-            className = 'marker-cluster marker-cluster-' + size;
-            
-            return L.divIcon({ 
-                html: '<div><span>' + count + '</span></div>', 
-                className: className, 
-                iconSize: L.point(40, 40) 
-            });
-        }
-    });
+        });
+        console.log('Using MarkerClusterGroup for markers');
+    } catch (e) {
+        console.error('Leaflet.markercluster is not loaded, falling back to normal markers:', e);
+        markers = L.layerGroup();
     }
     map.addLayer(markers);
     
@@ -229,8 +241,39 @@ export function toggleLegend(showLegend) {
  * Fit the map view to the marker bounds
  */
 export function fitMapToBounds() {
-    if (markers.getBounds().isValid()) {
-        map.fitBounds(markers.getBounds());
+    try {
+        // Try the MarkerClusterGroup getBounds method first
+        const bounds = markers.getBounds();
+        if (bounds.isValid()) {
+            map.fitBounds(bounds, {
+                padding: [30, 30],
+                maxZoom: 12,
+                animate: true,
+                duration: 0.5
+            });
+        }
+    } catch (e) {
+        // Fall back to calculating bounds manually if getBounds doesn't exist
+        try {
+            const layers = markers.getLayers();
+            if (layers && layers.length > 0) {
+                const bounds = L.latLngBounds();
+                layers.forEach(marker => {
+                    bounds.extend(marker.getLatLng());
+                });
+                
+                if (bounds.isValid()) {
+                    map.fitBounds(bounds, {
+                        padding: [30, 30],
+                        maxZoom: 12,
+                        animate: true,
+                        duration: 0.5
+                    });
+                }
+            }
+        } catch (e2) {
+            console.error('Error fitting map to bounds:', e2);
+        }
     }
 }
 
@@ -262,11 +305,11 @@ export function clearMarkers() {
  * @param {Array} markerArray Array of Leaflet markers
  */
 export function addMarkers(markerArray) {
-    if (typeof markers.addLayers === 'function') {
-        // Using MarkerClusterGroup
+    try {
+        // Try the MarkerClusterGroup addLayers method first
         markers.addLayers(markerArray);
-    } else {
-        // Fallback to LayerGroup for browsers without markercluster
+    } catch (e) {
+        // Fall back to adding markers individually
         markerArray.forEach(marker => markers.addLayer(marker));
     }
 }

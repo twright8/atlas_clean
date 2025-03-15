@@ -39,10 +39,10 @@ export function createDashboardLayout(container) {
                 <!-- Categories Chart -->
                 <div class="dashboard-card" id="category-breakdown-card">
                     <div class="card-header">
-                        <h3>Integrity Issues by Category</h3>
+                        <h3>Categories Breakdown</h3>
                         <div class="card-tools">
-                            <button class="view-toggle" id="category-view-toggle" title="Toggle between top 5/all categories">
-                                <i class="fa fa-bars"></i>
+                            <button class="view-toggle" id="category-view-toggle" title="Toggle between Integrity/Health Sector categories">
+                                <i class="fa fa-exchange"></i>
                             </button>
                         </div>
                     </div>
@@ -108,14 +108,17 @@ export function createDashboardLayout(container) {
             
             <!-- New row for additional insights -->
             <div class="dashboard-row">
-                <!-- Trends Analysis Card -->
-                <div class="dashboard-card" id="trends-analysis-card">
+                <!-- Category Interconnection Chart -->
+                <div class="dashboard-card" id="category-interconnection-card">
                     <div class="card-header">
-                        <h3>Trend Analysis</h3>
+                        <h3>Category Relationships</h3>
+                        <div class="card-tools">
+                            <button class="view-toggle" id="interconnection-toggle" title="Toggle visualization type">
+                                <i class="fa fa-random"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div id="trends-content">
-                        <div id="trend-indicators"></div>
-                    </div>
+                    <div id="interconnection-chart"></div>
                 </div>
                 
                 <!-- Recent Articles Card -->
@@ -157,14 +160,14 @@ function initializeToggleButtons() {
         });
     }
     
-    // Category view toggle (Top 5/All)
+    // Category view toggle (Integrity/Health)
     const categoryViewToggle = document.getElementById('category-view-toggle');
     if (categoryViewToggle) {
         categoryViewToggle.addEventListener('click', function() {
             this.classList.toggle('active');
             // The toggle state will be checked in the chart update function
             const event = new CustomEvent('categoryViewToggle', {
-                detail: { showAll: this.classList.contains('active') }
+                detail: { showHealthCategories: this.classList.contains('active') }
             });
             document.dispatchEvent(event);
         });
@@ -188,6 +191,19 @@ function initializeToggleButtons() {
     if (recentRefreshBtn) {
         recentRefreshBtn.addEventListener('click', function() {
             const event = new CustomEvent('refreshRecentArticles');
+            document.dispatchEvent(event);
+        });
+    }
+    
+    // Interconnection view toggle
+    const interconnectionToggle = document.getElementById('interconnection-toggle');
+    if (interconnectionToggle) {
+        interconnectionToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            // The toggle state will be checked in the chart update function
+            const event = new CustomEvent('interconnectionViewToggle', {
+                detail: { alternate: this.classList.contains('active') }
+            });
             document.dispatchEvent(event);
         });
     }

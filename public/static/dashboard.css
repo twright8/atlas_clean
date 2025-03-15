@@ -133,7 +133,8 @@
 /* Charts */
 #time-series-chart,
 #category-chart,
-#top-countries-chart {
+#top-countries-chart,
+#interconnection-chart {
     height: 260px;
     width: 100%;
     position: relative;
@@ -308,6 +309,24 @@
 
 .chart-tooltip-value {
     font-weight: 500;
+}
+
+/* Interconnection chart specific styles */
+#interconnection-chart {
+    overflow: visible;
+}
+
+#interconnection-chart .link {
+    stroke-linecap: round;
+    transition: stroke-opacity 0.3s ease;
+}
+
+#interconnection-chart .node circle {
+    transition: opacity 0.3s ease, r 0.2s ease;
+}
+
+#interconnection-chart .node text {
+    transition: opacity 0.3s ease;
 }
 
 /* Responsive adjustments */
