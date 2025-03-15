@@ -250,14 +250,42 @@ function initializeMap() {
   }).setView([0, 0], 2);
 
   // Create marker cluster group for better performance with many markers
-  markers = L.markerClusterGroup({
-    chunkedLoading: true,
-    chunkInterval: 200,
-    chunkDelay: 50,
-    maxClusterRadius: 80,
-    disableClusteringAtZoom: 16,
-    spiderfyOnMaxZoom: true
-  });
+  // Explicitly check if L.markerClusterGroup exists to prevent errors
+  if (typeof L.markerClusterGroup !== 'function') {
+    console.error('Leaflet.markercluster is not loaded, falling back to normal markers');
+    markers = L.layerGroup();
+  } else {
+    markers = L.markerClusterGroup({
+      chunkedLoading: true,
+      chunkInterval: 200,
+      chunkDelay: 50,
+      maxClusterRadius: 80,
+      disableClusteringAtZoom: 16,
+      spiderfyOnMaxZoom: true,
+      // Configure cluster icon sizes and colors
+      iconCreateFunction: function iconCreateFunction(cluster) {
+        var count = cluster.getChildCount();
+        var size, className;
+
+        // Define size and class based on marker count
+        if (count < 10) {
+          size = 'small';
+        } else if (count < 100) {
+          size = 'medium';
+        } else {
+          size = 'large';
+        }
+
+        // Apply appropriate CSS class
+        className = 'marker-cluster marker-cluster-' + size;
+        return L.divIcon({
+          html: '<div><span>' + count + '</span></div>',
+          className: className,
+          iconSize: L.point(40, 40)
+        });
+      }
+    });
+  }
   map.addLayer(markers);
 
   // Initialize with OpenStreetMap base layer
@@ -433,7 +461,15 @@ function clearMarkers() {
  * @param {Array} markerArray Array of Leaflet markers
  */
 function addMarkers(markerArray) {
-  markers.addLayers(markerArray);
+  if (typeof markers.addLayers === 'function') {
+    // Using MarkerClusterGroup
+    markers.addLayers(markerArray);
+  } else {
+    // Fallback to LayerGroup for browsers without markercluster
+    markerArray.forEach(function (marker) {
+      return markers.addLayer(marker);
+    });
+  }
 }
 
 /**
@@ -27299,7 +27335,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54130" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57645" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

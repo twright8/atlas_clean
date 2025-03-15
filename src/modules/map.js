@@ -23,14 +23,43 @@ export function initializeMap() {
     }).setView([0, 0], 2);
     
     // Create marker cluster group for better performance with many markers
-    markers = L.markerClusterGroup({
+    // Explicitly check if L.markerClusterGroup exists to prevent errors
+    if (typeof L.markerClusterGroup !== 'function') {
+        console.error('Leaflet.markercluster is not loaded, falling back to normal markers');
+        markers = L.layerGroup();
+    } else {
+        markers = L.markerClusterGroup({
         chunkedLoading: true,
         chunkInterval: 200,
         chunkDelay: 50,
         maxClusterRadius: 80,
         disableClusteringAtZoom: 16,
-        spiderfyOnMaxZoom: true
+        spiderfyOnMaxZoom: true,
+        // Configure cluster icon sizes and colors
+        iconCreateFunction: function(cluster) {
+            const count = cluster.getChildCount();
+            let size, className;
+            
+            // Define size and class based on marker count
+            if (count < 10) {
+                size = 'small';
+            } else if (count < 100) {
+                size = 'medium';
+            } else {
+                size = 'large';
+            }
+            
+            // Apply appropriate CSS class
+            className = 'marker-cluster marker-cluster-' + size;
+            
+            return L.divIcon({ 
+                html: '<div><span>' + count + '</span></div>', 
+                className: className, 
+                iconSize: L.point(40, 40) 
+            });
+        }
     });
+    }
     map.addLayer(markers);
     
     // Initialize with OpenStreetMap base layer
@@ -233,7 +262,13 @@ export function clearMarkers() {
  * @param {Array} markerArray Array of Leaflet markers
  */
 export function addMarkers(markerArray) {
-    markers.addLayers(markerArray);
+    if (typeof markers.addLayers === 'function') {
+        // Using MarkerClusterGroup
+        markers.addLayers(markerArray);
+    } else {
+        // Fallback to LayerGroup for browsers without markercluster
+        markerArray.forEach(marker => markers.addLayer(marker));
+    }
 }
 
 /**
