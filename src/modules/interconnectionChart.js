@@ -182,15 +182,16 @@ export function updateInterconnectionChart(chart, data) {
         .domain([0, d3.max(links, d => d.value)])
         .range([1, 5]);
     
-    // Create force simulation for node placement
+    // Create force simulation for node placement with stronger collision prevention
     const simulation = d3.forceSimulation(nodes)
-        .force('link', d3.forceLink(links).id(d => d.id).distance(radius * 0.7))
-        .force('charge', d3.forceManyBody().strength(-50))
+        .force('link', d3.forceLink(links).id(d => d.id).distance(radius * 0.8))
+        .force('charge', d3.forceManyBody().strength(-100))
         .force('center', d3.forceCenter(0, 0))
-        .force('collide', d3.forceCollide().radius(d => nodeSize(d.count) + 15).strength(1.9))
-		
-
-;
+        // Use a much stronger collision force with larger radius to ensure no overlap
+        .force('collide', d3.forceCollide(d => nodeSize(d.count) + 25).strength(1))
+        // Use alpha settings to ensure simulation runs sufficiently
+        .alphaDecay(0.01)
+        .velocityDecay(0.6);
     
     // Add center circle as guide
     chart.append('circle')
@@ -340,20 +341,69 @@ export function updateInterconnectionChart(chart, data) {
         .duration(500)
         .attr('opacity', 1);
     
+    // Helper function to check and resolve any remaining overlaps
+    function resolveRemainingOverlaps(nodes, nodeSize) {
+        const iterations = 30;
+        for (let i = 0; i < iterations; i++) {
+            let overlapping = false;
+            
+            // Check each pair of nodes for overlap
+            for (let a = 0; a < nodes.length; a++) {
+                for (let b = a + 1; b < nodes.length; b++) {
+                    const nodeA = nodes[a];
+                    const nodeB = nodes[b];
+                    
+                    const dx = nodeB.x - nodeA.x;
+                    const dy = nodeB.y - nodeA.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    const minDistance = nodeSize(nodeA.count) + nodeSize(nodeB.count) + 10;
+                    
+                    // If nodes overlap
+                    if (distance < minDistance) {
+                        overlapping = true;
+                        
+                        // Calculate the movement needed
+                        const moveX = (dx / distance) * (minDistance - distance) * 0.5;
+                        const moveY = (dy / distance) * (minDistance - distance) * 0.5;
+                        
+                        // Move nodes apart
+                        nodeA.x -= moveX;
+                        nodeA.y -= moveY;
+                        nodeB.x += moveX;
+                        nodeB.y += moveY;
+                    }
+                }
+            }
+            
+            if (!overlapping) break;
+        }
+    }
+    
     // Update position function for simulation
     simulation.on('tick', () => {
-        // Position nodes in a radial layout
+        // Position nodes in a radial layout with evenly distributed angles
+        const integrityCount = nodes.filter(n => n.group === 'integrity').length;
+        const healthCount = nodes.filter(n => n.group === 'health').length;
+        
+        let integrityIndex = 0;
+        let healthIndex = 0;
+        
         nodes.forEach(node => {
             if (node.group === 'integrity') {
-                // Position integrity categories on the left side
-                const angle = Math.PI + Math.random() * Math.PI - Math.PI/2;
+                // Position integrity categories on the left side with evenly distributed angles
+                const angleStep = Math.PI / (integrityCount + 1);
+                const angle = Math.PI + (integrityIndex + 1) * angleStep - Math.PI/2;
                 node.x = Math.cos(angle) * radius * 0.8;
                 node.y = Math.sin(angle) * radius * 0.8;
+                integrityIndex++;
             } else {
-                // Position health categories on the right side
-                const angle = Math.random() * Math.PI - Math.PI/2;
+                // Position health categories on the right side with evenly distributed angles
+                const angleStep = Math.PI / (healthCount + 1);
+                const angle = (healthIndex + 1) * angleStep - Math.PI/2;
                 node.x = Math.cos(angle) * radius * 0.8;
                 node.y = Math.sin(angle) * radius * 0.8;
+                healthIndex++;
             }
         });
         
@@ -369,9 +419,33 @@ export function updateInterconnectionChart(chart, data) {
         node.attr('transform', d => `translate(${d.x},${d.y})`);
     });
     
-    // Run simulation for a short time then stop
+    // Run simulation longer to ensure nodes find non-overlapping positions
     simulation.alpha(1).restart();
-    setTimeout(() => simulation.stop(), 2000);
+    
+    // Cool down the simulation gradually over more iterations
+    simulation
+        .alphaMin(0.001)
+        .alphaTarget(0)
+        .alphaDecay(0.02);
+    
+    // Let the simulation run longer for better layout
+    setTimeout(() => {
+        simulation.stop();
+        
+        // After simulation stops, do one final check and adjustment for any remaining overlaps
+        resolveRemainingOverlaps(nodes, nodeSize);
+        
+        // Update final positions
+        node.attr('transform', d => `translate(${d.x},${d.y})`);
+        
+        // Update final link paths
+        link.attr('d', d => {
+            const dx = d.target.x - d.source.x;
+            const dy = d.target.y - d.source.y;
+            const dr = Math.sqrt(dx * dx + dy * dy) * 1.5; // Adjust curve
+            return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+        });
+    }, 3000);
 }
 
 export default {

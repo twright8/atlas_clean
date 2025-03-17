@@ -1272,7 +1272,7 @@ exports.default = void 0;
  * @param {HTMLElement} container The container element for the dashboard
  */
 function createDashboardLayout(container) {
-  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <!-- Dashboard header with key insights -->\n            <div class=\"dashboard-header-card\">\n                <div class=\"dashboard-header-content\">\n                    <div class=\"dashboard-header-title\">\n                        <h2>Health Integrity Insights</h2>\n                        <p class=\"dashboard-subtitle\">Media reported integrity issues worldwide</p>\n                    </div>\n                    <div class=\"dashboard-key-metrics\" id=\"key-metrics\">\n                        <!-- Filled dynamically -->\n                    </div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Time Series Chart -->\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <div class=\"card-header\">\n                        <h3>Articles Over Time</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"time-view-toggle\" title=\"Toggle between monthly/yearly view\">\n                                <i class=\"fa fa-calendar\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                \n                <!-- Categories Chart -->\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <div class=\"card-header\">\n                        <h3>Categories Breakdown</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"category-view-toggle\" title=\"Toggle between Integrity/Health Sector categories\">\n                                <i class=\"fa fa-exchange\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Top Countries Chart -->\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <div class=\"card-header\">\n                        <h3>Top Countries by Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"country-view-toggle\" title=\"Toggle between chart/map view\">\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                \n                <!-- Summary Statistics -->\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <div class=\"card-header\">\n                        <h3>Summary Statistics</h3>\n                        <div class=\"date-range-indicator\">\n                            <i class=\"fa fa-calendar-o\"></i>\n                            <span id=\"time-period-display\">-</span>\n                        </div>\n                    </div>\n                    <div id=\"summary-stats\" class=\"summary-stats-grid\">\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-newspaper-o\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-articles\">0</span>\n                                <span class=\"stat-label\">Total Articles</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-globe\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-countries\">0</span>\n                                <span class=\"stat-label\">Countries</span>\n                            </div>\n                        </div>\n\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-calendar\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"time-period\">-</span>\n                                <span class=\"stat-label\">Time Period</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <!-- New row for additional insights -->\n            <div class=\"dashboard-row\">\n                <!-- Category Interconnection Chart -->\n                <div class=\"dashboard-card\" id=\"category-interconnection-card\">\n                    <div class=\"card-header\">\n                        <h3>Category Relationships</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"interconnection-toggle\" title=\"Toggle visualization type\">\n                                <i class=\"fa fa-random\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"interconnection-chart\"></div>\n                </div>\n                \n                <!-- Recent Articles Card -->\n                <div class=\"dashboard-card\" id=\"recent-articles-card\">\n                    <div class=\"card-header\">\n                        <h3>Recent Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"refresh-btn\" id=\"recent-refresh\" title=\"Refresh list\">\n                                <i class=\"fa fa-refresh\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"recent-articles-list\"></div>\n                </div>\n            </div>\n        </div>\n    ";
+  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <!-- Dashboard header with key insights -->\n            <div class=\"dashboard-header-card\">\n                <div class=\"dashboard-header-content\">\n                    <div class=\"dashboard-header-title\">\n                        <h2>Health Integrity Insights</h2>\n                        <p class=\"dashboard-subtitle\">Media reported integrity issues worldwide</p>\n                    </div>\n                    <div class=\"dashboard-key-metrics\" id=\"key-metrics\">\n                        <!-- Filled dynamically -->\n                    </div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Time Series Chart -->\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <div class=\"card-header\">\n                        <h3>Articles Over Time</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"time-view-toggle\" title=\"Toggle between monthly/yearly view\">\n                                <i class=\"fa fa-calendar\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                \n                <!-- Categories Chart -->\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <div class=\"card-header\">\n                        <h3>Categories Breakdown</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"category-view-toggle\" title=\"Toggle between Integrity/Health Sector categories\">\n                                <i class=\"fa fa-exchange\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Top Countries Chart -->\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <div class=\"card-header\">\n                        <h3>Top Countries by Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"country-view-toggle\" title=\"Toggle between chart/map view\">\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                \n                <!-- Summary Statistics -->\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <div class=\"card-header\">\n                        <h3>Summary Statistics</h3>\n                        <div class=\"date-range-indicator\">\n                        </div>\n                    </div>\n                    <div id=\"summary-stats\" class=\"summary-stats-grid\">\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-newspaper-o\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-articles\">0</span>\n                                <span class=\"stat-label\">Total Articles</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-globe\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-countries\">0</span>\n                                <span class=\"stat-label\">Countries</span>\n                            </div>\n                        </div>\n\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-calendar\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"time-period\">-</span>\n                                <span class=\"stat-label\">Time Period</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <!-- New row for additional insights -->\n            <div class=\"dashboard-row\">\n                <!-- Category Interconnection Chart -->\n                <div class=\"dashboard-card\" id=\"category-interconnection-card\">\n                    <div class=\"card-header\">\n                        <h3>Category Relationships</h3>\n                        <div class=\"card-tools\">\n\n                        </div>\n                    </div>\n                    <div id=\"interconnection-chart\"></div>\n                </div>\n                \n                <!-- Recent Articles Card -->\n                <div class=\"dashboard-card\" id=\"recent-articles-card\">\n                    <div class=\"card-header\">\n                        <h3>Recent Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"refresh-btn\" id=\"recent-refresh\" title=\"Refresh list\">\n                                <i class=\"fa fa-refresh\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"recent-articles-list\"></div>\n                </div>\n            </div>\n        </div>\n    ";
   container.innerHTML = dashboardHTML;
 
   // Initialize event listeners for toggle buttons
@@ -26897,12 +26897,16 @@ function updateInterconnectionChart(chart, data) {
     return d.value;
   })]).range([1, 5]);
 
-  // Create force simulation for node placement
+  // Create force simulation for node placement with stronger collision prevention
   var simulation = d3.forceSimulation(nodes).force('link', d3.forceLink(links).id(function (d) {
     return d.id;
-  }).distance(radius * 0.7)).force('charge', d3.forceManyBody().strength(-50)).force('center', d3.forceCenter(0, 0)).force('collide', d3.forceCollide().radius(function (d) {
-    return nodeSize(d.count) + 15;
-  }).strength(1.9));
+  }).distance(radius * 0.8)).force('charge', d3.forceManyBody().strength(-100)).force('center', d3.forceCenter(0, 0))
+  // Use a much stronger collision force with larger radius to ensure no overlap
+  .force('collide', d3.forceCollide(function (d) {
+    return nodeSize(d.count) + 25;
+  }).strength(1))
+  // Use alpha settings to ensure simulation runs sufficiently
+  .alphaDecay(0.01).velocityDecay(0.6);
 
   // Add center circle as guide
   chart.append('circle').attr('r', radius).style('fill', 'none').style('stroke', '#eee').style('stroke-width', 1).style('stroke-dasharray', '3,3');
@@ -26990,20 +26994,68 @@ function updateInterconnectionChart(chart, data) {
     return i * 50;
   }).duration(500).attr('opacity', 1);
 
+  // Helper function to check and resolve any remaining overlaps
+  function resolveRemainingOverlaps(nodes, nodeSize) {
+    var iterations = 30;
+    for (var i = 0; i < iterations; i++) {
+      var overlapping = false;
+
+      // Check each pair of nodes for overlap
+      for (var a = 0; a < nodes.length; a++) {
+        for (var b = a + 1; b < nodes.length; b++) {
+          var nodeA = nodes[a];
+          var nodeB = nodes[b];
+          var dx = nodeB.x - nodeA.x;
+          var dy = nodeB.y - nodeA.y;
+          var distance = Math.sqrt(dx * dx + dy * dy);
+          var minDistance = nodeSize(nodeA.count) + nodeSize(nodeB.count) + 10;
+
+          // If nodes overlap
+          if (distance < minDistance) {
+            overlapping = true;
+
+            // Calculate the movement needed
+            var moveX = dx / distance * (minDistance - distance) * 0.5;
+            var moveY = dy / distance * (minDistance - distance) * 0.5;
+
+            // Move nodes apart
+            nodeA.x -= moveX;
+            nodeA.y -= moveY;
+            nodeB.x += moveX;
+            nodeB.y += moveY;
+          }
+        }
+      }
+      if (!overlapping) break;
+    }
+  }
+
   // Update position function for simulation
   simulation.on('tick', function () {
-    // Position nodes in a radial layout
+    // Position nodes in a radial layout with evenly distributed angles
+    var integrityCount = nodes.filter(function (n) {
+      return n.group === 'integrity';
+    }).length;
+    var healthCount = nodes.filter(function (n) {
+      return n.group === 'health';
+    }).length;
+    var integrityIndex = 0;
+    var healthIndex = 0;
     nodes.forEach(function (node) {
       if (node.group === 'integrity') {
-        // Position integrity categories on the left side
-        var angle = Math.PI + Math.random() * Math.PI - Math.PI / 2;
+        // Position integrity categories on the left side with evenly distributed angles
+        var angleStep = Math.PI / (integrityCount + 1);
+        var angle = Math.PI + (integrityIndex + 1) * angleStep - Math.PI / 2;
         node.x = Math.cos(angle) * radius * 0.8;
         node.y = Math.sin(angle) * radius * 0.8;
+        integrityIndex++;
       } else {
-        // Position health categories on the right side
-        var _angle = Math.random() * Math.PI - Math.PI / 2;
+        // Position health categories on the right side with evenly distributed angles
+        var _angleStep = Math.PI / (healthCount + 1);
+        var _angle = (healthIndex + 1) * _angleStep - Math.PI / 2;
         node.x = Math.cos(_angle) * radius * 0.8;
         node.y = Math.sin(_angle) * radius * 0.8;
+        healthIndex++;
       }
     });
 
@@ -27021,11 +27073,32 @@ function updateInterconnectionChart(chart, data) {
     });
   });
 
-  // Run simulation for a short time then stop
+  // Run simulation longer to ensure nodes find non-overlapping positions
   simulation.alpha(1).restart();
+
+  // Cool down the simulation gradually over more iterations
+  simulation.alphaMin(0.001).alphaTarget(0).alphaDecay(0.02);
+
+  // Let the simulation run longer for better layout
   setTimeout(function () {
-    return simulation.stop();
-  }, 2000);
+    simulation.stop();
+
+    // After simulation stops, do one final check and adjustment for any remaining overlaps
+    resolveRemainingOverlaps(nodes, nodeSize);
+
+    // Update final positions
+    node.attr('transform', function (d) {
+      return "translate(".concat(d.x, ",").concat(d.y, ")");
+    });
+
+    // Update final link paths
+    link.attr('d', function (d) {
+      var dx = d.target.x - d.source.x;
+      var dy = d.target.y - d.source.y;
+      var dr = Math.sqrt(dx * dx + dy * dy) * 1.5; // Adjust curve
+      return "M".concat(d.source.x, ",").concat(d.source.y, "A").concat(dr, ",").concat(dr, " 0 0,1 ").concat(d.target.x, ",").concat(d.target.y);
+    });
+  }, 3000);
 }
 var _default = exports.default = {
   initializeInterconnectionChart: initializeInterconnectionChart,
@@ -27603,7 +27676,7 @@ function initializeFilters(processedData, filterElements) {
   uiModule.initializeResetButton(function () {
     if (isAnyFilterActive()) {
       $('#countryFilter, #corruptionCategoriesFilter, #healthCategoriesFilter').val(null).trigger('change');
-      $('#startDate').datepicker('setDate', minDate);
+      $('#startDate').datepicker('setDate', "01/01/2022");
       $('#endDate').datepicker('setDate', maxDate);
       $('#search-input').val('');
       archivedFilter.checked = false;
@@ -27681,7 +27754,14 @@ function isAnyFilterActive() {
   var isUnreliableFilterActive = !document.getElementById('unreliableFilter').checked;
   var isCaseFilterActive = !document.getElementById('caseFilter').checked;
   var isCountryLevelFilterActive = !document.getElementById('countryLevelFilter').checked;
-  var isDateFilterActive = startDate && dateRange.minDate && startDate.getTime() !== dateRange.minDate.getTime() || endDate && dateRange.maxDate && endDate.getTime() !== dateRange.maxDate.getTime();
+
+  // Check if start date is different from default (01/01/2022)
+  var defaultStartDate = new Date(2022, 0, 1); // January 1, 2022
+  var isStartDateChanged = startDate && startDate.getTime() !== defaultStartDate.getTime();
+
+  // Check if end date is different from max date
+  var isEndDateChanged = endDate && dateRange.maxDate && endDate.getTime() !== dateRange.maxDate.getTime();
+  var isDateFilterActive = isStartDateChanged || isEndDateChanged;
   return selectedCountries.length > 0 || selectedCorruptionCategories.length > 0 || selectedHealthCategories.length > 0 || isDateFilterActive || searchTerm !== '' || isArchivedFilterActive || isUnreliableFilterActive || isCaseFilterActive || isCountryLevelFilterActive;
 }
 
@@ -27839,7 +27919,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52270" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52352" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

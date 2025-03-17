@@ -132,7 +132,7 @@ function initializeFilters(processedData, filterElements) {
     uiModule.initializeResetButton(() => {
         if (isAnyFilterActive()) {
             $('#countryFilter, #corruptionCategoriesFilter, #healthCategoriesFilter').val(null).trigger('change');
-            $('#startDate').datepicker('setDate', minDate);
+            $('#startDate').datepicker('setDate', "01/01/2022");
             $('#endDate').datepicker('setDate', maxDate);
             $('#search-input').val('');
             archivedFilter.checked = false;
@@ -212,9 +212,14 @@ function isAnyFilterActive() {
     const isCaseFilterActive = !document.getElementById('caseFilter').checked;
     const isCountryLevelFilterActive = !document.getElementById('countryLevelFilter').checked;
 
-    const isDateFilterActive = (startDate && dateRange.minDate && startDate.getTime() !== dateRange.minDate.getTime()) || 
-                               (endDate && dateRange.maxDate && endDate.getTime() !== dateRange.maxDate.getTime());
+// Check if start date is different from default (01/01/2022)
+const defaultStartDate = new Date(2022, 0, 1); // January 1, 2022
+const isStartDateChanged = startDate && startDate.getTime() !== defaultStartDate.getTime();
 
+// Check if end date is different from max date
+const isEndDateChanged = endDate && dateRange.maxDate && endDate.getTime() !== dateRange.maxDate.getTime();
+
+const isDateFilterActive = isStartDateChanged || isEndDateChanged;
     return selectedCountries.length > 0 || 
            selectedCorruptionCategories.length > 0 || 
            selectedHealthCategories.length > 0 || 

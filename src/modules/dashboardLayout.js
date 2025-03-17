@@ -68,8 +68,6 @@ export function createDashboardLayout(container) {
                     <div class="card-header">
                         <h3>Summary Statistics</h3>
                         <div class="date-range-indicator">
-                            <i class="fa fa-calendar-o"></i>
-                            <span id="time-period-display">-</span>
                         </div>
                     </div>
                     <div id="summary-stats" class="summary-stats-grid">
@@ -106,9 +104,7 @@ export function createDashboardLayout(container) {
                     <div class="card-header">
                         <h3>Category Relationships</h3>
                         <div class="card-tools">
-                            <button class="view-toggle" id="interconnection-toggle" title="Toggle visualization type">
-                                <i class="fa fa-random"></i>
-                            </button>
+
                         </div>
                     </div>
                     <div id="interconnection-chart"></div>
