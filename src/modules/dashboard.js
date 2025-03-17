@@ -303,7 +303,6 @@ function updateTrendAnalysis(currentData, previousData) {
         </div>
         <div class="trend-indicator">
             <div class="trend-title">
-                <i class="fa fa-globe"></i>
                 <span>Countries</span>
             </div>
             <div class="trend-value ${countriesTrend.direction}">

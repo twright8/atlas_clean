@@ -86,7 +86,7 @@ export function initializeDatePickers(onChange, dateRange) {
     }).on('changeDate', onChange);
 
     // Set initial dates
-    $('#startDate').datepicker('setDate', dateRange.minDate);
+    $('#startDate').datepicker('setDate', "01/01/2022");
     $('#endDate').datepicker('setDate', dateRange.maxDate);
 }
 

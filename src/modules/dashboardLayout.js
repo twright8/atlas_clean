@@ -57,7 +57,6 @@ export function createDashboardLayout(container) {
                         <h3>Top Countries by Articles</h3>
                         <div class="card-tools">
                             <button class="view-toggle" id="country-view-toggle" title="Toggle between chart/map view">
-                                <i class="fa fa-globe"></i>
                             </button>
                         </div>
                     </div>

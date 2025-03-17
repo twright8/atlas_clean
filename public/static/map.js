@@ -877,7 +877,7 @@ function initializeDatePickers(onChange, dateRange) {
   }).on('changeDate', onChange);
 
   // Set initial dates
-  $('#startDate').datepicker('setDate', dateRange.minDate);
+  $('#startDate').datepicker('setDate', "01/01/2022");
   $('#endDate').datepicker('setDate', dateRange.maxDate);
 }
 
@@ -1214,7 +1214,7 @@ exports.default = void 0;
  * @param {HTMLElement} container The container element for the dashboard
  */
 function createDashboardLayout(container) {
-  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <!-- Dashboard header with key insights -->\n            <div class=\"dashboard-header-card\">\n                <div class=\"dashboard-header-content\">\n                    <div class=\"dashboard-header-title\">\n                        <h2>Health Integrity Insights</h2>\n                        <p class=\"dashboard-subtitle\">Analysis of healthcare integrity issues worldwide</p>\n                    </div>\n                    <div class=\"dashboard-key-metrics\" id=\"key-metrics\">\n                        <!-- Filled dynamically -->\n                    </div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Time Series Chart -->\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <div class=\"card-header\">\n                        <h3>Articles Over Time</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"time-view-toggle\" title=\"Toggle between monthly/yearly view\">\n                                <i class=\"fa fa-calendar\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                \n                <!-- Categories Chart -->\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <div class=\"card-header\">\n                        <h3>Categories Breakdown</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"category-view-toggle\" title=\"Toggle between Integrity/Health Sector categories\">\n                                <i class=\"fa fa-exchange\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Top Countries Chart -->\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <div class=\"card-header\">\n                        <h3>Top Countries by Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"country-view-toggle\" title=\"Toggle between chart/map view\">\n                                <i class=\"fa fa-globe\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                \n                <!-- Summary Statistics -->\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <div class=\"card-header\">\n                        <h3>Summary Statistics</h3>\n                        <div class=\"date-range-indicator\">\n                            <i class=\"fa fa-calendar-o\"></i>\n                            <span id=\"time-period-display\">-</span>\n                        </div>\n                    </div>\n                    <div id=\"summary-stats\" class=\"summary-stats-grid\">\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-newspaper-o\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-articles\">0</span>\n                                <span class=\"stat-label\">Total Articles</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-globe\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-countries\">0</span>\n                                <span class=\"stat-label\">Countries</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-tags\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-categories\">0</span>\n                                <span class=\"stat-label\">Categories</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-calendar\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"time-period\">-</span>\n                                <span class=\"stat-label\">Time Period</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <!-- New row for additional insights -->\n            <div class=\"dashboard-row\">\n                <!-- Category Interconnection Chart -->\n                <div class=\"dashboard-card\" id=\"category-interconnection-card\">\n                    <div class=\"card-header\">\n                        <h3>Category Relationships</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"interconnection-toggle\" title=\"Toggle visualization type\">\n                                <i class=\"fa fa-random\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"interconnection-chart\"></div>\n                </div>\n                \n                <!-- Recent Articles Card -->\n                <div class=\"dashboard-card\" id=\"recent-articles-card\">\n                    <div class=\"card-header\">\n                        <h3>Recent Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"refresh-btn\" id=\"recent-refresh\" title=\"Refresh list\">\n                                <i class=\"fa fa-refresh\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"recent-articles-list\"></div>\n                </div>\n            </div>\n        </div>\n    ";
+  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <!-- Dashboard header with key insights -->\n            <div class=\"dashboard-header-card\">\n                <div class=\"dashboard-header-content\">\n                    <div class=\"dashboard-header-title\">\n                        <h2>Health Integrity Insights</h2>\n                        <p class=\"dashboard-subtitle\">Analysis of healthcare integrity issues worldwide</p>\n                    </div>\n                    <div class=\"dashboard-key-metrics\" id=\"key-metrics\">\n                        <!-- Filled dynamically -->\n                    </div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Time Series Chart -->\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <div class=\"card-header\">\n                        <h3>Articles Over Time</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"time-view-toggle\" title=\"Toggle between monthly/yearly view\">\n                                <i class=\"fa fa-calendar\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                \n                <!-- Categories Chart -->\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <div class=\"card-header\">\n                        <h3>Categories Breakdown</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"category-view-toggle\" title=\"Toggle between Integrity/Health Sector categories\">\n                                <i class=\"fa fa-exchange\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Top Countries Chart -->\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <div class=\"card-header\">\n                        <h3>Top Countries by Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"country-view-toggle\" title=\"Toggle between chart/map view\">\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                \n                <!-- Summary Statistics -->\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <div class=\"card-header\">\n                        <h3>Summary Statistics</h3>\n                        <div class=\"date-range-indicator\">\n                            <i class=\"fa fa-calendar-o\"></i>\n                            <span id=\"time-period-display\">-</span>\n                        </div>\n                    </div>\n                    <div id=\"summary-stats\" class=\"summary-stats-grid\">\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-newspaper-o\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-articles\">0</span>\n                                <span class=\"stat-label\">Total Articles</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-globe\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-countries\">0</span>\n                                <span class=\"stat-label\">Countries</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-tags\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-categories\">0</span>\n                                <span class=\"stat-label\">Categories</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-calendar\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"time-period\">-</span>\n                                <span class=\"stat-label\">Time Period</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <!-- New row for additional insights -->\n            <div class=\"dashboard-row\">\n                <!-- Category Interconnection Chart -->\n                <div class=\"dashboard-card\" id=\"category-interconnection-card\">\n                    <div class=\"card-header\">\n                        <h3>Category Relationships</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"interconnection-toggle\" title=\"Toggle visualization type\">\n                                <i class=\"fa fa-random\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"interconnection-chart\"></div>\n                </div>\n                \n                <!-- Recent Articles Card -->\n                <div class=\"dashboard-card\" id=\"recent-articles-card\">\n                    <div class=\"card-header\">\n                        <h3>Recent Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"refresh-btn\" id=\"recent-refresh\" title=\"Refresh list\">\n                                <i class=\"fa fa-refresh\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"recent-articles-list\"></div>\n                </div>\n            </div>\n        </div>\n    ";
   container.innerHTML = dashboardHTML;
 
   // Initialize event listeners for toggle buttons
@@ -25676,11 +25676,15 @@ function initializeTimeSeriesChart() {
   var width = Math.max(containerWidth - margin.left - margin.right, 100);
   var height = 260 - margin.top - margin.bottom;
 
-  // Create SVG
-  var svg = container.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', "translate(".concat(margin.left, ",").concat(margin.top, ")"));
+  // Create SVG with extra height for labels
+  var svg = container.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom + 130) // Added 30px for labels
+  .append('g').attr('transform', "translate(".concat(margin.left, ",").concat(margin.top, ")"));
+  var x = d3.scaleTime().domain([/* your min date */ /* your max date */,]).range([0, width]);
 
   // Add X axis placeholder
-  svg.append('g').attr('class', 'x-axis').attr('transform', "translate(0,".concat(height, ")")).append('text').attr('y', 40).attr('x', width / 2).attr('fill', '#333').style('text-anchor', 'middle').text('Date');
+  svg.append('g').attr('class', 'x-axis').attr('transform', "translate(0,".concat(height, ")")).call(d3.axisBottom(x));
+
+  // Add the X axis label as a separate element with more space
 
   // Add Y axis placeholder
   svg.append('g').attr('class', 'y-axis').append('text').attr('transform', 'rotate(-90)').attr('y', -40).attr('x', -height / 2).attr('fill', '#333').style('text-anchor', 'middle').text('Articles');
@@ -25715,7 +25719,7 @@ function initializeCategoryChart() {
   var svg = container.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', "translate(".concat(margin.left, ",").concat(margin.top, ")"));
 
   // Add X axis placeholder
-  svg.append('g').attr('class', 'x-axis').attr('transform', "translate(0,".concat(height, ")")).append('text').attr('y', 40).attr('x', width / 2).attr('fill', '#333').style('text-anchor', 'middle').text('Count');
+  svg.append('g').attr('class', 'x-axis').attr('transform', "translate(0,".concat(height, ")")).append('text').attr('y', 40).attr('x', width / 2).attr('fill', '#333').style('text-anchor', 'middle');
 
   // Add Y axis placeholder
   svg.append('g').attr('class', 'y-axis');
@@ -25747,8 +25751,7 @@ function initializeTopCountriesChart() {
   var svg = container.append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', "translate(".concat(margin.left, ",").concat(margin.top, ")"));
 
   // Add X axis placeholder
-  svg.append('g').attr('class', 'x-axis').attr('transform', "translate(0,".concat(height, ")")).append('text').attr('y', 40).attr('x', width / 2).attr('fill', '#333').style('text-anchor', 'middle').text('Articles');
-
+  svg.append('g').attr('class', 'x-axis').attr('transform', "translate(0,".concat(height, ")")).append('text').attr('y', 40).attr('x', width / 2).attr('fill', '#333').style('text-anchor', 'middle');
   // Add Y axis placeholder
   svg.append('g').attr('class', 'y-axis');
 
@@ -25818,9 +25821,16 @@ function updateTimeSeriesChart(chart, data, dateRange) {
   var height = 260 - margin.top - margin.bottom;
 
   // Set scales
-  var x = d3.scaleTime().domain(d3.extent(timeData, function (d) {
+  var dateExtent = d3.extent(timeData, function (d) {
     return d.date;
-  })).range([0, width]).nice();
+  });
+  var minDate = dateExtent[0];
+  var maxDate = dateExtent[1];
+
+  // Add 10% padding to the right side only
+  var timeRange = maxDate - minDate;
+  var paddedMaxDate = new Date(maxDate.getTime() + timeRange * 0.2);
+  var x = d3.scaleTime().domain([minDate, paddedMaxDate]).range([0, width]).nice();
   var y = d3.scaleLinear().domain([0, d3.max(timeData, function (d) {
     return d.value;
   }) * 1.1]).range([height, 0]).nice();
@@ -25870,7 +25880,7 @@ function updateTimeSeriesChart(chart, data, dateRange) {
     return y(d.value);
   }).attr('r', 0).attr('fill', '#e5007d').transition().delay(function (d, i) {
     return i * 50;
-  }).duration(500).attr('r', 5);
+  }).duration(500).attr('r', 3);
 
   // Add hover area with improved tooltips
   chart.append('g').attr('class', 'hover-area').selectAll('rect').data(timeData).enter().append('rect').attr('x', function (d) {
@@ -25880,7 +25890,9 @@ function updateTimeSeriesChart(chart, data, dateRange) {
     d3.select(this.parentNode.parentNode).selectAll('.data-point').filter(function (point) {
       return point.key === d.key;
     }).transition().duration(100).attr('r', 7).attr('fill', '#ff4081');
-    var tooltip = d3.select('#time-series-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', "".concat(d3.event.pageX - d3.select('#time-series-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#time-series-chart').node().getBoundingClientRect().top - 60, "px"));
+    var tooltip = d3.select('#time-series-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', '10px') // Fixed position on the left
+    .style('top', '10px') // Fixed position at the top
+    .style('z-index', '1000').style('background-color', 'rgba(255, 255, 255, 0.9)').style('border', '1px solid #ddd').style('padding', '8px').style('border-radius', '4px');
     var formatDate = options.yearly ? '%Y' : '%B %Y';
     tooltip.html("\n                <div class=\"chart-tooltip-title\">".concat(d3.timeFormat(formatDate)(d.date), "</div>\n                <div><span class=\"chart-tooltip-value\">").concat(d.value, "</span> articles</div>\n                <div>").concat(Math.round(d.value / data.length * 100), "% of selected data</div>\n            "));
   }).on('mouseout', function () {
@@ -25972,7 +25984,7 @@ function updateCategoryChart(chart, data) {
   // Set scales
   var x = d3.scaleLinear().domain([0, d3.max(topCategories, function (d) {
     return d.count;
-  }) * 1.1]).range([0, width]);
+  }) * 1.35]).range([0, width]);
   var y = d3.scaleBand().domain(topCategories.map(function (d) {
     return d.category;
   })).range([0, height]).padding(0.2);
@@ -26009,7 +26021,7 @@ function updateCategoryChart(chart, data) {
   // Handle interactive hover effects
   chart.selectAll('.category-bar').on('mouseover', function (d) {
     d3.select(this).transition().duration(100).attr('fill', options.showHealthCategories ? '#3694d1' : '#e5007d');
-    var tooltip = d3.select('#category-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', "".concat(d3.event.pageX - d3.select('#category-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#category-chart').node().getBoundingClientRect().top - 40, "px"));
+    var tooltip = d3.select('#category-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', "10px").style('top', "10px");
     tooltip.html("\n                <div class=\"chart-tooltip-title\">".concat(d.category, "</div>\n                <div><span class=\"chart-tooltip-value\">").concat(d.count, "</span> articles</div>\n                <div>").concat((d.count / data.length * 100).toFixed(1), "% of selected data</div>\n            "));
   }).on('mouseout', function () {
     d3.select(this).transition().duration(100).attr('fill', barColor);
@@ -26112,7 +26124,7 @@ function updateTopCountriesChart(chart, data) {
   // Set scales
   var x = d3.scaleLinear().domain([0, d3.max(topCountries, function (d) {
     return d.count;
-  }) * 1.1]).range([0, width]);
+  }) * 1.35]).range([0, width]);
   var y = d3.scaleBand().domain(topCountries.map(function (d) {
     return d.country;
   })).range([0, height]).padding(0.2);
@@ -26146,7 +26158,7 @@ function updateTopCountriesChart(chart, data) {
   // Handle interactive hover effects
   chart.selectAll('.country-bar').on('mouseover', function (d) {
     d3.select(this).transition().duration(100).attr('fill', '#3694d1');
-    var tooltip = d3.select('#top-countries-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', "".concat(d3.event.pageX - d3.select('#top-countries-chart').node().getBoundingClientRect().left, "px")).style('top', "".concat(d3.event.pageY - d3.select('#top-countries-chart').node().getBoundingClientRect().top - 40, "px"));
+    var tooltip = d3.select('#top-countries-chart').append('div').attr('class', 'chart-tooltip').style('position', 'absolute').style('left', "10px").style('top', "10px");
     tooltip.html("\n                <div class=\"chart-tooltip-title\">".concat(d.country, "</div>\n                <div><span class=\"chart-tooltip-value\">").concat(d.count, "</span> articles</div>\n                <div>").concat((d.count / data.length * 100).toFixed(1), "% of selected data</div>\n            "));
   }).on('mouseout', function () {
     d3.select(this).transition().duration(100).attr('fill', '#e5007d');
@@ -26178,24 +26190,6 @@ function updateTopCountriesChart(chart, data) {
   }).text(function (d) {
     return d.count;
   }).attr('fill', '#333').attr('font-size', '12px').attr('opacity', 0).transition().duration(500).attr('opacity', 1);
-}
-
-/**
- * Update the countries chart with a map visualization
- * @param {Object} chart The chart reference
- * @param {Array} data Filtered data array
- */
-function updateCountryMapChart(chart, data) {
-  // Clear existing chart content
-  chart.selectAll('*').remove();
-
-  // Show message that this is just a placeholder - in a real implementation, 
-  // we'd integrate with a proper map visualization
-  chart.append('text').attr('class', 'map-placeholder').attr('x', chart.node().getBBox().width / 2).attr('y', chart.node().getBBox().height / 2 - 20).attr('text-anchor', 'middle').attr('font-size', '14px').attr('fill', '#666').text('Map view is active');
-  chart.append('text').attr('class', 'map-placeholder-note').attr('x', chart.node().getBBox().width / 2).attr('y', chart.node().getBBox().height / 2 + 10).attr('text-anchor', 'middle').attr('font-size', '12px').attr('fill', '#666').text('Use the main map view for more detailed geographic analysis');
-
-  // Add instruction to toggle back
-  chart.append('text').attr('class', 'map-placeholder-instruction').attr('x', chart.node().getBBox().width / 2).attr('y', chart.node().getBBox().height / 2 + 40).attr('text-anchor', 'middle').attr('font-size', '12px').attr('fill', '#3694d1').text('Click the globe icon to return to bar chart view');
 }
 var _default = exports.default = {
   initializeTimeSeriesChart: initializeTimeSeriesChart,
@@ -27277,7 +27271,7 @@ function updateTrendAnalysis(currentData, previousData) {
   }
 
   // Create trends HTML
-  var trendsHTML = "\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-newspaper-o\"></i>\n                <span>Articles</span>\n            </div>\n            <div class=\"trend-value ".concat(totalArticlesTrend.direction, "\">\n                <i class=\"fa fa-").concat(getTrendIcon(totalArticlesTrend.direction), "\"></i>\n                <span>").concat(totalArticlesTrend.value, "%</span>\n            </div>\n        </div>\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-globe\"></i>\n                <span>Countries</span>\n            </div>\n            <div class=\"trend-value ").concat(countriesTrend.direction, "\">\n                <i class=\"fa fa-").concat(getTrendIcon(countriesTrend.direction), "\"></i>\n                <span>").concat(countriesTrend.value, "%</span>\n            </div>\n        </div>\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-tag\"></i>\n                <span>Top Category</span>\n            </div>\n            <div class=\"trend-value ").concat(categoryTrendClass, "\">\n                <i class=\"fa fa-").concat(getTrendIcon(categoryTrendClass), "\"></i>\n                <span>").concat(categoryTrendValue, "</span>\n            </div>\n        </div>\n    ");
+  var trendsHTML = "\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-newspaper-o\"></i>\n                <span>Articles</span>\n            </div>\n            <div class=\"trend-value ".concat(totalArticlesTrend.direction, "\">\n                <i class=\"fa fa-").concat(getTrendIcon(totalArticlesTrend.direction), "\"></i>\n                <span>").concat(totalArticlesTrend.value, "%</span>\n            </div>\n        </div>\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <span>Countries</span>\n            </div>\n            <div class=\"trend-value ").concat(countriesTrend.direction, "\">\n                <i class=\"fa fa-").concat(getTrendIcon(countriesTrend.direction), "\"></i>\n                <span>").concat(countriesTrend.value, "%</span>\n            </div>\n        </div>\n        <div class=\"trend-indicator\">\n            <div class=\"trend-title\">\n                <i class=\"fa fa-tag\"></i>\n                <span>Top Category</span>\n            </div>\n            <div class=\"trend-value ").concat(categoryTrendClass, "\">\n                <i class=\"fa fa-").concat(getTrendIcon(categoryTrendClass), "\"></i>\n                <span>").concat(categoryTrendValue, "</span>\n            </div>\n        </div>\n    ");
   trendIndicatorsContainer.innerHTML = trendsHTML;
 }
 
@@ -27721,7 +27715,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58619" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50751" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

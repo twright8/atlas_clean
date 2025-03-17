@@ -21,23 +21,25 @@ export function initializeTimeSeriesChart() {
     const width = Math.max(containerWidth - margin.left - margin.right, 100);
     const height = 260 - margin.top - margin.bottom;
     
-    // Create SVG
+    // Create SVG with extra height for labels
     const svg = container.append('svg')
         .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('height', height + margin.top + margin.bottom + 130) // Added 30px for labels
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
-    
+        
+    const x = d3.scaleTime()
+        .domain([/* your min date */, /* your max date */])
+        .range([0, width]);
+        
     // Add X axis placeholder
     svg.append('g')
         .attr('class', 'x-axis')
         .attr('transform', `translate(0,${height})`)
-        .append('text')
-        .attr('y', 40)
-        .attr('x', width / 2)
-        .attr('fill', '#333')
-        .style('text-anchor', 'middle')
-        .text('Date');
+        .call(d3.axisBottom(x));
+        
+    // Add the X axis label as a separate element with more space
+
     
     // Add Y axis placeholder
     svg.append('g')
@@ -90,8 +92,7 @@ export function initializeCategoryChart() {
         .attr('y', 40)
         .attr('x', width / 2)
         .attr('fill', '#333')
-        .style('text-anchor', 'middle')
-        .text('Count');
+        .style('text-anchor', 'middle');
     
     // Add Y axis placeholder
     svg.append('g')
@@ -130,9 +131,7 @@ export function initializeTopCountriesChart() {
         .attr('y', 40)
         .attr('x', width / 2)
         .attr('fill', '#333')
-        .style('text-anchor', 'middle')
-        .text('Articles');
-    
+        .style('text-anchor', 'middle');    
     // Add Y axis placeholder
     svg.append('g')
         .attr('class', 'y-axis');
@@ -203,10 +202,18 @@ export function updateTimeSeriesChart(chart, data, dateRange, options = { yearly
     const height = 260 - margin.top - margin.bottom;
     
     // Set scales
-    const x = d3.scaleTime()
-        .domain(d3.extent(timeData, d => d.date))
-        .range([0, width])
-        .nice();
+const dateExtent = d3.extent(timeData, d => d.date);
+const minDate = dateExtent[0];
+const maxDate = dateExtent[1];
+
+// Add 10% padding to the right side only
+const timeRange = maxDate - minDate;
+const paddedMaxDate = new Date(maxDate.getTime() + timeRange * 0.2);
+
+const x = d3.scaleTime()
+    .domain([minDate, paddedMaxDate])
+    .range([0, width])
+    .nice();
     
     const y = d3.scaleLinear()
         .domain([0, d3.max(timeData, d => d.value) * 1.1])
@@ -301,7 +308,7 @@ export function updateTimeSeriesChart(chart, data, dateRange, options = { yearly
         .transition()
         .delay((d, i) => i * 50)
         .duration(500)
-        .attr('r', 5);
+        .attr('r', 3);
     
     // Add hover area with improved tooltips
     chart.append('g')
@@ -325,12 +332,17 @@ export function updateTimeSeriesChart(chart, data, dateRange, options = { yearly
                 .attr('r', 7)
                 .attr('fill', '#ff4081');
             
-            const tooltip = d3.select('#time-series-chart')
-                .append('div')
-                .attr('class', 'chart-tooltip')
-                .style('position', 'absolute')
-                .style('left', `${d3.event.pageX - d3.select('#time-series-chart').node().getBoundingClientRect().left}px`)
-                .style('top', `${d3.event.pageY - d3.select('#time-series-chart').node().getBoundingClientRect().top - 60}px`);
+const tooltip = d3.select('#time-series-chart')
+    .append('div')
+    .attr('class', 'chart-tooltip')
+    .style('position', 'absolute')
+    .style('left', '10px')  // Fixed position on the left
+    .style('top', '10px')   // Fixed position at the top
+    .style('z-index', '1000')
+    .style('background-color', 'rgba(255, 255, 255, 0.9)')
+    .style('border', '1px solid #ddd')
+    .style('padding', '8px')
+    .style('border-radius', '4px');
             
             const formatDate = options.yearly ? '%Y' : '%B %Y';
             
@@ -453,7 +465,7 @@ export function updateCategoryChart(chart, data, options = { showHealthCategorie
     
     // Set scales
     const x = d3.scaleLinear()
-        .domain([0, d3.max(topCategories, d => d.count) * 1.1])
+        .domain([0, d3.max(topCategories, d => d.count) * 1.35])
         .range([0, width]);
     
     const y = d3.scaleBand()
@@ -507,6 +519,7 @@ export function updateCategoryChart(chart, data, options = { showHealthCategorie
         .attr('fill', barColor)
         .transition()
         .duration(800)
+		
         .attr('width', d => x(d.count));
     
     // Handle interactive hover effects
@@ -521,8 +534,9 @@ export function updateCategoryChart(chart, data, options = { showHealthCategorie
                 .append('div')
                 .attr('class', 'chart-tooltip')
                 .style('position', 'absolute')
-                .style('left', `${d3.event.pageX - d3.select('#category-chart').node().getBoundingClientRect().left}px`)
-                .style('top', `${d3.event.pageY - d3.select('#category-chart').node().getBoundingClientRect().top - 40}px`);
+                .style('left', `10px`)
+                .style('top', `10px`);
+            
             
             tooltip.html(`
                 <div class="chart-tooltip-title">${d.category}</div>
@@ -630,7 +644,7 @@ export function updateTopCountriesChart(chart, data, options = { mapView: false 
     
     // Set scales
     const x = d3.scaleLinear()
-        .domain([0, d3.max(topCountries, d => d.count) * 1.1])
+        .domain([0, d3.max(topCountries, d => d.count) * 1.35])
         .range([0, width]);
     
     const y = d3.scaleBand()
@@ -695,8 +709,8 @@ export function updateTopCountriesChart(chart, data, options = { mapView: false 
                 .append('div')
                 .attr('class', 'chart-tooltip')
                 .style('position', 'absolute')
-                .style('left', `${d3.event.pageX - d3.select('#top-countries-chart').node().getBoundingClientRect().left}px`)
-                .style('top', `${d3.event.pageY - d3.select('#top-countries-chart').node().getBoundingClientRect().top - 40}px`);
+                .style('left', `10px`)
+                .style('top', `10px`);
             
             tooltip.html(`
                 <div class="chart-tooltip-title">${d.country}</div>
@@ -743,45 +757,6 @@ export function updateTopCountriesChart(chart, data, options = { mapView: false 
         .attr('opacity', 1);
 }
 
-/**
- * Update the countries chart with a map visualization
- * @param {Object} chart The chart reference
- * @param {Array} data Filtered data array
- */
-function updateCountryMapChart(chart, data) {
-    // Clear existing chart content
-    chart.selectAll('*').remove();
-    
-    // Show message that this is just a placeholder - in a real implementation, 
-    // we'd integrate with a proper map visualization
-    chart.append('text')
-        .attr('class', 'map-placeholder')
-        .attr('x', chart.node().getBBox().width / 2)
-        .attr('y', chart.node().getBBox().height / 2 - 20)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '14px')
-        .attr('fill', '#666')
-        .text('Map view is active');
-    
-    chart.append('text')
-        .attr('class', 'map-placeholder-note')
-        .attr('x', chart.node().getBBox().width / 2)
-        .attr('y', chart.node().getBBox().height / 2 + 10)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '12px')
-        .attr('fill', '#666')
-        .text('Use the main map view for more detailed geographic analysis');
-    
-    // Add instruction to toggle back
-    chart.append('text')
-        .attr('class', 'map-placeholder-instruction')
-        .attr('x', chart.node().getBBox().width / 2)
-        .attr('y', chart.node().getBBox().height / 2 + 40)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '12px')
-        .attr('fill', '#3694d1')
-        .text('Click the globe icon to return to bar chart view');
-}
 
 export default {
     initializeTimeSeriesChart,
