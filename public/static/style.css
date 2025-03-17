@@ -1450,13 +1450,15 @@ margin-left: -9px!important;
 }
 
 /* Make the time period stat box take up full width of second row */
-#summary-stats {
+# {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
 	padding-bottom:3px;
 }
-
+@media only screen and (max-width: 768px){
+#summary-stats{padding-bottom:20px;
+}}
 #summary-stats .stat-box:nth-child(3) {
     grid-column: 1 / span 2;
 }
@@ -1472,3 +1474,4 @@ margin-left: -9px!important;
     }
 }
 #dashboard{margin-bottom:15px}
+@media only screen and (max-width: 768px){#category-interconnection-card{display:none}}
