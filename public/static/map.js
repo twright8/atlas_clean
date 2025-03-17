@@ -426,9 +426,14 @@ function createMarker(location) {
   var date = location['Date'] || 'Unknown Date';
   var corruptionCategories = Array.isArray(location['Corruption Categories']) ? String(location['Corruption Categories']).replace(/,(?=[^\s])/g, ', ') : '';
   var sectorCategories = Array.isArray(location['Sector Categories']) ? String(location['Sector Categories']).replace(/,(?=[^\s])/g, ', ') : '';
+
+  // Create email link with subject containing the article title
+  var emailSubject = encodeURIComponent('Inquiry about news article');
+  var emailBody = encodeURIComponent("Article: \"".concat(title, "\"\nCountry: ").concat(country, "\nDate: ").concat(date));
+  var emailLink = "mailto:ti-health@transparency.org?subject=".concat(emailSubject, "&body=").concat(emailBody);
   return L.marker([location.lat, location.long], {
     icon: icon
-  }).bindPopup("\n            <div class=\"popup-content\">\n                <h3 class=\"popup-title\">\"".concat(title, "\"</h3>\n                <div class=\"popup-details\">\n                    <p><strong>Country:</strong> ").concat(country, "</p>\n                    <p><strong>URL:</strong> ").concat(url !== '#' ? "<a href=\"".concat(url, "\" target=\"_blank\">Link</a>") : 'No URL', "</p>\n                    <p><strong>Date:</strong> ").concat(date, "</p>\n                    <p><strong>Integrity Area:</strong> ").concat(corruptionCategories, "</p>\n                    <p><strong>Sector Area:</strong> ").concat(sectorCategories, "</p>\n                </div>\n            </div>\n        "));
+  }).bindPopup("\n            <div class=\"popup-content\">\n                <h3 class=\"popup-title\">\"".concat(title, "\"</h3>\n                <div class=\"popup-details\">\n                    <p><strong>Country:</strong> ").concat(country, "</p>\n                    <p><strong>URL:</strong> ").concat(url !== '#' ? "<a href=\"".concat(url, "\" target=\"_blank\">Link</a>") : 'No URL', "</p>\n                    <p><strong>Date:</strong> ").concat(date, "</p>\n                    <p><strong>Integrity Area:</strong> ").concat(corruptionCategories, "</p>\n                    <p><strong>Sector Area:</strong> ").concat(sectorCategories, "</p>\n                    <div style=\"margin-top: 5px; text-align: right;\">\n                        <button id=\"reporter\" title=\"Report or request removal of individual articles\">\n                            <a href=\"").concat(emailLink, "\">\n                                <i class=\"fa fa-flag\"></i>Report\n                            </a>\n                        </button>\n                    </div>\n                </div>\n            </div>\n        "));
 }
 
 /**
@@ -27834,7 +27839,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59147" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52270" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

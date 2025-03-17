@@ -217,6 +217,11 @@ export function createMarker(location) {
     const sectorCategories = Array.isArray(location['Sector Categories']) ? 
         String(location['Sector Categories']).replace(/,(?=[^\s])/g, ', ') : '';
     
+    // Create email link with subject containing the article title
+    const emailSubject = encodeURIComponent('Inquiry about news article');
+    const emailBody = encodeURIComponent(`Article: "${title}"\nCountry: ${country}\nDate: ${date}`);
+    const emailLink = `mailto:ti-health@transparency.org?subject=${emailSubject}&body=${emailBody}`;
+    
     return L.marker([location.lat, location.long], {icon: icon})
         .bindPopup(`
             <div class="popup-content">
@@ -227,6 +232,13 @@ export function createMarker(location) {
                     <p><strong>Date:</strong> ${date}</p>
                     <p><strong>Integrity Area:</strong> ${corruptionCategories}</p>
                     <p><strong>Sector Area:</strong> ${sectorCategories}</p>
+                    <div style="margin-top: 5px; text-align: right;">
+                        <button id="reporter" title="Report or request removal of individual articles">
+                            <a href="${emailLink}">
+                                <i class="fa fa-flag"></i>Report
+                            </a>
+                        </button>
+                    </div>
                 </div>
             </div>
         `);
