@@ -255,6 +255,9 @@ function initializeMap() {
     wheelPxPerZoomLevel: 120
   }).setView([0, 0], 2);
 
+  // Make map instance available globally
+  window.map = map;
+
   // Create marker cluster group for better performance with many markers
   try {
     // Try to create a MarkerClusterGroup directly
@@ -375,6 +378,7 @@ var onMoveEnd = exports.onMoveEnd = null;
  * Setup map event listeners
  */
 function setupMapEvents() {
+  console.log('Setting up map events');
   map.on('movestart', function () {
     map.isMoving = function () {
       return true;
@@ -384,8 +388,13 @@ function setupMapEvents() {
     map.isMoving = function () {
       return false;
     };
+    // First check the module-level callback
     if (typeof onMoveEnd === 'function') {
       onMoveEnd();
+    }
+    // Then check if we have a global callback as fallback
+    else if (typeof window.updateVisibleData === 'function') {
+      window.updateVisibleData();
     }
   });
 }
@@ -722,7 +731,13 @@ function filterData(filterCriteria) {
  * @returns {Array} Visible data inside bounds
  */
 function getVisibleData(bounds) {
+  if (!bounds || typeof bounds.contains !== 'function') {
+    return filteredData;
+  }
   return filteredData.filter(function (d) {
+    if (!d.lat || !d.long) {
+      return false;
+    }
     return bounds.contains(L.latLng(d.lat, d.long));
   });
 }
@@ -805,6 +820,18 @@ function initializeViewToggle() {
       mapElement.style.display = 'block';
       dashboardElement.style.display = 'none';
       dataTables.style.display = 'none';
+
+      // Trigger map resize event to ensure proper rendering
+      if (window.map) {
+        setTimeout(function () {
+          window.map.invalidateSize();
+
+          // Trigger an update of visible data when switching to map
+          if (typeof window.updateMapView === 'function') {
+            window.updateMapView();
+          }
+        }, 100);
+      }
     } else if (listBtn.classList.contains('active')) {
       mapElement.style.display = 'none';
       dashboardElement.style.display = 'none';
@@ -813,6 +840,16 @@ function initializeViewToggle() {
       mapElement.style.display = 'none';
       dashboardElement.style.display = 'block';
       dataTables.style.display = 'none';
+
+      // Force dashboard refresh when displaying
+      if (typeof window.handleDashboardResize === 'function') {
+        setTimeout(window.handleDashboardResize, 100);
+      }
+
+      // Force update of all dashboard charts with current filtered data
+      if (typeof window.forceUpdateDashboard === 'function') {
+        setTimeout(window.forceUpdateDashboard, 200);
+      }
     }
   }
   buttons.forEach(function (button) {
@@ -824,8 +861,24 @@ function initializeViewToggle() {
       updateVisibility();
 
       // Force dashboard refresh when dashboard tab is selected
-      if (button.id === 'dashboard-btn' && typeof window.handleDashboardResize === 'function') {
-        setTimeout(window.handleDashboardResize, 300);
+      if (button.id === 'dashboard-btn') {
+        if (typeof window.handleDashboardResize === 'function') {
+          setTimeout(window.handleDashboardResize, 200);
+        }
+        if (typeof window.forceUpdateDashboard === 'function') {
+          setTimeout(window.forceUpdateDashboard, 300);
+        }
+      }
+
+      // When switching to the map view, ensure the filter updates with visible data
+      if (button.id === 'map-overview-btn') {
+        setTimeout(function () {
+          if (typeof window.updateMapView === 'function') {
+            window.updateMapView();
+          } else if (typeof window.updateVisibleData === 'function') {
+            window.updateVisibleData();
+          }
+        }, 200);
       }
     });
   });
@@ -1214,7 +1267,7 @@ exports.default = void 0;
  * @param {HTMLElement} container The container element for the dashboard
  */
 function createDashboardLayout(container) {
-  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <!-- Dashboard header with key insights -->\n            <div class=\"dashboard-header-card\">\n                <div class=\"dashboard-header-content\">\n                    <div class=\"dashboard-header-title\">\n                        <h2>Health Integrity Insights</h2>\n                        <p class=\"dashboard-subtitle\">Analysis of healthcare integrity issues worldwide</p>\n                    </div>\n                    <div class=\"dashboard-key-metrics\" id=\"key-metrics\">\n                        <!-- Filled dynamically -->\n                    </div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Time Series Chart -->\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <div class=\"card-header\">\n                        <h3>Articles Over Time</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"time-view-toggle\" title=\"Toggle between monthly/yearly view\">\n                                <i class=\"fa fa-calendar\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                \n                <!-- Categories Chart -->\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <div class=\"card-header\">\n                        <h3>Categories Breakdown</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"category-view-toggle\" title=\"Toggle between Integrity/Health Sector categories\">\n                                <i class=\"fa fa-exchange\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Top Countries Chart -->\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <div class=\"card-header\">\n                        <h3>Top Countries by Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"country-view-toggle\" title=\"Toggle between chart/map view\">\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                \n                <!-- Summary Statistics -->\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <div class=\"card-header\">\n                        <h3>Summary Statistics</h3>\n                        <div class=\"date-range-indicator\">\n                            <i class=\"fa fa-calendar-o\"></i>\n                            <span id=\"time-period-display\">-</span>\n                        </div>\n                    </div>\n                    <div id=\"summary-stats\" class=\"summary-stats-grid\">\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-newspaper-o\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-articles\">0</span>\n                                <span class=\"stat-label\">Total Articles</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-globe\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-countries\">0</span>\n                                <span class=\"stat-label\">Countries</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-tags\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-categories\">0</span>\n                                <span class=\"stat-label\">Categories</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-calendar\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"time-period\">-</span>\n                                <span class=\"stat-label\">Time Period</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <!-- New row for additional insights -->\n            <div class=\"dashboard-row\">\n                <!-- Category Interconnection Chart -->\n                <div class=\"dashboard-card\" id=\"category-interconnection-card\">\n                    <div class=\"card-header\">\n                        <h3>Category Relationships</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"interconnection-toggle\" title=\"Toggle visualization type\">\n                                <i class=\"fa fa-random\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"interconnection-chart\"></div>\n                </div>\n                \n                <!-- Recent Articles Card -->\n                <div class=\"dashboard-card\" id=\"recent-articles-card\">\n                    <div class=\"card-header\">\n                        <h3>Recent Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"refresh-btn\" id=\"recent-refresh\" title=\"Refresh list\">\n                                <i class=\"fa fa-refresh\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"recent-articles-list\"></div>\n                </div>\n            </div>\n        </div>\n    ";
+  var dashboardHTML = "\n        <div class=\"dashboard-container\">\n            <!-- Dashboard header with key insights -->\n            <div class=\"dashboard-header-card\">\n                <div class=\"dashboard-header-content\">\n                    <div class=\"dashboard-header-title\">\n                        <h2>Health Integrity Insights</h2>\n                        <p class=\"dashboard-subtitle\">Media reported integrity issues worldwide</p>\n                    </div>\n                    <div class=\"dashboard-key-metrics\" id=\"key-metrics\">\n                        <!-- Filled dynamically -->\n                    </div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Time Series Chart -->\n                <div class=\"dashboard-card\" id=\"time-series-card\">\n                    <div class=\"card-header\">\n                        <h3>Articles Over Time</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"time-view-toggle\" title=\"Toggle between monthly/yearly view\">\n                                <i class=\"fa fa-calendar\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"time-series-chart\"></div>\n                </div>\n                \n                <!-- Categories Chart -->\n                <div class=\"dashboard-card\" id=\"category-breakdown-card\">\n                    <div class=\"card-header\">\n                        <h3>Categories Breakdown</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"category-view-toggle\" title=\"Toggle between Integrity/Health Sector categories\">\n                                <i class=\"fa fa-exchange\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"category-chart\"></div>\n                </div>\n            </div>\n            \n            <div class=\"dashboard-row\">\n                <!-- Top Countries Chart -->\n                <div class=\"dashboard-card\" id=\"top-countries-card\">\n                    <div class=\"card-header\">\n                        <h3>Top Countries by Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"country-view-toggle\" title=\"Toggle between chart/map view\">\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"top-countries-chart\"></div>\n                </div>\n                \n                <!-- Summary Statistics -->\n                <div class=\"dashboard-card\" id=\"dashboard-summary-card\">\n                    <div class=\"card-header\">\n                        <h3>Summary Statistics</h3>\n                        <div class=\"date-range-indicator\">\n                            <i class=\"fa fa-calendar-o\"></i>\n                            <span id=\"time-period-display\">-</span>\n                        </div>\n                    </div>\n                    <div id=\"summary-stats\" class=\"summary-stats-grid\">\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-newspaper-o\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-articles\">0</span>\n                                <span class=\"stat-label\">Total Articles</span>\n                            </div>\n                        </div>\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-globe\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"total-countries\">0</span>\n                                <span class=\"stat-label\">Countries</span>\n                            </div>\n                        </div>\n\n                        <div class=\"stat-box\">\n                            <div class=\"stat-icon\"><i class=\"fa fa-calendar\"></i></div>\n                            <div class=\"stat-content\">\n                                <span class=\"stat-value\" id=\"time-period\">-</span>\n                                <span class=\"stat-label\">Time Period</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            \n            <!-- New row for additional insights -->\n            <div class=\"dashboard-row\">\n                <!-- Category Interconnection Chart -->\n                <div class=\"dashboard-card\" id=\"category-interconnection-card\">\n                    <div class=\"card-header\">\n                        <h3>Category Relationships</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"view-toggle\" id=\"interconnection-toggle\" title=\"Toggle visualization type\">\n                                <i class=\"fa fa-random\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"interconnection-chart\"></div>\n                </div>\n                \n                <!-- Recent Articles Card -->\n                <div class=\"dashboard-card\" id=\"recent-articles-card\">\n                    <div class=\"card-header\">\n                        <h3>Recent Articles</h3>\n                        <div class=\"card-tools\">\n                            <button class=\"refresh-btn\" id=\"recent-refresh\" title=\"Refresh list\">\n                                <i class=\"fa fa-refresh\"></i>\n                            </button>\n                        </div>\n                    </div>\n                    <div id=\"recent-articles-list\"></div>\n                </div>\n            </div>\n        </div>\n    ";
   container.innerHTML = dashboardHTML;
 
   // Initialize event listeners for toggle buttons
@@ -25919,6 +25972,8 @@ function updateCategoryChart(chart, data) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
     showHealthCategories: false
   };
+  console.log("Updating category chart with ".concat(data.length, " data points"));
+
   // Determine which category type to show based on options
   var categoryType = options.showHealthCategories ? 'Sector Categories' : 'Corruption Categories';
 
@@ -26065,6 +26120,8 @@ function updateTopCountriesChart(chart, data) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
     mapView: false
   };
+  console.log("Updating top countries chart with ".concat(data.length, " data points"));
+
   // If map view is selected, show the map chart instead of bars
   if (options.mapView) {
     updateCountryMapChart(chart, data);
@@ -26240,18 +26297,6 @@ function updateSummaryStats(data, dateRange) {
     }
   });
 
-  // Count unique categories
-  var uniqueCategories = new Set();
-  data.forEach(function (item) {
-    if (Array.isArray(item['Corruption Categories'])) {
-      item['Corruption Categories'].forEach(function (category) {
-        if (category && category.trim()) {
-          uniqueCategories.add(category);
-        }
-      });
-    }
-  });
-
   // Format date range
   var timePeriodText = '-';
   var timePeriodDisplayText = '-';
@@ -26265,7 +26310,6 @@ function updateSummaryStats(data, dateRange) {
   // Update DOM elements for stats
   document.getElementById('total-articles').textContent = totalArticles.toLocaleString();
   document.getElementById('total-countries').textContent = uniqueCountries.size.toLocaleString();
-  document.getElementById('total-categories').textContent = uniqueCategories.size.toLocaleString();
   document.getElementById('time-period').textContent = timePeriodText;
 
   // Update the date range indicator in the card header if it exists
@@ -26728,6 +26772,8 @@ function initializeInterconnectionChart() {
  * @param {Array} data Filtered data array
  */
 function updateInterconnectionChart(chart, data) {
+  console.log("Updating interconnection chart with ".concat(data.length, " data points"));
+
   // Clear existing content
   chart.selectAll('*').remove();
   if (data.length === 0) {
@@ -26850,8 +26896,8 @@ function updateInterconnectionChart(chart, data) {
   var simulation = d3.forceSimulation(nodes).force('link', d3.forceLink(links).id(function (d) {
     return d.id;
   }).distance(radius * 0.7)).force('charge', d3.forceManyBody().strength(-50)).force('center', d3.forceCenter(0, 0)).force('collide', d3.forceCollide().radius(function (d) {
-    return nodeSize(d.count) + 5;
-  }));
+    return nodeSize(d.count) + 15;
+  }).strength(1.9));
 
   // Add center circle as guide
   chart.append('circle').attr('r', radius).style('fill', 'none').style('stroke', '#eee').style('stroke-width', 1).style('stroke-dasharray', '3,3');
@@ -26987,6 +27033,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+exports.forceUpdateCharts = forceUpdateCharts;
 exports.handleDashboardResize = handleDashboardResize;
 exports.initializeDashboard = initializeDashboard;
 exports.updateDashboard = updateDashboard;
@@ -27365,6 +27412,23 @@ function updateRecentArticles(data) {
 }
 
 /**
+ * Force update all dashboard charts with the current data
+ */
+function forceUpdateCharts() {
+  // If we have data, refresh all charts
+  if (dashboardData.length > 0) {
+    console.log('Forcing update to all dashboard charts');
+    dashboardCharts.updateTimeSeriesChart(timeSeriesChart, dashboardData, dateRange, chartOptions.timeSeries);
+    dashboardCharts.updateCategoryChart(categoryChart, dashboardData, chartOptions.category);
+    dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData, chartOptions.country);
+    interconnectionChart.updateInterconnectionChart(interconnectionViz, dashboardData, chartOptions.interconnection);
+    dashboardStats.updateSummaryStats(dashboardData, dateRange);
+    updateKeyMetrics(dashboardData);
+    updateRecentArticles(dashboardData);
+  }
+}
+
+/**
  * Handle window resize event to make charts responsive
  */
 function handleDashboardResize() {
@@ -27379,7 +27443,8 @@ function handleDashboardResize() {
 var _default = exports.default = {
   initializeDashboard: initializeDashboard,
   updateDashboard: updateDashboard,
-  handleDashboardResize: handleDashboardResize
+  handleDashboardResize: handleDashboardResize,
+  forceUpdateCharts: forceUpdateCharts
 };
 },{"./dashboardLayout":"modules/dashboardLayout.js","./dashboardCharts":"modules/dashboardCharts.js","./dashboardStats":"modules/dashboardStats.js","./interconnectionChart":"modules/interconnectionChart.js"}],"app.js":[function(require,module,exports) {
 "use strict";
@@ -27588,6 +27653,9 @@ function updateFilters() {
   // Apply filters
   var filteredData = dataModule.filterData(filterCriteria);
 
+  // Store the filtered data for reference
+  window.currentFilteredData = filteredData;
+
   // Update map and table
   updateMapAndTable();
 }
@@ -27668,23 +27736,74 @@ function updateMapAndTable() {
  * Update visible data in table based on map bounds
  */
 var updateVisibleData = uiModule.debounce(function () {
-  console.time('Updating Visible Data');
   if (mapModule.isMapMoving()) {
     return;
   }
   var bounds = mapModule.getMapBounds();
   var visibleData = dataModule.getVisibleData(bounds);
+
+  // Store the visible data for reference
+  window.currentVisibleData = visibleData;
+
+  // Update the data table with the visible data
   tableModule.updateDataTable(visibleData);
+
+  // Update the dashboard with the visible data
+  if (typeof dashboardModule.updateDashboard === 'function') {
+    var dateRange = dataModule.getDateRange();
+    // Log number of data points being processed
+    console.log("Updating dashboard with ".concat(visibleData.length, " visible data points"));
+    dashboardModule.updateDashboard(visibleData, dateRange);
+  }
+
+  // Ensure all dashboard charts are updated with the visible data
+  if (document.querySelector('#dashboard').style.display === 'block') {
+    dashboardModule.handleDashboardResize();
+  }
+
+  // Update filter count display
   $('.filter-count').text(dataModule.formatNumber(visibleData.length));
-  console.timeEnd('Updating Visible Data');
 }, 1000);
 
 // Make updateVisibleData available to map event handlers
 mapModule.onMoveEnd = updateVisibleData;
 
+// Make updateVisibleData available globally for view switching
+window.updateVisibleData = updateVisibleData;
+
+// Function to handle updates when switching to map view
+window.updateMapView = function () {
+  // Ensure the callback is set
+  mapModule.onMoveEnd = updateVisibleData;
+
+  // Update map state if needed
+  if (!mapModule.isMapMoving()) {
+    mapModule.fitMapToBounds();
+    updateVisibleData();
+  }
+};
+
 // Make dashboard resize handler available globally
 window.handleDashboardResize = function () {
   dashboardModule.handleDashboardResize();
+};
+
+// Make dashboard force update function available globally
+window.forceUpdateDashboard = function () {
+  // Check if we're using visible data from the map
+  var bounds = mapModule.getMapBounds();
+  var visibleData = dataModule.getVisibleData(bounds);
+
+  // Update dashboard with map-visible data
+  if (visibleData.length > 0) {
+    var dateRange = dataModule.getDateRange();
+    dashboardModule.updateDashboard(visibleData, dateRange);
+
+    // Force all charts to update
+    if (typeof dashboardModule.forceUpdateCharts === 'function') {
+      dashboardModule.forceUpdateCharts();
+    }
+  }
 };
 },{"./modules/map":"modules/map.js","./modules/data":"modules/data.js","./modules/ui":"modules/ui.js","./modules/table":"modules/table.js","./modules/dashboard":"modules/dashboard.js"}],"map.js":[function(require,module,exports) {
 "use strict";
@@ -27715,7 +27834,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50751" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59147" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

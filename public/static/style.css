@@ -1428,3 +1428,26 @@ margin-left: -9px!important;
     margin-top: -32px!important   /* Adjust based on your icon height */
 }
 
+/* Make the time period stat box take up full width of second row */
+#summary-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+	padding-bottom:3px;
+}
+
+#summary-stats .stat-box:nth-child(3) {
+    grid-column: 1 / span 2;
+}
+
+/* Responsive adjustment for mobile */
+@media (max-width: 768px) {
+    #summary-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    #summary-stats .stat-box:nth-child(3) {
+        grid-column: 1;
+    }
+}
+#dashboard{margin-bottom:15px}

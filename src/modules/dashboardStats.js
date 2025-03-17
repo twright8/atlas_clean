@@ -21,17 +21,7 @@ export function updateSummaryStats(data, dateRange) {
         }
     });
     
-    // Count unique categories
-    const uniqueCategories = new Set();
-    data.forEach(item => {
-        if (Array.isArray(item['Corruption Categories'])) {
-            item['Corruption Categories'].forEach(category => {
-                if (category && category.trim()) {
-                    uniqueCategories.add(category);
-                }
-            });
-        }
-    });
+
     
     // Format date range
     let timePeriodText = '-';
@@ -46,7 +36,6 @@ export function updateSummaryStats(data, dateRange) {
     // Update DOM elements for stats
     document.getElementById('total-articles').textContent = totalArticles.toLocaleString();
     document.getElementById('total-countries').textContent = uniqueCountries.size.toLocaleString();
-    document.getElementById('total-categories').textContent = uniqueCategories.size.toLocaleString();
     document.getElementById('time-period').textContent = timePeriodText;
     
     // Update the date range indicator in the card header if it exists

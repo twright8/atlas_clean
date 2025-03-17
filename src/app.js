@@ -188,6 +188,9 @@ function updateFilters() {
     // Apply filters
     const filteredData = dataModule.filterData(filterCriteria);
     
+    // Store the filtered data for reference
+    window.currentFilteredData = filteredData;
+    
     // Update map and table
     updateMapAndTable();
 }
@@ -288,8 +291,6 @@ function updateMapAndTable() {
  * Update visible data in table based on map bounds
  */
 const updateVisibleData = uiModule.debounce(function() {
-    console.time('Updating Visible Data');
-    
     if (mapModule.isMapMoving()) {
         return;
     }
@@ -297,16 +298,66 @@ const updateVisibleData = uiModule.debounce(function() {
     const bounds = mapModule.getMapBounds();
     const visibleData = dataModule.getVisibleData(bounds);
     
-    tableModule.updateDataTable(visibleData);
-    $('.filter-count').text(dataModule.formatNumber(visibleData.length));
+    // Store the visible data for reference
+    window.currentVisibleData = visibleData;
     
-    console.timeEnd('Updating Visible Data');
+    // Update the data table with the visible data
+    tableModule.updateDataTable(visibleData);
+    
+    // Update the dashboard with the visible data
+    if (typeof dashboardModule.updateDashboard === 'function') {
+        const dateRange = dataModule.getDateRange();
+        // Log number of data points being processed
+        console.log(`Updating dashboard with ${visibleData.length} visible data points`);
+        dashboardModule.updateDashboard(visibleData, dateRange);
+    }
+    
+    // Ensure all dashboard charts are updated with the visible data
+    if (document.querySelector('#dashboard').style.display === 'block') {
+        dashboardModule.handleDashboardResize();
+    }
+    
+    // Update filter count display
+    $('.filter-count').text(dataModule.formatNumber(visibleData.length));
 }, 1000);
 
 // Make updateVisibleData available to map event handlers
 mapModule.onMoveEnd = updateVisibleData;
 
+// Make updateVisibleData available globally for view switching
+window.updateVisibleData = updateVisibleData;
+
+// Function to handle updates when switching to map view
+window.updateMapView = function() {
+    // Ensure the callback is set
+    mapModule.onMoveEnd = updateVisibleData;
+    
+    // Update map state if needed
+    if (!mapModule.isMapMoving()) {
+        mapModule.fitMapToBounds();
+        updateVisibleData();
+    }
+};
+
 // Make dashboard resize handler available globally
 window.handleDashboardResize = function() {
     dashboardModule.handleDashboardResize();
+};
+
+// Make dashboard force update function available globally
+window.forceUpdateDashboard = function() {
+    // Check if we're using visible data from the map
+    const bounds = mapModule.getMapBounds();
+    const visibleData = dataModule.getVisibleData(bounds);
+    
+    // Update dashboard with map-visible data
+    if (visibleData.length > 0) {
+        const dateRange = dataModule.getDateRange();
+        dashboardModule.updateDashboard(visibleData, dateRange);
+        
+        // Force all charts to update
+        if (typeof dashboardModule.forceUpdateCharts === 'function') {
+            dashboardModule.forceUpdateCharts();
+        }
+    }
 };

@@ -14,7 +14,7 @@ export function createDashboardLayout(container) {
                 <div class="dashboard-header-content">
                     <div class="dashboard-header-title">
                         <h2>Health Integrity Insights</h2>
-                        <p class="dashboard-subtitle">Analysis of healthcare integrity issues worldwide</p>
+                        <p class="dashboard-subtitle">Media reported integrity issues worldwide</p>
                     </div>
                     <div class="dashboard-key-metrics" id="key-metrics">
                         <!-- Filled dynamically -->
@@ -87,13 +87,7 @@ export function createDashboardLayout(container) {
                                 <span class="stat-label">Countries</span>
                             </div>
                         </div>
-                        <div class="stat-box">
-                            <div class="stat-icon"><i class="fa fa-tags"></i></div>
-                            <div class="stat-content">
-                                <span class="stat-value" id="total-categories">0</span>
-                                <span class="stat-label">Categories</span>
-                            </div>
-                        </div>
+
                         <div class="stat-box">
                             <div class="stat-icon"><i class="fa fa-calendar"></i></div>
                             <div class="stat-content">

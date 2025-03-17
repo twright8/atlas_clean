@@ -404,6 +404,8 @@ const tooltip = d3.select('#time-series-chart')
  * @param {Object} options Chart options
  */
 export function updateCategoryChart(chart, data, options = { showHealthCategories: false }) {
+    console.log(`Updating category chart with ${data.length} data points`);
+    
     // Determine which category type to show based on options
     const categoryType = options.showHealthCategories ? 'Sector Categories' : 'Corruption Categories';
     
@@ -590,6 +592,8 @@ export function updateCategoryChart(chart, data, options = { showHealthCategorie
  * @param {Object} options Chart options
  */
 export function updateTopCountriesChart(chart, data, options = { mapView: false }) {
+    console.log(`Updating top countries chart with ${data.length} data points`);
+    
     // If map view is selected, show the map chart instead of bars
     if (options.mapView) {
         updateCountryMapChart(chart, data);

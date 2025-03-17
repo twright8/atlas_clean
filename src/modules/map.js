@@ -28,6 +28,9 @@ export function initializeMap() {
         wheelPxPerZoomLevel: 120
     }).setView([0, 0], 2);
     
+    // Make map instance available globally
+    window.map = map;
+    
     // Create marker cluster group for better performance with many markers
     try {
         // Try to create a MarkerClusterGroup directly
@@ -166,14 +169,20 @@ export let onMoveEnd = null;
  * Setup map event listeners
  */
 function setupMapEvents() {
+    console.log('Setting up map events');
     map.on('movestart', function() {
         map.isMoving = function() { return true; };
     });
 
     map.on('moveend', function() {
         map.isMoving = function() { return false; };
+        // First check the module-level callback
         if (typeof onMoveEnd === 'function') {
             onMoveEnd();
+        }
+        // Then check if we have a global callback as fallback
+        else if (typeof window.updateVisibleData === 'function') {
+            window.updateVisibleData();
         }
     });
 }

@@ -167,7 +167,16 @@ export function filterData(filterCriteria) {
  * @returns {Array} Visible data inside bounds
  */
 export function getVisibleData(bounds) {
-    return filteredData.filter(d => bounds.contains(L.latLng(d.lat, d.long)));
+    if (!bounds || typeof bounds.contains !== 'function') {
+        return filteredData;
+    }
+    
+    return filteredData.filter(d => {
+        if (!d.lat || !d.long) {
+            return false;
+        }
+        return bounds.contains(L.latLng(d.lat, d.long));
+    });
 }
 
 /**

@@ -422,6 +422,23 @@ function updateRecentArticles(data) {
 }
 
 /**
+ * Force update all dashboard charts with the current data
+ */
+export function forceUpdateCharts() {
+    // If we have data, refresh all charts
+    if (dashboardData.length > 0) {
+        console.log('Forcing update to all dashboard charts');
+        dashboardCharts.updateTimeSeriesChart(timeSeriesChart, dashboardData, dateRange, chartOptions.timeSeries);
+        dashboardCharts.updateCategoryChart(categoryChart, dashboardData, chartOptions.category);
+        dashboardCharts.updateTopCountriesChart(topCountriesChart, dashboardData, chartOptions.country);
+        interconnectionChart.updateInterconnectionChart(interconnectionViz, dashboardData, chartOptions.interconnection);
+        dashboardStats.updateSummaryStats(dashboardData, dateRange);
+        updateKeyMetrics(dashboardData);
+        updateRecentArticles(dashboardData);
+    }
+}
+
+/**
  * Handle window resize event to make charts responsive
  */
 export function handleDashboardResize() {
@@ -437,5 +454,6 @@ export function handleDashboardResize() {
 export default {
     initializeDashboard,
     updateDashboard,
-    handleDashboardResize
+    handleDashboardResize,
+    forceUpdateCharts
 };

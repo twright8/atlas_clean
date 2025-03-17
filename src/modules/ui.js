@@ -19,6 +19,18 @@ export function initializeViewToggle() {
             mapElement.style.display = 'block';
             dashboardElement.style.display = 'none';
             dataTables.style.display = 'none';
+            
+            // Trigger map resize event to ensure proper rendering
+            if (window.map) {
+                setTimeout(() => {
+                    window.map.invalidateSize();
+                    
+                    // Trigger an update of visible data when switching to map
+                    if (typeof window.updateMapView === 'function') {
+                        window.updateMapView();
+                    }
+                }, 100);
+            }
         } else if (listBtn.classList.contains('active')) {
             mapElement.style.display = 'none';
             dashboardElement.style.display = 'none';
@@ -27,6 +39,16 @@ export function initializeViewToggle() {
             mapElement.style.display = 'none';
             dashboardElement.style.display = 'block';
             dataTables.style.display = 'none';
+            
+            // Force dashboard refresh when displaying
+            if (typeof window.handleDashboardResize === 'function') {
+                setTimeout(window.handleDashboardResize, 100);
+            }
+            
+            // Force update of all dashboard charts with current filtered data
+            if (typeof window.forceUpdateDashboard === 'function') {
+                setTimeout(window.forceUpdateDashboard, 200);
+            }
         }
     }
 
@@ -37,8 +59,25 @@ export function initializeViewToggle() {
             updateVisibility();
             
             // Force dashboard refresh when dashboard tab is selected
-            if (button.id === 'dashboard-btn' && typeof window.handleDashboardResize === 'function') {
-                setTimeout(window.handleDashboardResize, 300);
+            if (button.id === 'dashboard-btn') {
+                if (typeof window.handleDashboardResize === 'function') {
+                    setTimeout(window.handleDashboardResize, 200);
+                }
+                
+                if (typeof window.forceUpdateDashboard === 'function') {
+                    setTimeout(window.forceUpdateDashboard, 300);
+                }
+            }
+            
+            // When switching to the map view, ensure the filter updates with visible data
+            if (button.id === 'map-overview-btn') {
+                setTimeout(() => {
+                    if (typeof window.updateMapView === 'function') {
+                        window.updateMapView();
+                    } else if (typeof window.updateVisibleData === 'function') {
+                        window.updateVisibleData();
+                    }
+                }, 200);
             }
         });
     });

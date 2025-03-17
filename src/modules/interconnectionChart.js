@@ -44,6 +44,8 @@ export function initializeInterconnectionChart() {
  * @param {Array} data Filtered data array
  */
 export function updateInterconnectionChart(chart, data) {
+    console.log(`Updating interconnection chart with ${data.length} data points`);
+    
     // Clear existing content
     chart.selectAll('*').remove();
     
@@ -185,7 +187,10 @@ export function updateInterconnectionChart(chart, data) {
         .force('link', d3.forceLink(links).id(d => d.id).distance(radius * 0.7))
         .force('charge', d3.forceManyBody().strength(-50))
         .force('center', d3.forceCenter(0, 0))
-        .force('collide', d3.forceCollide().radius(d => nodeSize(d.count) + 5));
+        .force('collide', d3.forceCollide().radius(d => nodeSize(d.count) + 15).strength(1.9))
+		
+
+;
     
     // Add center circle as guide
     chart.append('circle')
