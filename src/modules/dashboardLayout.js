@@ -28,9 +28,12 @@ export function createDashboardLayout(container) {
                     <div class="card-header">
                         <h3>Articles Over Time</h3>
                         <div class="card-tools">
-                            <button class="view-toggle" id="time-view-toggle" title="Toggle between monthly/yearly view">
-                                <i class="fa fa-calendar"></i>
-                            </button>
+    <button class="view-toggle" id="time-view-toggle" title="Toggle between monthly/yearly view">
+        <i class="fa fa-calendar"></i> <!-- Existing Toggle -->
+    </button>
+    <button class="view-toggle" id="time-content-toggle" title="Toggle content view (Total, Integrity, Health)">
+        <i class="fa fa-exchange"></i> <!-- New Toggle (Example Icon) -->
+    </button>
                         </div>
                     </div>
                     <div id="time-series-chart"></div>
@@ -137,6 +140,24 @@ export function createDashboardLayout(container) {
  */
 function initializeToggleButtons() {
     // Time view toggle (Monthly/Yearly)
+	const timeContentToggle = document.getElementById('time-content-toggle');
+if (timeContentToggle) {
+    let timeModes = ['total', 'integrity', 'health'];
+    let currentTimeModeIndex = 0;
+    timeContentToggle.addEventListener('click', function() {
+        currentTimeModeIndex = (currentTimeModeIndex + 1) % timeModes.length;
+        const newMode = timeModes[currentTimeModeIndex];
+        // Update icon/tooltip based on newMode if desired
+        this.title = `View: ${newMode.charAt(0).toUpperCase() + newMode.slice(1)}`;
+        // Dispatch event
+        const event = new CustomEvent('timeContentToggle', {
+            detail: { mode: newMode }
+        });
+        document.dispatchEvent(event);
+    });
+    // Set initial title
+    timeContentToggle.title = `View: ${timeModes[0].charAt(0).toUpperCase() + timeModes[0].slice(1)}`;
+}
     const timeViewToggle = document.getElementById('time-view-toggle');
     if (timeViewToggle) {
         timeViewToggle.addEventListener('click', function() {

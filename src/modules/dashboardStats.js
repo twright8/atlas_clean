@@ -9,43 +9,109 @@ import * as d3 from 'd3';
  * @param {Array} data Filtered data array
  * @param {Object} dateRange Object with minDate and maxDate
  */
-export function updateSummaryStats(data, dateRange) {
-    // Calculate summary statistics
+export function updateSummaryStats(data, filterDateRange) {
+    // Calculate summary statistics from the filtered data
     const totalArticles = data.length;
-    
-    // Count unique countries
+
+    // Count unique countries from the filtered data
     const uniqueCountries = new Set();
     data.forEach(item => {
         if (item.country && item.country.trim()) {
             uniqueCountries.add(item.country);
         }
     });
-    
 
-    
-    // Format date range
-    let timePeriodText = '-';
-    let timePeriodDisplayText = '-';
-    if (dateRange && dateRange.minDate && dateRange.maxDate) {
-        const formatDate = d3.timeFormat('%b %Y');
-        const formatMonthYear = d3.timeFormat('%B %Y');
-        timePeriodText = `${formatDate(dateRange.minDate)} - ${formatDate(dateRange.maxDate)}`;
-        timePeriodDisplayText = `${formatMonthYear(dateRange.minDate)} - ${formatMonthYear(dateRange.maxDate)}`;
+    // --- Calculate the ACTUAL date range within the FILTERED data ---
+    let actualMinDate = null;
+    let actualMaxDate = null;
+
+    if (data && data.length > 0) {
+        data.forEach(item => {
+            // Ensure item.parsedDate is a valid Date object
+            if (item.parsedDate instanceof Date && !isNaN(item.parsedDate.getTime())) { // Added getTime() check for robustness
+                if (actualMinDate === null || item.parsedDate < actualMinDate) {
+                    actualMinDate = item.parsedDate;
+                }
+                if (actualMaxDate === null || item.parsedDate > actualMaxDate) {
+                    actualMaxDate = item.parsedDate;
+                }
+            }
+        });
     }
-    
+    // --- End of actual date range calculation ---
+
+    // Format the calculated date range for display
+    let timePeriodText = 'N/A'; // Default if no valid dates found
+    let timePeriodDisplayText = 'No data for selected period'; // Default for header display
+
+    if (actualMinDate && actualMaxDate) {
+        try {
+            // Format for the main stat box (e.g., "Jan 2023 - Dec 2023")
+            const formatDateShort = d3.timeFormat('%b %Y');
+            timePeriodText = `${formatDateShort(actualMinDate)} - ${formatDateShort(actualMaxDate)}`;
+
+            // Format for the card header display (e.g., "January 2023 - December 2023")
+            const formatDateLong = d3.timeFormat('%B %Y');
+             // Handle case where min and max date fall in the same month/year
+            if (formatDateLong(actualMinDate) === formatDateLong(actualMaxDate)) {
+                 timePeriodDisplayText = `${formatDateLong(actualMaxDate)}`;
+            } else {
+                 timePeriodDisplayText = `${formatDateLong(actualMinDate)} - ${formatDateLong(actualMaxDate)}`;
+            }
+        } catch (e) {
+             console.error("Error formatting actual dates:", actualMinDate, actualMaxDate, e);
+             timePeriodText = 'Error';
+             timePeriodDisplayText = 'Error formatting dates';
+        }
+    } else if (data.length > 0 && !actualMinDate && !actualMaxDate) {
+         // Data exists, but no valid dates found within it
+         timePeriodText = 'Invalid Dates';
+         timePeriodDisplayText = 'Data found, but contains no valid dates';
+    } else if (data.length === 0) {
+        // Explicitly handle the case where no data matches filters
+        timePeriodText = 'N/A';
+        timePeriodDisplayText = 'No articles match filters';
+    }
+
+
     // Update DOM elements for stats
-    document.getElementById('total-articles').textContent = totalArticles.toLocaleString();
-    document.getElementById('total-countries').textContent = uniqueCountries.size.toLocaleString();
-    document.getElementById('time-period').textContent = timePeriodText;
-    
-    // Update the date range indicator in the card header if it exists
-    const timeDisplayElement = document.getElementById('time-period-display');
-    if (timeDisplayElement) {
-        timeDisplayElement.textContent = timePeriodDisplayText;
+    // Use 'toLocaleString()' for better number formatting
+    const totalArticlesElement = document.getElementById('total-articles');
+    if (totalArticlesElement) {
+        totalArticlesElement.textContent = totalArticles.toLocaleString();
+    } else {
+        console.warn("Element with ID 'total-articles' not found.");
     }
-    
-    // Calculate and update additional metrics
-    updateTrendMetrics(data);
+
+    const totalCountriesElement = document.getElementById('total-countries');
+    if (totalCountriesElement) {
+        totalCountriesElement.textContent = uniqueCountries.size.toLocaleString();
+    } else {
+        console.warn("Element with ID 'total-countries' not found.");
+    }
+
+    const timePeriodElement = document.getElementById('time-period');
+    if (timePeriodElement) {
+        timePeriodElement.textContent = timePeriodText; // Use the calculated text
+    } else {
+        console.warn("Element with ID 'time-period' not found.");
+    }
+
+
+    // Update the date range indicator in the card header if it exists
+    const summaryCard = document.getElementById('dashboard-summary-card');
+    if (summaryCard) {
+        const dateRangeIndicator = summaryCard.querySelector('.date-range-indicator');
+        if (dateRangeIndicator) {
+            dateRangeIndicator.textContent = timePeriodDisplayText; // Use the calculated display text
+        } else {
+            // If it doesn't exist, maybe create it or log a warning
+            // console.warn("Date range indicator element not found in summary card header.");
+        }
+    } else {
+        console.warn("Summary card element (#dashboard-summary-card) not found.");
+    }
+
 }
 
 /**

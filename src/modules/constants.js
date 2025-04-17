@@ -9,8 +9,10 @@ export const infoBoxes = {
     archived: "When checked, this includes articles collected using our earlier data gathering methods. We've since improved our collection process. Unchecked shows only articles collected with our current methods.",
     cased: "When checked, this filters out general discussions and commentaries to focus on stories about specific corruption cases. Check it to include all articles.",
     unreliable: "We use AI to identify potentially unreliable news stories based on their writing style and content. While keeping this checked can help reduce exposure to low-quality news, please note: The filter works automatically with no human oversight. It may incorrectly flag legitimate stories as unreliable. It may miss unreliable stories. It can reflect biases present in AI training data. Think of it as a helpful but unverified first pass rather than a definitive assessment of reliability.",
-    countryLevel: "When checked, this shows only articles where a specific location within the country could be determined. Check it to include articles where only the country-level location was identified."
+    countryLevel: "When checked, this excludes articles where we couldn't find a more specific location (e.g. 'New York' or 'Bogata') than a country, e.g. 'England' or 'South Africa'. When unchecked, these articles will be included on the map in the geographical center of said country. They will have different colour marker icons."
 };
+
+
 
 // Map marker settings
 export const markerSettings = {

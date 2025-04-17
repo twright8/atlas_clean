@@ -79,7 +79,7 @@ export function setupMapMoveEvents(mapConfig, getFilteredData, dataTable) {
         dataTable.clear().rows.add(visibleData).draw();
         $('.filter-count').text(formatNumber(visibleData.length));
         console.timeEnd('Updating Visible Data');
-    }, 1000);
+    }, 300);
 
     mapConfig.map.on('movestart', function() {
         mapConfig.map.isMoving = function() { return true; };

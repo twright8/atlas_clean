@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "crossfilter2": "^1.4.6",
-    "d3": "^5.9.1",
+    "d3": "^7.9.0",
     "d3-request": "^1.0.6",
     "datatables": "^1.10.18",
     "datatables.net": "^1.10.19",

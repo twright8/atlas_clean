@@ -15,77 +15,84 @@ export function initializeViewToggle() {
     const dataTables = document.getElementById('mask');
 
     function updateVisibility() {
-        if (mapOverviewBtn.classList.contains('active')) {
-            mapElement.style.display = 'block';
-            dashboardElement.style.display = 'none';
-            dataTables.style.display = 'none';
-            
+        const previouslyActiveButton = document.querySelector('.switch-button.active');
+
+        // Determine active view based on button state
+        let activeView = null;
+        if (mapOverviewBtn.classList.contains('active')) activeView = 'map';
+        else if (listBtn.classList.contains('active')) activeView = 'list';
+        else if (dashboardBtn.classList.contains('active')) activeView = 'dashboard';
+
+        console.log(`Updating visibility. Active view: ${activeView}`);
+
+        // Set display properties
+        mapElement.style.display = (activeView === 'map') ? 'block' : 'none';
+        dashboardElement.style.display = (activeView === 'dashboard') ? 'block' : 'none';
+        dataTables.style.display = (activeView === 'list') ? 'block' : 'none';
+
+        // --- Actions on becoming visible ---
+        if (activeView === 'map') {
             // Trigger map resize event to ensure proper rendering
             if (window.map) {
+                console.log("Map view activated. Invalidating map size.");
                 setTimeout(() => {
                     window.map.invalidateSize();
-                    
                     // Trigger an update of visible data when switching to map
+                    console.log("Triggering updateMapView/updateVisibleData for map.");
                     if (typeof window.updateMapView === 'function') {
-                        window.updateMapView();
+                        window.updateMapView(); // This should internally call updateVisibleData
+                    } else if (typeof window.updateVisibleData === 'function') {
+                        // Fallback if updateMapView is not defined
+                         window.updateVisibleData();
                     }
-                }, 100);
+                }, 150); // Slightly increased delay might help rendering race conditions
             }
-        } else if (listBtn.classList.contains('active')) {
-            mapElement.style.display = 'none';
-            dashboardElement.style.display = 'none';
-            dataTables.style.display = 'block';
-        } else if (dashboardBtn.classList.contains('active')) {
-            mapElement.style.display = 'none';
-            dashboardElement.style.display = 'block';
-            dataTables.style.display = 'none';
-            
-            // Force dashboard refresh when displaying
-            if (typeof window.handleDashboardResize === 'function') {
-                setTimeout(window.handleDashboardResize, 100);
-            }
-            
-            // Force update of all dashboard charts with current filtered data
-            if (typeof window.forceUpdateDashboard === 'function') {
-                setTimeout(window.forceUpdateDashboard, 200);
-            }
+        } else if (activeView === 'dashboard') {
+             console.log("Dashboard view activated. Triggering forceUpdateDashboard and handleDashboardResize.");
+             // Force dashboard refresh when displaying
+             // forceUpdateDashboard now correctly tells the dashboard to redraw with its CURRENT data.
+             if (typeof window.forceUpdateDashboard === 'function') {
+                 setTimeout(window.forceUpdateDashboard, 150); // Delay slightly
+             }
+             // handleDashboardResize ensures layout is correct after becoming visible.
+             if (typeof window.handleDashboardResize === 'function') {
+                 // This might be slightly redundant if forceUpdateDashboard also calls resize,
+                 // but ensures layout adjustments happen.
+                 setTimeout(window.handleDashboardResize, 250);
+             }
+        } else if (activeView === 'list') {
+            console.log("List view activated.");
+             // Optionally trigger table redraw if needed, though updateVisibleData handles data
+             // if (window.dataTable) { setTimeout(() => window.dataTable.columns.adjust().draw(), 150); }
+
+             // IMPORTANT: Ensure the table/count reflect the FULL filtered data when in List view
+             if (typeof window.updateVisibleData === 'function') {
+                console.log("Triggering updateVisibleData for list view.");
+                // No debounce needed here, we want immediate update on view switch
+                window.updateVisibleData.cancel?.(); // Cancel any pending debounce
+                window.updateVisibleData(); // Call immediately
+             }
         }
     }
 
     buttons.forEach(button => {
         button.addEventListener('click', () => {
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            updateVisibility();
-            
-            // Force dashboard refresh when dashboard tab is selected
-            if (button.id === 'dashboard-btn') {
-                if (typeof window.handleDashboardResize === 'function') {
-                    setTimeout(window.handleDashboardResize, 200);
-                }
-                
-                if (typeof window.forceUpdateDashboard === 'function') {
-                    setTimeout(window.forceUpdateDashboard, 300);
-                }
-            }
-            
-            // When switching to the map view, ensure the filter updates with visible data
-            if (button.id === 'map-overview-btn') {
-                setTimeout(() => {
-                    if (typeof window.updateMapView === 'function') {
-                        window.updateMapView();
-                    } else if (typeof window.updateVisibleData === 'function') {
-                        window.updateVisibleData();
-                    }
-                }, 200);
+            // Only proceed if the clicked button is not already active
+            if (!button.classList.contains('active')) {
+                console.log(`Button clicked: ${button.id}`);
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                updateVisibility(); // Call the centralized visibility handler
+            } else {
+                 console.log(`Button ${button.id} is already active. No view change.`);
             }
         });
     });
 
-    // Initial visibility setup
+    // Initial visibility setup on page load
+    console.log("Setting initial view visibility.");
     updateVisibility();
 }
-
 /**
  * Initialize the filter box expand/collapse functionality
  */

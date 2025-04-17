@@ -126,7 +126,7 @@
                 </div>
 
                 <p>We rely entirely on what news articles report. Just because we haven't tagged any stories about a particular type of corruption in a certain place doesn't mean it isn't happening there - it just means we haven't found English language news coverage that meets our specific criteria.</p>
-
+				<p>If you need more information about how we defined these categories, please email TI global health. We can send you the guidelines and prompts we used. Overall, we designed the categories to be flexible and practical rather than having strict definitions</p>
                 <h3>In summary:</h3>
                 <ul>
                     <li>We do not have all data on corruption everywhere. We have tried to get as much as is available but that is limited by a number of factors including press freedom, internet access etc.</li>
@@ -170,8 +170,8 @@
             </div>
             <div id="contact" class="panel-collapse">
               <div class="panel-body">
-                <p>The project is funded by:</p> 
-                <img src="https://www.giz.de/static/en/images/giz-logo.gif" alt="GIZ Logo" style="max-width: 200px;">
+                <p>This project is funded by the German Federal Ministry for Economic Cooperation and Development (BMZ) and supported by the Deutsche Gesellschaft für Internationale Zusammenarbeit (GIZ) GmbH.</p> 
+                <img src="https://www.giz.de/static/cdc_en/images/images_content_460x160/CDC/ELdZ_eng.png" alt="GIZ Logo" style="max-width:500px;">
               </div>
             </div>
           </div>
