@@ -2149,3 +2149,10 @@ padding-bottom:0px;
 @media only screen and (max-width: 768px) {.dashboard-header-card {
 margin-top:5px
 }}
+#mob-about{
+display:none
+}
+@media only screen and (max-width: 991px) {#mob-about {
+display:block;
+font-size:1.5rem!important
+}}

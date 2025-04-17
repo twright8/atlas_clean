@@ -1,6 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-light" id="iw-nav">
   <a class="navbar-brand" href="https://www.transparency.org.uk/" target="_blank"><img id="tigh" src="./images/ti_uk_logo.png" alt=""/> </a>
 
+        <a id="mob-about" href="./about.php" class="nav-link"><i class="fa fa-info-circle" aria-hidden="true"></i> </a>
+
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
