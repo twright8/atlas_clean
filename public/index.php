@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3RNPDMQC9R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3RNPDMQC9R');
+
+      // Helper function for tracking outbound links
+      function trackOutboundLink(url, sourceComponent) {
+        if (typeof gtag === 'function') {
+          gtag('event', 'click_outbound_link', {
+            'event_category': 'engagement',
+            'event_label': url,
+            'link_url': url, // GA4 standard parameter
+            'source_component': sourceComponent, // Custom parameter
+            'transport_type': 'beacon', // Helps ensure the event is sent
+            'event_callback': function() {
+              // This callback is often used to navigate after the event is sent,
+              // but since target="_blank" handles the new tab, we might not need to do much here.
+              // However, window.open in JS might benefit from a slight delay or this callback.
+            }
+          });
+        }
+      }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Health Atlas</title>

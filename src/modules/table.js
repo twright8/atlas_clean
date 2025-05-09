@@ -1,27 +1,9 @@
-import { dataTableSettings } from './constants';
+// table.js
+import { dataTableSettings as originalDataTableSettings } from './constants'; // Keep original for other settings
+import * as d3 from 'd3'; // Assuming d3 is used for date parsing as in your original file
 
 let dataTable;
 
-/**
- * Initialize the data table with configuration
- * @returns {Object} DataTable instance
- */
-export function initializeDataTable() {
-    console.time('DataTable Initialization');
-    
-    // Extend jQuery DataTables with custom date sorting for European date format (dd/mm/yy)
-    extendDataTableSorting();
-    
-    // Initialize the datatable with settings
-    dataTable = $('#dc-data-table').DataTable(dataTableSettings);
-    
-    console.timeEnd('DataTable Initialization');
-    return dataTable;
-}
-
-/**
- * Extend DataTable with custom date sorting for European format dates
- */
 function extendDataTableSorting() {
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {
         "date-eu-pre": function(date) {
@@ -39,29 +21,60 @@ function extendDataTableSorting() {
     });
 }
 
-/**
- * Parse date in dd/mm/yy format
- * @param {String} dateStr Date string to parse
- * @returns {Date|null} Parsed date or null
- */
 function parseDateDMY(dateStr) {
-    // Use d3's built-in parser or implement our own
     const dmy = d3.timeParse("%d/%m/%y");
     return dmy(dateStr);
 }
 
-/**
- * Update the data table with new data
- * @param {Array} data Data array to display in the table
- */
-export function updateDataTable(data) {
-    dataTable.clear().rows.add(data).draw();
+export function initializeDataTable() {
+    console.time('DataTable Initialization');
+    extendDataTableSorting();
+
+    const dataTableSettings = {
+        ...originalDataTableSettings, // Spread original settings
+        columns: [
+            {
+                data: 'Title',
+                width: '50%',
+                defaultContent: "N/A",
+                render: function(data, type, row) {
+                    return data ? `"${data}"` : 'N/A';
+                }
+            },
+            { data: 'country' },
+            {
+                data: 'url',
+                render: function(data, type, row) {
+                    if (data) {
+                        // IMPORTANT: Ensure the URL is properly escaped for use in JavaScript string
+                        const escapedUrl = data.replace(/'/g, "\\'");
+                        return `<a href="${data}" target="_blank" onclick="trackOutboundLink('${escapedUrl}', 'table_view'); return true;">Link</a>`;
+                    }
+                    return '';
+                }
+            },
+            { data: 'Date' },
+            {
+                data: 'Corruption Categories', render: function(data, type, row) {
+                    if (!data) return '';
+                    let strData = String(data);
+                    return strData.replace(/,(?=[^\s])/g, ', ');
+                }
+            }
+        ]
+    };
+
+    dataTable = $('#dc-data-table').DataTable(dataTableSettings);
+    console.timeEnd('DataTable Initialization');
+    return dataTable;
 }
 
-/**
- * Get current data table instance
- * @returns {Object} DataTable instance
- */
+export function updateDataTable(data) {
+    if (dataTable) {
+        dataTable.clear().rows.add(data).draw();
+    }
+}
+
 export function getDataTable() {
     return dataTable;
 }
