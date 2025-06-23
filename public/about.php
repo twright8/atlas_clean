@@ -152,6 +152,43 @@
             </div>
           </div>
 
+          <!-- TERMS OF USE SECTION -->
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h1 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTerms">3. TERMS OF USE</a>
+              </h1>
+            </div>
+            <div id="collapseTerms" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <h3>1. Introduction</h3>
+                <p>Welcome to the Global Health Atlas ("the Tool"), a project by Transparency International (UK). By accessing or using the Tool, you agree to comply with and be bound by these Terms of Use.</p>
+
+                <h3>2. Permitted Use</h3>
+                <p>You are granted a limited license to access and use the Tool for personal, non-commercial, and informational purposes only. This includes viewing the data on the dashboard and using the provided "Export" function to download a limited set of metadata (article title, date, and link) for personal analysis and reporting.</p>
+
+                <h3>3. Prohibited Uses</h3>
+                <p>You may not, directly or indirectly:</p>
+                <ul>
+                  <li>Use the Tool or any data derived from it for any commercial purposes.</li>
+                  <li>Resell, sublicense, or redistribute any data obtained from the Tool to any third party.</li>
+                  <li>Use the Tool to create a service or product that is competitive with the Tool or its underlying data provider.</li>
+                  <li>Use any automated means, such as bots or scrapers, to access or copy data from the Tool.</li>
+                  <li>Remove or obscure any proprietary notices, including attribution to our data provider.</li>
+                </ul>
+
+                <h3>4. Intellectual Property</h3>
+                <p>The underlying news data is the property of our data provider. You are not granted any license to the underlying full-text news content. You must not, directly or indirectly: (i) reverse engineer, decompile, copy, mirror, disassemble, or otherwise attempt to discover or reproduce the source code, object code, or underlying structure, feature, function, user interface, ideas, know-how, or algorithms</p>
+
+                <h3>5. Attribution</h3>
+                <p>Where you present or cite data obtained from the Tool in any report,  publication, website, or other external publicity,  you must provide clear attribution, for example: "Data sourced from the Global Health Atlas by Transparency International (UK), powered by data from Newscatcher."</p>
+
+                <h3>6. Disclaimer and Limitation of Liability</h3>
+                <p>The Tool and all data are provided "as is" without warranty of any kind. Transparency International (UK) is not liable for any damages arising from the use of the Tool.</p>
+              </div>
+            </div>
+          </div>
+          
           <!-- CONTACTS -->
           <div class="panel panel-default panel-static">
             <div class="panel-heading">
@@ -177,10 +214,10 @@
                 <a href="#">PROJECT SPONSORS</a>
               </h2>
             </div>
-            <div id="contact" class="panel-collapse">
+            <div id="contact" class="panel-collapse"> <!-- Note: This ID "contact" is duplicated from the section above. This might be an issue for anchor links or JS targeting IDs, but I am not changing existing code. -->
               <div class="panel-body">
                 <p>This project is funded by the German Federal Ministry for Economic Cooperation and Development (BMZ) and supported by the Deutsche Gesellschaft für Internationale Zusammenarbeit (GIZ) GmbH.</p> 
-                <img src="https://www.giz.de/static/cdc_en/images/images_content_460x160/CDC/ELdZ_eng.png" alt="GIZ Logo" style="max-width:500px;">
+                <img src="https://www.giz.de/static/en/images/giz-logo.gif" alt="GIZ Logo" style="max-width:500px;">
               </div>
             </div>
           </div>
